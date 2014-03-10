@@ -1,5 +1,5 @@
 ##################################################################
-# Version 1.1
+# Version 1.2
 ##################################################################
 import os
 import sys
@@ -82,9 +82,9 @@ class KyanToolKit_Py(object):
 
 	def CheckResult(self, result):
 		if 0 == result:
-			self.pInfo("Done")
+			self.Info("Done")
 		else:
-			self.pWarn("Failed")
+			self.Warn("Failed")
 
 	def Info(self, words):
 		print("[INFO] " + words)
