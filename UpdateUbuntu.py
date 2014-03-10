@@ -15,11 +15,13 @@
 #
 import os
 import sys
+import KyanToolKit_Py
 
 #--Pre-conditions Check-------------------------------------------
 if not "linux" in sys.platform:
 	sys.exit()
+ktk = KyanToolKit_Py.KyanToolKit_Py()
 
 #--Update & Upgrade-----------------------------------------------
-os.system("sudo apt-get update")
-os.system("sudo apt-get upgrade")
+ktk.RunCmd("sudo apt-get update")
+ktk.RunCmd("sudo apt-get upgrade")
