@@ -1,5 +1,5 @@
 ##################################################################
-# Version 1.2
+# Version 1.3
 ##################################################################
 import os
 import sys
@@ -76,7 +76,7 @@ class KyanToolKit_Py(object):
 		trace.write(trace_header + trace_content + "\n</" + trace_type + ">\n")
 
 	def RunCmd(self, words):
-		self.banner(words)
+		print(self.banner(words))
 		result = os.system(words)
 		self.CheckResult(result)
 
