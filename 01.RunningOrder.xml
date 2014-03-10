@@ -1,0 +1,13 @@
+<New_Installation>
+	<Shell Sequence="1" User="root">NecessaryAptGets.sh</Shell>
+	<Shell Sequence="2" User="root">AutoCreateUser.sh -u [username]</Shell>
+	<Shell Sequence="3" User="userself">AutoInstallVNC.sh</Shell>
+	<Shell Sequence="4" User="root">AutoSetVPN.sh -u [username] -p [password]</Shell>
+</New_Installation>
+
+<Server_Restart>
+</Server_Restart>
+
+<Remove_Installation>
+	<Shell Sequence="1" User="root">AutoCreateUser.sh -u [username] -del</Shell>
+</Remove_Installation>
