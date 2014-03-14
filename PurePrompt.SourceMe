@@ -9,7 +9,7 @@
 #-------------+----------------+----------+-----------------------
 #  2013-11-08 |     YAN Kai    |   V1.0   | Script Creation
 #  2013-11-12 |     YAN Kai    |   V1.1   | Improve \n
-#             |                |          |                
+#             |                |          |
 #-----------------------------------------------------------------
 #=================================================================
 #
@@ -22,7 +22,7 @@ set Color_font_tmp='%{\e[33m%}'
 set Purple_font_tmp='%{\e[35m%}'
 
 #--Common Variables-----------------------------------------------
-# %c for "~" and %C for no "~", %C2 keep 2 last directorys. also try %C0
+# %c for "~" and %C2 for no "~", %C2 keep 2 last directorys. also try %C0
 set Trailing_in_Prompt='%c'
 set Env_Variable_in_Prompt="${USER}"
 
