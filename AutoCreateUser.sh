@@ -10,7 +10,7 @@
 #-------------+----------------+----------+-----------------------
 #  2013-11-01 |     YAN Kai    |   V1.0   | Script Creation
 #  2013-11-03 |     YAN Kai    |   V1.1   | Add .vimrc support
-#             |                |          |                
+#             |                |          |
 #-----------------------------------------------------------------
 #=================================================================
 #
@@ -157,7 +157,7 @@ else
 		echo "alias stopvnc 'vnc4server -kill'" >>  /home/${v_username}/.aliases_${v_username}
 		echo "alias gvim '/usr/bin/gvim -p'" >> /home/${v_username}/.aliases_${v_username}
 		echo "# KyanToolKit_Unix Tools" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias gp '${KyanToolKit_Unix_Folder}/EasyGrep.sh -i'" >> /home/${v_username}/.aliases_${v_username}
+		echo "alias gp '${KyanToolKit_Unix_Folder}/EasyGrep.sh -i --color'" >> /home/${v_username}/.aliases_${v_username}
 		echo "alias PWD '${KyanToolKit_Unix_Folder}/ClearAndPwd.sh -noclear -nolist'" >> /home/${v_username}/.aliases_${v_username}
 		echo "alias LS '${KyanToolKit_Unix_Folder}/ClearAndPwd.sh -noclear'" >> /home/${v_username}/.aliases_${v_username}
 		echo "source '${KyanToolKit_Unix_Folder}/PurePrompt.SourceMe'" >> /home/${v_username}/.aliases_${v_username}
