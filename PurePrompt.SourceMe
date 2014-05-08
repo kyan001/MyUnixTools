@@ -23,8 +23,10 @@ set Color_font_tmp='%{\e[33m%}'
 set Purple_font_tmp='%{\e[35m%}'
 
 #--Common Variables-----------------------------------------------
-# %c for "~" and %C for no "~", %C2 keep 2 last directorys. also try %C0
-set Trailing_in_Prompt='%c2'
+# %c for "~" and %C for no "~"
+# %C2 keep 2 last directorys. also try %C0
+# ${cwd} for whole path
+set Trailing_in_Prompt='${cwd}'
 set Env_Variable_in_Prompt="${USER}"
 
 #--Main-----------------------------------------------------------
