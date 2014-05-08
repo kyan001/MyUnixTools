@@ -41,7 +41,7 @@ else:
 	ktk.Info(vimrc_file + " already exists")
 #--write file----------------------------------------------------
 # \!:1 = 1st argument
-vimrc_template = """# -----
+vimrc_template = """\" -----
 \" --Line number
 set nu
 \" --Column number
@@ -64,7 +64,7 @@ set sm
 set is
 \" --Show Tab Line(0=no,1=tab>2,2=always)
 set showtabline
-"""
+\" -----"""
 # vimrc arg def
 
 # file open
