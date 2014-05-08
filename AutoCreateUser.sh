@@ -151,28 +151,7 @@ else
 		RunCmd "touch /home/${v_username}/.vimrc"
 		RunCmd "chown ${v_username} /home/${v_username}/.vimrc"
 		pInfo "[ Write /home/${v_username}/.vimrc file ] \t... \c"
-		echo "\" Line number" > /home/${v_username}/.vimrc
-		echo "set nu" >> /home/${v_username}/.vimrc
-		echo "\" Column number" >> /home/${v_username}/.vimrc
-		echo "set ruler" >> /home/${v_username}/.vimrc
-		echo "\" ignore case when search" >> /home/${v_username}/.vimrc
-		echo "\"set ic" >> /home/${v_username}/.vimrc
-		echo "\" tab is 4 spaces long" >> /home/${v_username}/.vimrc
-		echo "\"set ts=4" >> /home/${v_username}/.vimrc
-		echo "\" highlight search result" >> /home/${v_username}/.vimrc
-		echo "set hls" >> /home/${v_username}/.vimrc
-		echo "\" highlight line and column" >> /home/${v_username}/.vimrc
-		echo "\"set cuc" >> /home/${v_username}/.vimrc
-		echo "\"set cul" >> /home/${v_username}/.vimrc
-		echo "\" autoindent and smartindent" >> /home/${v_username}/.vimrc
-		echo "set ai " >> /home/${v_username}/.vimrc
-		echo "set si" >> /home/${v_username}/.vimrc
-		echo "\" show match brackets" >> /home/${v_username}/.vimrc
-		echo "set sm" >> /home/${v_username}/.vimrc
-		echo "\" search as you type (incsearch)" >> /home/${v_username}/.vimrc
-		echo "set is" >> /home/${v_username}/.vimrc
-		echo "\" Show Tab Line(0=no,1=tab>2,2=always)" >> /home/${v_username}/.vimrc
-		echo "set showtabline" >> /home/${v_username}/.vimrc
+		python3 "${KyanToolKit_Unix_Folder}/UpdateVimrc.py ${v_username}"
 		CheckResult
 	fi
 fi

@@ -2,7 +2,7 @@
 #
 #=================================================================
 # UpdateAliases.py
-#   update users ~//home/{user}/.aliases_{user}
+#   update users /home/{user}/.aliases_{user}
 #
 # HISTORY
 #-----------------------------------------------------------------
@@ -70,3 +70,4 @@ final_string = alias_template.replace("${v_username}",v_username).replace("${Kya
 # write and close
 a_file.write(final_string)
 a_file.close()
+ktk.Info("Done. Enjoy.")
