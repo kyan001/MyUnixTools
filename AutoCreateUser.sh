@@ -144,23 +144,7 @@ else
 		RunCmd "touch /home/${v_username}/.aliases_${v_username}"
 		RunCmd "chown ${v_username} /home/${v_username}/.aliases_${v_username}"
 		pInfo "[ Write /home/${v_username}/.aliases_${v_username} file ] \t... \c"
-		echo "# basic commands" > /home/${v_username}/.aliases_${v_username}
-		echo "alias ll 'ls -lh'" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias lsgp 'ls | grep -i'" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias llgp 'll | grep -i'" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias fd 'find -L . -name'" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias newa 'source /home/${v_username}/.aliases_${v_username}'" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias hgp 'history | grep -i'" >> /home/${v_username}/.aliases_${v_username}
-		echo "# 3rd Party Tools" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias py 'python3'" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias startvnc 'vnc4server -geometry 1350x700'" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias stopvnc 'vnc4server -kill'" >>  /home/${v_username}/.aliases_${v_username}
-		echo "alias gvim '/usr/bin/gvim -p'" >> /home/${v_username}/.aliases_${v_username}
-		echo "# KyanToolKit_Unix Tools" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias gp '${KyanToolKit_Unix_Folder}/EasyGrep.sh -i --color'" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias PWD '${KyanToolKit_Unix_Folder}/ClearAndPwd.sh -noclear -nolist'" >> /home/${v_username}/.aliases_${v_username}
-		echo "alias LS '${KyanToolKit_Unix_Folder}/ClearAndPwd.sh -noclear'" >> /home/${v_username}/.aliases_${v_username}
-		echo "source '${KyanToolKit_Unix_Folder}/PurePrompt.SourceMe'" >> /home/${v_username}/.aliases_${v_username}
+		python3 "${KyanToolKit_Unix_Folder}/UpdateAliases.py ${v_username}"
 		CheckResult
 
 		# Create user .vimrc file
