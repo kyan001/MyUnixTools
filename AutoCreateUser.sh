@@ -143,15 +143,15 @@ else
 		# Create user asliases file
 		RunCmd "touch /home/${v_username}/.aliases_${v_username}"
 		RunCmd "chown ${v_username} /home/${v_username}/.aliases_${v_username}"
-		pInfo "[ Write /home/${v_username}/.aliases_${v_username} file ] \t... \c"
-		python3 "${KyanToolKit_Unix_Folder}/UpdateAliases.py ${v_username}"
+		pInfo "[ Write /home/${v_username}/.aliases_${v_username} file ] \t..."
+		python3 "${KyanToolKit_Unix_Folder}/UpdateAliases.py" ${v_username}
 		CheckResult
 
 		# Create user .vimrc file
 		RunCmd "touch /home/${v_username}/.vimrc"
 		RunCmd "chown ${v_username} /home/${v_username}/.vimrc"
-		pInfo "[ Write /home/${v_username}/.vimrc file ] \t... \c"
-		python3 "${KyanToolKit_Unix_Folder}/UpdateVimrc.py ${v_username}"
+		pInfo "[ Write /home/${v_username}/.vimrc file ] \t..."
+		python3 "${KyanToolKit_Unix_Folder}/UpdateVimrc.py" ${v_username}
 		CheckResult
 	fi
 fi
