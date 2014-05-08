@@ -25,12 +25,13 @@ set Purple_font_tmp='%{\e[35m%}'
 #--Common Variables-----------------------------------------------
 # %c for "~" and %C for no "~"
 # %C2 keep 2 last directorys. also try %C0
-# ${cwd} for whole path
-set Trailing_in_Prompt='${cwd}'
+# %/  The current working directory. %~ with ~
+
+set Trailing_in_Prompt='%~'
 set Env_Variable_in_Prompt="${USER}"
 
 #--Main-----------------------------------------------------------
-set prompt="\n${Purple_font_tmp}${Env_Variable_in_Prompt}${Normal_font_tmp} @ ${Color_font_tmp}${Trailing_in_Prompt}/${Normal_font_tmp} \n> "
+set prompt="\n${Purple_font_tmp}${Env_Variable_in_Prompt}${Normal_font_tmp} @ ${Color_font_tmp}${Trailing_in_Prompt}${Normal_font_tmp} \n> "
 
 #--Unset Env Variables--------------------------------------------
 unset Normal_font_tmp
