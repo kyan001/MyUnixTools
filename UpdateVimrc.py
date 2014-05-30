@@ -63,7 +63,7 @@ set sm
 \" --search as you type (incsearch)
 set is
 \" --Show Tab Line(0=no,1=tab>2,2=always)
-set showtabline
+set showtabline=1
 \" -----"""
 # vimrc arg def
 
