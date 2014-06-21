@@ -18,8 +18,6 @@
 #--Variables Defination-------------------------------------------
 # Normal Bold Underline Gray Red Purple BLUE
 VN="\e[0m";VB="\e[1m";VU="\e[4m";VG="\e[2m";VR="\e[31m";VP="\e[35m";VBLUE="\e[34m";
-# KTK
-KyanToolKit_Unix_Folder="/home/kyan001/KyanToolKit_Unix"
 
 #--Common Macros--------------------------------------------------
 Bold(){ echo -e "${VB}$1${VN}"; }
@@ -30,13 +28,13 @@ pInfoGray(){ echo -e "${VB}${VG}${VU}[INFO]${VN} ${VG}$1${VN}"; }
 Usage(){
 	echo ""
 	Bold "Usage:"
+	echo -e "\t$0 -u/ser <USERNAME>"
 	echo -e "\t$0 -u/ser <USERNAME> -del/ete"
 	echo -e "\t$0 -help"
 	echo ""
 	echo "1. Must executed under ROOT user."
 	echo "2. Use -del/ete option to delete user, otherwise will create."
 	echo "3. Enter your password yourself."
-	echo "4. Make sure ${KyanToolKit_Unix_Folder} exsits."
 	echo ""
 	exit 0
 }
@@ -144,14 +142,14 @@ else
 		RunCmd "touch /home/${v_username}/.aliases_${v_username}"
 		RunCmd "chown ${v_username} /home/${v_username}/.aliases_${v_username}"
 		pInfo "[ Write /home/${v_username}/.aliases_${v_username} file ] \t..."
-		python3 "${KyanToolKit_Unix_Folder}/UpdateAliases.py" ${v_username}
+		python3 "./UpdateAliases.py" ${v_username}
 		CheckResult
 
 		# Create user .vimrc file
 		RunCmd "touch /home/${v_username}/.vimrc"
 		RunCmd "chown ${v_username} /home/${v_username}/.vimrc"
 		pInfo "[ Write /home/${v_username}/.vimrc file ] \t..."
-		python3 "${KyanToolKit_Unix_Folder}/UpdateVimrc.py" ${v_username}
+		python3 "./UpdateVimrc.py" ${v_username}
 		CheckResult
 	fi
 fi
