@@ -12,13 +12,13 @@
 #	6.python3
 #	7.pptpd
 #	8.iptables
-#	
+#
 # HISTORY
 #-----------------------------------------------------------------
 #     DATE    |     AUTHOR     |  VERSION | COMMENT
 #-------------+----------------+----------+-----------------------
 #  2013-11-02 |     YAN Kai    |   V1.0   | Script Creation
-#             |                |          |                
+#             |                |          |
 #-----------------------------------------------------------------
 #=================================================================
 #
@@ -55,7 +55,7 @@ CheckResult(){
 }
 AptGetInstall(){
 	pInfo "=========================="
-	pInfo "(${NOWTASK}/${ALLTASK}) Installing $1." 
+	pInfo "(${NOWTASK}/${ALLTASK}) Installing $1."
 	pInfo "=========================="
 	sudo apt-get install $1
 	CheckResult
@@ -79,5 +79,5 @@ AptGetInstall "konsole"
 AptGetInstall "python3"
 AptGetInstall "pptpd"
 AptGetInstall "iptables"
-RunCmd "sudo apt-get update"
-RunCmd "sudo apt-get upgrade"
+# RunCmd "sudo apt-get update"
+# RunCmd "sudo apt-get upgrade"
