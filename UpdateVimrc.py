@@ -24,7 +24,7 @@ user = getpass.getuser()
 ktk.needPlatform("linux");
 #--get user-------------------------------------------------------
 if len(sys.argv) <= 1:
-	ktk.Warn("User not passed, using current user.")
+	ktk.warn("User not passed, using current user.")
 else:
 	user = sys.argv[1]
 vimrc_file = "/home/" + user + "/.vimrc"

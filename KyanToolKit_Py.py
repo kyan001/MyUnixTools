@@ -73,12 +73,11 @@ class KyanToolKit_Py(object):
 	def needUser(self, expect_user):
 		print("\n============ Checking User ============");
 		self.info("Required User: " + expect_user);
-		self.info("Current User: " + self.getUser();
+		self.info("Current User: " + self.getUser());
 		if not self.getUser() == expect_user:
 			self.byeBye("Bye");
 		else:
 			self.info("Done");
-
 
 	def byeBye(self,input_="See you later."):
 		exit(input_)
@@ -107,7 +106,7 @@ class KyanToolKit_Py(object):
 		if 0 == result:
 			self.info("Done")
 		else:
-			self.Warn("Failed")
+			self.warn("Failed")
 
 	def info(self, words):
 		print("[INFO] " + words)
