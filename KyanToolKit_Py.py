@@ -59,25 +59,25 @@ class KyanToolKit_Py(object):
 		return choices_[numerical_choice-1]
 
 	def getUser(self):
-		return getpass.getUser();
+		return getpass.getuser();
 
 	def needPlatform(self, expect_platform):
-		print("\n============ Checking Platform ============");
+		print("============ Checking Platform ============");
 		self.info("Required Platform: " + expect_platform);
 		self.info("Current Platform: " + sys.platform);
-		if not rqrPltfrm in sys.platform:
+		if not expect_platform in sys.platform:
 			self.err("Wrong Platform.");
 			self.byeBye("Bye");
 		else:
-			self.info("Done");
+			self.info("Done\n");
 	def needUser(self, expect_user):
-		print("\n============ Checking User ============");
+		print("============ Checking User ============");
 		self.info("Required User: " + expect_user);
 		self.info("Current User: " + self.getUser());
-		if not self.getUser() == expect_user:
+		if self.getUser() != expect_user:
 			self.byeBye("Bye");
 		else:
-			self.info("Done");
+			self.info("Done\n");
 
 	def byeBye(self,input_="See you later."):
 		exit(input_)

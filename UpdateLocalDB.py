@@ -11,5 +11,9 @@ ktk = KyanToolKit_Py.KyanToolKit_Py();
 ktk.needPlatform("win");
 ktk.needUser("Kyan");
 
-db_bakcup_file_name = datetime.datetime.now();
-ktk.info(db_bakcup_file_name);
+
+time_now = datetime.datetime.strftime(datetime.datetime.now(),'%Y%m%d-%H%M%S');
+prefix = "tickets_";
+append = ".sql"
+sql_file_name = prefix + time_now + append;
+ktk.info(sql_file_name);
