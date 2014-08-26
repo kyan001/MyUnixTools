@@ -22,5 +22,5 @@ if not "linux" in sys.platform:
 ktk = KyanToolKit_Py.KyanToolKit_Py()
 
 #--Update & Upgrade-----------------------------------------------
-ktk.RunCmd("sudo apt-get update")
-ktk.RunCmd("sudo apt-get upgrade")
+ktk.runCmd("sudo apt-get update")
+ktk.runCmd("sudo apt-get upgrade")

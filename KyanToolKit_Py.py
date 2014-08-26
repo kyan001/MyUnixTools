@@ -1,9 +1,10 @@
 ##################################################################
-# Version 1.3
+# Version 1.4
 ##################################################################
 import os
 import sys
 import time
+import getpass;
 class KyanToolKit_Py(object):
 	def __init__(self,trace_file_="trace.xml"):
 		self.trace_file = trace_file_
@@ -35,7 +36,7 @@ class KyanToolKit_Py(object):
 			os.system('clear')
 		else:
 			os.system('clear')
-			self.Err("No clearScreen for " + sys.platform)
+			self.err("No clearScreen for " + sys.platform)
 
 	def pressToContinue(self,input_="..."):
 		#PY2# raw_input(input_)
@@ -57,6 +58,28 @@ class KyanToolKit_Py(object):
 			self.byeBye("[ERR] Invalid Choice")
 		return choices_[numerical_choice-1]
 
+	def getUser(self):
+		return getpass.getUser();
+
+	def needPlatform(self, expect_platform):
+		print("\n============ Checking Platform ============");
+		self.info("Required Platform: " + expect_platform);
+		self.info("Current Platform: " + sys.platform);
+		if not rqrPltfrm in sys.platform:
+			self.err("Wrong Platform.");
+			self.byeBye("Bye");
+		else:
+			self.info("Done");
+	def needUser(self, expect_user):
+		print("\n============ Checking User ============");
+		self.info("Required User: " + expect_user);
+		self.info("Current User: " + self.getUser();
+		if not self.getUser() == expect_user:
+			self.byeBye("Bye");
+		else:
+			self.info("Done");
+
+
 	def byeBye(self,input_="See you later."):
 		exit(input_)
 
@@ -75,22 +98,22 @@ class KyanToolKit_Py(object):
 		trace = open(self.trace_file,'a')
 		trace.write(trace_header + trace_content + "\n</" + trace_type + ">\n")
 
-	def RunCmd(self, words):
+	def runCmd(self, words):
 		print(self.banner(words))
 		result = os.system(words)
-		self.CheckResult(result)
+		self.checkResult(result)
 
-	def CheckResult(self, result):
+	def checkResult(self, result):
 		if 0 == result:
-			self.Info("Done")
+			self.info("Done")
 		else:
 			self.Warn("Failed")
 
-	def Info(self, words):
+	def info(self, words):
 		print("[INFO] " + words)
 
-	def Warn(self, words):
+	def warn(self, words):
 		print("[WARNING] " + words)
 
-	def Err(self, words):
+	def err(self, words):
 		print("[ERROR] " + words)

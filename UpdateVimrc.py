@@ -21,24 +21,22 @@ ktk = KyanToolKit_Py.KyanToolKit_Py()
 user = getpass.getuser()
 
 #--Pre-conditions Check-------------------------------------------
-if not "linux" in sys.platform:
-	ktk.Err("platform not linux, is " + sys.platform)
-	sys.exit()
+ktk.needPlatform("linux");
 #--get user-------------------------------------------------------
 if len(sys.argv) <= 1:
 	ktk.Warn("User not passed, using current user.")
 else:
 	user = sys.argv[1]
 vimrc_file = "/home/" + user + "/.vimrc"
-ktk.Info("User = " + user)
-ktk.Info("File = " + vimrc_file)
+ktk.info("User = " + user)
+ktk.info("File = " + vimrc_file)
 #--touch file and change owner-----------------------------------
 if not os.path.exists(vimrc_file):
-	ktk.Info(vimrc_file + " not exists. Create one")
-	ktk.RunCmd("touch " + vimrc_file)
-	ktk.RunCmd("chown " + user + " " + vimrc_file)
+	ktk.info(vimrc_file + " not exists. Create one")
+	ktk.runCmd("touch " + vimrc_file)
+	ktk.runCmd("chown " + user + " " + vimrc_file)
 else:
-	ktk.Info(vimrc_file + " already exists")
+	ktk.info(vimrc_file + " already exists")
 #--write file----------------------------------------------------
 # \!:1 = 1st argument
 vimrc_template = """\" -----
@@ -74,4 +72,4 @@ final_string = vimrc_template
 # write and close
 v_file.write(final_string)
 v_file.close()
-ktk.Info("Done. Enjoy.")
+ktk.info("Done. Enjoy.")

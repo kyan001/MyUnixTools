@@ -21,24 +21,22 @@ ktk = KyanToolKit_Py.KyanToolKit_Py()
 user = getpass.getuser()
 
 #--Pre-conditions Check-------------------------------------------
-if not "linux" in sys.platform:
-	ktk.Err("platform not linux, is " + sys.platform)
-	sys.exit()
+ktk.needPlatform("linux");
 #--get user-------------------------------------------------------
 if len(sys.argv) <= 1:
 	ktk.Warn("User not passed, using current user.")
 else:
 	user = sys.argv[1]
 alias_file = "/home/" + user + "/.aliases_" + user
-ktk.Info("User = " + user)
-ktk.Info("File = " + alias_file)
+ktk.info("User = " + user)
+ktk.info("File = " + alias_file)
 #--touch file and change owner-----------------------------------
 if not os.path.exists(alias_file):
-	ktk.Info(alias_file + " not exists. Create one")
-	ktk.RunCmd("touch " + alias_file)
-	ktk.RunCmd("chown " + user + " " + alias_file)
+	ktk.info(alias_file + " not exists. Create one")
+	ktk.runCmd("touch " + alias_file)
+	ktk.runCmd("chown " + user + " " + alias_file)
 else:
-	ktk.Info(alias_file + " already exists")
+	ktk.info(alias_file + " already exists")
 #--write file----------------------------------------------------
 # \!:1 = 1st argument
 alias_template = """# -----
@@ -70,4 +68,4 @@ final_string = alias_template.replace("${v_username}",v_username).replace("${Kya
 # write and close
 a_file.write(final_string)
 a_file.close()
-ktk.Info("Done. Enjoy.")
+ktk.info("Done. Enjoy.")
