@@ -50,13 +50,20 @@ class KyanToolKit_Py(object):
 	def getChoice(self,choices_):
 		out_print = ""
 		index = 1
-		for i in choices_:
-			out_print += "\n" + str(index) + " - " + str(i)
+		for item in choices_:
+			out_print += "\n" + str(index) + " - " + str(item)
 			index += 1
-		numerical_choice = int(self.getInput(out_print))
-		if numerical_choice > len(choices_):
-			self.byeBye("[ERR] Invalid Choice")
-		return choices_[numerical_choice-1]
+		user_choice = self.getInput(out_print);
+		if user_choice in choices_:
+			return user_choice;
+		elif user_choice.isdigit():
+			numerical_choice = int(user_choice);
+			if numerical_choice > len(choices_):
+				self.byeBye("[ERR] Invalid Choice")
+			return choices_[numerical_choice-1]
+		else:
+			self.err("Please enter a valid choice");
+			return self.getChoice(choices_);
 
 	def getUser(self):
 		return getpass.getuser();
@@ -98,15 +105,22 @@ class KyanToolKit_Py(object):
 		trace.write(trace_header + trace_content + "\n</" + trace_type + ">\n")
 
 	def runCmd(self, words):
-		print(self.banner(words))
-		result = os.system(words)
-		self.checkResult(result)
+		if len(words) > 80:
+			def breakCommands(cmd):
+				formatted_cmd = cmd.replace(' -','\n# \t-');
+				formatted_cmd = "##########################.\n# " + formatted_cmd + "\n##########################.";
+				return formatted_cmd;
+			print(breakCommands(words));
+		else:
+			print(self.banner(words));
+		result = os.system(words);
+		self.checkResult(result);
 
 	def checkResult(self, result):
 		if 0 == result:
-			self.info("Done")
+			self.info("Done\n")
 		else:
-			self.warn("Failed")
+			self.warn("Failed\n")
 
 	def info(self, words):
 		print("[INFO] " + words)
