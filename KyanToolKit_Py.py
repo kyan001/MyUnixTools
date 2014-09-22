@@ -1,5 +1,5 @@
 ##################################################################
-# Version 1.4
+# Version 1.5
 ##################################################################
 import os
 import sys
@@ -115,6 +115,10 @@ class KyanToolKit_Py(object):
 			print(self.banner(words));
 		result = os.system(words);
 		self.checkResult(result);
+
+	def readCmd(self, words):
+		result = os.popen(words).read();
+		return result;
 
 	def checkResult(self, result):
 		if 0 == result:
