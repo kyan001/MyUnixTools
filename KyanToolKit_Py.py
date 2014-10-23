@@ -1,5 +1,5 @@
 ##################################################################
-# Version 1.8
+# Version 1.9
 ##################################################################
 import os
 import sys
@@ -73,7 +73,7 @@ class KyanToolKit_Py(object):
 		except AttributeError:
 			words_list = "";
 			for s in words:
-				words_list += s;
+				words_list += " "+s;
 			print(self.banner(words_list));
 		result = subprocess.Popen(words);
 
