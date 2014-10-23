@@ -1,5 +1,5 @@
 ##################################################################
-# Version 1.7
+# Version 1.8
 ##################################################################
 import os
 import sys
@@ -68,7 +68,13 @@ class KyanToolKit_Py(object):
 		self.checkResult(result);
 
 	def pOpen(self, words):
-		print("##########################.\n# " + words + "\n##########################.");
+		try:
+			print(self.banner(words));
+		except AttributeError:
+			words_list = "";
+			for s in words:
+				words_list += s;
+			print(self.banner(words_list));
 		result = subprocess.Popen(words);
 
 	def readCmd(self, words):
