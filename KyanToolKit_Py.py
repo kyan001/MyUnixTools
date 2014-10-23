@@ -68,13 +68,10 @@ class KyanToolKit_Py(object):
 		self.checkResult(result);
 
 	def pOpen(self, words):
-		try:
+		if len(words) > 80:
+			print(self.breakCommands(words));
+		else:
 			print(self.banner(words));
-		except AttributeError:
-			words_list = "";
-			for s in words:
-				words_list += " "+s;
-			print(self.banner(words_list));
 		result = subprocess.Popen(words);
 
 	def readCmd(self, words):
@@ -147,7 +144,7 @@ class KyanToolKit_Py(object):
 		else:
 			self.warn("Failed\n")
 
-	def breakCommands(cmd):
+	def breakCommands(self, cmd):
 		formatted_cmd = cmd.replace(' -','\n# \t-');
 		formatted_cmd = "##########################.\n# " + formatted_cmd + "\n##########################.";
 		return formatted_cmd;
