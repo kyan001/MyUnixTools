@@ -1,5 +1,5 @@
 ##################################################################
-# Version 1.6
+# Version 1.7
 ##################################################################
 import os
 import sys
@@ -68,7 +68,7 @@ class KyanToolKit_Py(object):
 		self.checkResult(result);
 
 	def pOpen(self, words):
-		print(self.banner(words));
+		print("##########################.\n# " + words + "\n##########################.");
 		result = subprocess.Popen(words);
 
 	def readCmd(self, words):
