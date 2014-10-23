@@ -68,10 +68,7 @@ class KyanToolKit_Py(object):
 		self.checkResult(result);
 
 	def pOpen(self, words):
-		if len(words) > 80:
-			print(self.breakCommands(words));
-		else:
-			print(self.banner(words));
+		print(words);
 		result = subprocess.Popen(words);
 
 	def readCmd(self, words):
