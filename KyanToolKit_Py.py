@@ -70,6 +70,7 @@ class KyanToolKit_Py(object):
 	def pOpen(self, words):
 		print(words);
 		result = subprocess.Popen(words);
+		return result;
 
 	def readCmd(self, words):
 		result = os.popen(words).read();
