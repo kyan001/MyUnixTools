@@ -142,14 +142,14 @@ else
 		RunCmd "touch /home/${v_username}/.aliases_${v_username}"
 		RunCmd "chown ${v_username} /home/${v_username}/.aliases_${v_username}"
 		pInfo "[ Write /home/${v_username}/.aliases_${v_username} file ] \t..."
-		python3 "./UpdateAliases.py" ${v_username}
+		python3 "python3 ./UpdateAliases.py" ${v_username}
 		CheckResult
 
 		# Create user .vimrc file
 		RunCmd "touch /home/${v_username}/.vimrc"
 		RunCmd "chown ${v_username} /home/${v_username}/.vimrc"
 		pInfo "[ Write /home/${v_username}/.vimrc file ] \t..."
-		python3 "./UpdateVimrc.py" ${v_username}
+		python3 "python3 ./UpdateVimrc.py" ${v_username}
 		CheckResult
 	fi
 fi
