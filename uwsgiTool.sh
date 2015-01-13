@@ -18,7 +18,7 @@
 VN="\e[0m";VB="\e[1m";VU="\e[4m";VG="\e[2m";VR="\e[31m";VP="\e[35m";VBLUE="\e[34m";
 # KTK
 KyanToolKit_Unix_Folder="/home/kyan001/KyanToolKit_Unix"
-uwsgi_xml = "/var/www/portal/uwsgi.xml"
+uwsgi_xml="/var/www/portal/uwsgi.xml"
 
 #--Common Macros--------------------------------------------------
 Bold(){ echo -e "${VB}$1${VN}"; }
@@ -55,27 +55,25 @@ stop_flag=0;
 reload_flag=0;
 
 #--Param Processing-----------------------------------------------
-until [ $# = 0 ]
-do
+if [ $# = 1 ]
+then
 	case "$1" in
-	-start)
-		start_flag=1;
-		shift
-		;;
-	-stop)
-		stop_flag=1;
-		shift
-		;;
-	-reload)
-		reload_flag=1;
-		shift
-		;;
-	*)
-		echo -e "${VR}${VB}[ERR] Wrong parameter: $1${VN}";
-		shift
-		;;
+		-start)
+			start_flag=1;
+			;;
+		-stop)
+			stop_flag=1;
+			;;
+		-reload)
+			reload_flag=1;
+			;;
+		*)
+			echo -e "${VR}${VB}[ERR] Wrong parameter: $1${VN}";
+			;;
 	esac
-done
+else
+	pErr "Please Enter -start / -stop / -reload";
+fi
 
 #--Main-----------------------------------------------------------
 sudo echo ""
