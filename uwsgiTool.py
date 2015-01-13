@@ -19,8 +19,7 @@ ktk = KyanToolKit_Py.KyanToolKit_Py()
 
 #--Pre-conditions Check-------------------------------------------
 ktk.needPlatform("linux");
-#--get user-------------------------------------------------------
-ktk.needUser("root");
+ktk.runCmd("sudo echo ''");
 #--set params-----------------------------------------------------
 uwsgi_xml="/var/www/portal/uwsgi.xml"
 pid_file="/tmp/uwsgi.pid"
