@@ -78,7 +78,7 @@ fi
 #--Main-----------------------------------------------------------
 sudo echo ""
 if [ ${start_flag} = 1 ]
-then	RunCmd "sudo uwsgi -x '${uwsgi_xml}' --pidfile '/tmp/uwsgi.pid' &";
+then	sudo uwsgi -x '${uwsgi_xml}' --pidfile '/tmp/uwsgi.pid' &;
 fi
 
 if [ ${stop_flag} = 1 ]
