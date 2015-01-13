@@ -28,17 +28,17 @@ operations=["start","stop","reload"];
 oprtn="";
 if len(sys.argv) != 1:
     oprtn = ktk.getChoice(operations);
-else if sys.argv[0] in operations:
+elif sys.argv[0] in operations:
     oprtn = sys.argv[0];
 else:
     ktk.err("Wrong Params: " + sys.argv[0]);
     ktk.byeBye();
-
+#--run commands---------------------------------------------------
 if "start" == oprtn:
     ktk.runCmd("sudo uwsgi -x '" + uwsgi_xml +"' --pidfile '" + pid_file + "' &");
-else if "stop" == oprtn:
+elif "stop" == oprtn:
     ktk.runCmd("sudo uwsgi --stop " + pid_file);
-else if "reload" == oprtn:
+elif "reload" == oprtn:
     ktk.runCmd("sudo uwsgi --reload " + pid_file);
 else:
     ktk.err("Wrong operation: " + oprtn);
