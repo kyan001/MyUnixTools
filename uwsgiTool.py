@@ -25,12 +25,12 @@ uwsgi_xml="/var/www/portal/uwsgi.xml"
 pid_file="/tmp/uwsgi.pid"
 operations=["start","stop","reload"];
 oprtn="";
-if len(sys.argv) != 1:
+if len(sys.argv) != 2:
     oprtn = ktk.getChoice(operations);
-elif sys.argv[0] in operations:
-    oprtn = sys.argv[0];
+elif sys.argv[1] in operations:
+    oprtn = sys.argv[1];
 else:
-    ktk.err("Wrong Params: " + sys.argv[0]);
+    ktk.err("Wrong Params: " + sys.argv[1]);
     ktk.byeBye();
 #--run commands---------------------------------------------------
 if "start" == oprtn:
