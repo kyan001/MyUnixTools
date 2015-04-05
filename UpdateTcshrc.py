@@ -40,7 +40,7 @@ if not os.path.exists(tcshrc_file):
 else:
     ktk.info(tcshrc_file + " already exists")
 #--write file----------------------------------------------------
-final_string = "source '" + aliases_file;
+final_string = "source '" + aliases_file + "'";
 t_file = open(tcshrc_file,'w')
 t_file.write(final_string)
 t_file.close()
