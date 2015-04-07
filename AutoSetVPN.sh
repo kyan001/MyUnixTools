@@ -3,13 +3,13 @@
 #=================================================================
 # AutoSetVPN.sh
 #   Automatically set VPN configs. Use -refresh to refresh VPN connection
-#	
+#
 # HISTORY
 #-----------------------------------------------------------------
 #     DATE    |     AUTHOR     |  VERSION | COMMENT
 #-------------+----------------+----------+-----------------------
 #  2013-11-03 |     YAN Kai    |   V1.0   | Script Creation
-#             |                |          |                
+#             |                |          |
 #-----------------------------------------------------------------
 #=================================================================
 #
@@ -20,7 +20,7 @@ VN="\e[0m";VB="\e[1m";VU="\e[4m";VG="\e[2m";VR="\e[31m";VP="\e[35m";VBLUE="\e[34
 # KTK
 KyanToolKit_Unix_Folder="/home/kyan001/KyanToolKit_Unix"
 # Parameters
-local_ip="173.230.148.199"
+local_ip="10.100.0.1"
 remote_ip="10.100.0.2-20"
 ms_dns_1="74.207.242.5"
 ms_dns_2="8.8.8.8"
@@ -110,7 +110,7 @@ then
 	echo -e "(No Change) \c"
 else
 	echo "localip $local_ip" >> /etc/pptpd.conf
-	echo "remoteip $remote_ip" >> /etc/pptpd.conf	
+	echo "remoteip $remote_ip" >> /etc/pptpd.conf
 fi
 CheckResult
 
@@ -157,7 +157,8 @@ pInfo "[ sysctl -p ]"
 sysctl -p
 
 # set iptables
-RunCmd "iptables -t nat -A POSTROUTING -s ${iptables_s} -o ${iptables_o} -j MASQUERADE"
+RunCmd "sudo iptables -t nat -A POSTROUTING -s ${iptables_s} -o ${iptables_o} -j MASQUERADE"
+RunCmd "sudo iptables -I FORWARD -p gre -j ACCEPT"
 
 # Write iptables to startup.
 pInfo "[ iptables-save > /etc/iptables-rules ]"
