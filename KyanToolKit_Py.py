@@ -12,6 +12,7 @@ class KyanToolKit_Py(object):
 	def __init__(self,trace_file_="trace.xml"):
 		self.trace_file = trace_file_
 		pass
+
 	def __del__(self):
 		pass
 
@@ -53,14 +54,20 @@ class KyanToolKit_Py(object):
 			os.system('clear')
 			self.err("No clearScreen for " + sys.platform)
 
-	def pressToContinue(self,input_="..."):
+	def pressToContinue(self,input_="\nPress Enter to Continue...\n"):
 		#PY2# raw_input(input_)
 		input(input_)
+
+	def pause(self):
+		self.needPlatform("win32");
+		print("\n");
+		os.system("pause");
 
 	def byeBye(self,input_="See you later."):
 		exit(input_)
 
 	def runCmd(self, words):
+		'run command and show if success or failed'
 		if len(words) > 80:
 			print(self.breakCommands(words));
 		else:
@@ -78,10 +85,11 @@ class KyanToolKit_Py(object):
 		return result;
 
 #--Get Information------------------------------------------------
-	def getInput(self,question_,prompt_='> '):
-		print(question_)
+	def getInput(self,question='',prompt='> '):
+		if '' != question:
+			print(question)
 		#PY2# return raw_input(prompt_).strip()
-		return input(prompt_).strip()
+		return input(prompt).strip()
 
 	def getChoice(self,choices_):
 		out_print = ""
