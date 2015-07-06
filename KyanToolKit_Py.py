@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 ##################################################################
-# Version 2.2
+# Version 2.3
 ##################################################################
 import os, sys
 import time
 import getpass
 import subprocess, shlex
 import urllib.request
+import threading
 
 class KyanToolKit_Py(object):
 	def __init__(self,trace_file_="trace.xml"):
@@ -16,6 +17,13 @@ class KyanToolKit_Py(object):
 	def __del__(self):
 		pass
 
+	def async(input_func): #decorator
+		def callInputFunc(*args, **kwargs):
+			t = threading.Thread(target=input_func, args=args, kwargs=kwargs)
+			return t.start()
+		return callInputFunc
+
+	@async
 	def update(self):
 		ktk_url = "https://raw.githubusercontent.com/kyan001/KyanToolKit_Unix/master/KyanToolKit_Py.py"
 		try:
@@ -25,7 +33,7 @@ class KyanToolKit_Py(object):
 				ktk_file.write(ktk_codes);
 			self.info("KyanToolKit_Py.py update Success")
 		except Exception as e:
-			self.warn("KyanToolKit_Py Update Failed: " + e)
+			self.warn("KyanToolKit_Py Update Failed: " + str(e))
 
 #--Text Process---------------------------------------------------
 	def banner(self,content_="Well Come"):
