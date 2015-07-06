@@ -1,18 +1,23 @@
 class FakeOut:
-    '''用于重定向 sys.stdout'''
+    '''
+    用于重定向 sys.stdout
+    系统默认调用 sys.stdout.write()
+    '''
     def __init__(self):
-        self.buffer = [] #list
+        self.list = [] #(list)
+        self.buffer = ""
 
     def write(self, words):
-        import sys
-        sys.stderr.write(words.replace("\n",r'\n'))
-        self.buffer.append(words)
-
-    def read(self):
-        return self.buffer
+        self.buffer += words
+        if words == '\n': #print会自动单独write一个"\n"在末尾，此时讲打印内容放入list内。
+            self.flush();
 
     def readline(self):
-        return self.buffer.pop()
+        return self.list.pop()
+
+    def flush(self):
+        self.list.append(self.buffer)
 
     def clean(self):
-        self.buffer = [] #list
+        self.list = [] #(list)
+        self.buffer = ""

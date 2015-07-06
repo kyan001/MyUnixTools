@@ -47,19 +47,20 @@ class KyanToolKit_Py(object):
 #--System Fucntions-----------------------------------------------
 	def clearScreen(self):
 		if "win" in sys.platform:
-			if os.system('cls')==0:
-				return True;
-		if "linux" in sys.platform:
-			if os.system('clear')==0:
-				return True;
-		self.err("No clearScreen for " + sys.platform)
-		return False;
+			os.system('cls')
+		elif "linux" in sys.platform:
+			os.system('clear')
+		else:
+			self.err("No clearScreen for " + sys.platform)
 
 	def pressToContinue(self,input_="\nPress Enter to Continue...\n"):
 		#PY2# raw_input(input_)
 		input(input_)
 
-	def byeBye(self,input_="See you later."):
+	def byeBye(self,input_="See you later"): #BWC
+		self.bye(input_)
+
+	def bye(self, input_='See you later'):
 		exit(input_)
 
 	def runCmd(self, words):

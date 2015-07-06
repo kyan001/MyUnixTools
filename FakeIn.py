@@ -1,19 +1,21 @@
 class FakeIn:
-    '''用于重定向 sys.stdin'''
+    '''
+    用于重定向 sys.stdin
+    系统默认调用 sys.stdin.readline()[:-1]
+    '''
     def __init__(self):
-        self.buffer = ""
+        self.list = [] #(list)
 
     def readline(self):
-        return self.buffer
+        return self.list.pop()
 
     def write(self, words='\n'):
-        self.buffer = words;
-        # buffer[-1] must be '\n'
-        if not self.buffer:
-            self.buffer = "\n"
-        else:
-            if self.buffer[-1]!="\n":
-                self.buffer = self.buffer + "\n"
+        # list[-1] must be '\n'
+        if words and words[-1]=='\n':
+            pass
+        else: #调用write("")时，或参数最后一位不是\n时
+            words += '\n'
+        self.list.append(words)
 
     def clean(self):
-        self.buffer = '\n'
+        self.list = '\n'
