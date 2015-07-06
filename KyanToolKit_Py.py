@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 ##################################################################
-# Version 2.0
+# Version 2.2
 ##################################################################
-import os
-import sys
+import os, sys
 import time
-import getpass;
-import subprocess;
+import getpass
+import subprocess, shlex
+import urllib.request
 
 class KyanToolKit_Py(object):
 	def __init__(self,trace_file_="trace.xml"):
@@ -15,6 +15,17 @@ class KyanToolKit_Py(object):
 
 	def __del__(self):
 		pass
+
+	def update(self):
+		ktk_url = "https://raw.githubusercontent.com/kyan001/KyanToolKit_Unix/master/KyanToolKit_Py.py"
+		try:
+			ktk_req = urllib.request.urlopen(ktk_url)
+			ktk_codes = ktk_req.read()
+			with open("KyanToolKit_Py.py", "wb") as ktk_file:
+				ktk_file.write(ktk_codes);
+			self.info("KyanToolKit_Py.py update Success")
+		except Exception as e:
+			self.warn("KyanToolKit_Py Update Failed: " + e)
 
 #--Text Process---------------------------------------------------
 	def banner(self,content_="Well Come"):
@@ -63,23 +74,20 @@ class KyanToolKit_Py(object):
 	def bye(self, input_='See you later'):
 		exit(input_)
 
-	def runCmd(self, words):
+	def runCmd(self, cmd):
 		'run command and show if success or failed'
-		if len(words) > 80:
-			print(self.breakCommands(words));
+		if len(cmd) > 80:
+			print(self.breakCommands(cmd));
 		else:
-			print(self.banner(words));
-		result = os.system(words);
+			print(self.banner(cmd));
+		result = os.system(cmd);
 		self.checkResult(result);
 
-	def pOpen(self, words):
-		print(words);
-		result = subprocess.Popen(words);
-		return result;
-
-	def readCmd(self, words):
-		result = os.popen(words).read();
-		return result;
+	def readCmd(self, cmd):
+		args = shlex.split(cmd);
+		proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+		(proc_stdout, proc_stderr) = proc.communicate(input=None) # input = proc_stdin
+		return proc_stdout.decode(); # stdout & stderr is in bytes format
 
 #--Get Information------------------------------------------------
 	def getInput(self,question='',prompt='> '):
@@ -108,14 +116,12 @@ class KyanToolKit_Py(object):
 
 #--Pre-checks---------------------------------------------------
 	def needPlatform(self, expect_platform):
-		print("============ Checking Platform ============");
-		self.info("Required Platform: " + expect_platform);
-		self.info("Current Platform: " + sys.platform);
+		self.info("Platform Require: " + expect_platform + ', Current: ' + sys.platform);
 		if not expect_platform in sys.platform:
-			self.err("Wrong Platform.");
-			self.byeBye("Bye");
+			self.byeBye("Wrong Platform.");
 		else:
 			self.info("Done\n");
+
 	def needUser(self, expect_user):
 		print("============ Checking User ============");
 		self.info("Required User: " + expect_user);

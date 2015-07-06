@@ -74,19 +74,41 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_checkResult_1(self):
         self.ktk.checkResult(0)
-        self.assertEqual(self.fakeout.readline(), "[INFO] Done\n\n");
+        self.assertEqual(self.fakeout.readline(), "[INFO] Done\n\n")
 
     def test_checkResult_2(self):
         self.ktk.checkResult(1)
-        self.assertEqual(self.fakeout.readline(), "[WARNING] Failed\n\n");
+        self.assertEqual(self.fakeout.readline(), "[WARNING] Failed\n\n")
 
     def test_runCmd(self):
         self.ktk.runCmd("echo x")
-        self.assertEqual(self.fakeout.readline(), "##########\n# echo x #\n##########\n[INFO] Done\n\n");
-        self.assertEqual(self.fakeos.readline(), "echo x");
+        self.assertEqual(self.fakeout.readline(), "##########\n# echo x #\n##########\n[INFO] Done\n\n")
+        self.assertEqual(self.fakeos.readline(), "echo x")
 
     def test_getUser(self):
-        self.assertEqual(self.ktk.getUser(), os.getlogin());
+        self.assertEqual(self.ktk.getUser(), os.getlogin())
+
+    def test_readCmd(self):
+        self.assertEqual(self.ktk.readCmd(r"echo Test Text"), "Test Text\n")
+
+    def test_getInput(self):
+        self.fakein.write("Test Input")
+        self.assertEqual(self.ktk.getInput(), "Test Input")
+        self.assertEqual(self.fakeout.readline(), "> ")
+
+    def test_getChoice_1(self):
+        self.fakein.write("1");
+        self.assertEqual(self.ktk.getChoice(["Test", "Text"]), "Test")
+        self.assertEqual(self.fakeout.readline(), "\n1 - Test\n2 - Text\n> ")
+
+    def test_getChoice_2(self):
+        self.fakein.write("Text");
+        self.assertEqual(self.ktk.getChoice(["Test", "Text"]), "Text")
+        self.assertEqual(self.fakeout.readline(), "\n1 - Test\n2 - Text\n> ")
+
+    def test_needPlatform(self):
+        self.ktk.needPlatform(sys.platform)
+        self.assertEqual(self.fakeout.readline(), "[INFO] Platform Require: " + sys.platform + ", Current: " + sys.platform + "\n[INFO] Done\n\n");
 
 if __name__ == '__main__':
     KyanToolKit_Py.KyanToolKit_Py().clearScreen()
