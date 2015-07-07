@@ -29,12 +29,10 @@ class KyanToolKit_Py(object):
             self = args[0]
             mutex = self.mutex.get('stdout')
             if mutex.acquire():
-                print("locked")
                 try:
                     return input_func(*args, **kwargs)
                 finally:
                     mutex.release()
-                    print("unlocked")
         return callInputFunc
 
     def async(input_func): #decorator
@@ -111,16 +109,12 @@ class KyanToolKit_Py(object):
 #--Get Information------------------------------------------------
     @lockStdout
     def getInput(self,question='',prompt='> '):
-        self.mutex['stdout'] = threading.Lock()
         if '' != question:
             print(question)
         #PY2# return raw_input(prompt_).strip()
         return str(input(prompt)).strip()
-        self.mutex['stdout'].release()
 
-    @lockStdout
     def getChoice(self,choices_):
-        self.mutex['stdout'] = threading.Lock()
         out_print = ""
         index = 1
         for item in choices_:
