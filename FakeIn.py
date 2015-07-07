@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class FakeIn:
     '''
     用于重定向 sys.stdin

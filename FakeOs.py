@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class FakeOs:
     '''用于重定向 os.system'''
     def __init__(self):
