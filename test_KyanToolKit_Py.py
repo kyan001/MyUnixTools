@@ -3,6 +3,7 @@ import unittest
 import KyanToolKit_Py
 import FakeOut, FakeIn, FakeOs
 import sys, os
+import threading, time
 
 class test_KyanToolKitPy(unittest.TestCase):
     '''
@@ -33,8 +34,13 @@ class test_KyanToolKitPy(unittest.TestCase):
         sys.stdin = self.console_in
         os.system = self.os_system
 
+    def test_init(self):
+        'testing __init__()'
+        self.assertTrue(self.ktk.trace_file)
+        self.assertIsNotNone(self.ktk.q.get('stdout'))
+        self.assertIsNotNone(self.ktk.mutex.get('stdout'))
+
     def test_banner(self):
-        'banner is the first test'
         expect_word = '###############\n#  Test Text  #\n###############'
         self.assertEqual(expect_word, self.ktk.banner("Test Text"))
 
@@ -110,6 +116,34 @@ class test_KyanToolKitPy(unittest.TestCase):
     def test_needPlatform(self):
         self.ktk.needPlatform(sys.platform)
         self.assertEqual(self.fakeout.readline(), "[INFO] Platform Require: " + sys.platform + ", Current: " + sys.platform + "\n[INFO] Done\n\n");
+
+    def test_asyncPrint_simple(self):
+        self.ktk.asyncPrint("Test Text");
+        self.assertEqual(self.fakeout.readline(), "Test Text\n")
+        self.assertFalse(self.ktk.mutex.get('stdout').locked())
+
+    def test_asyncPrint_full(self):
+        mutex = self.ktk.mutex.get('stdout');
+        asyncPrint_called = threading.Event()
+        def lockMutex():
+            if mutex.acquire(): #上锁
+                asyncPrint_called.wait() # wait until asyncPrint called
+                self.assertIsNone(self.fakeout.readline())
+                mutex.release() #放锁
+        t = threading.Thread(target=lockMutex)
+        t.start() # mutex locked
+        self.ktk.asyncPrint("Test Text")
+        asyncPrint_called.set()
+        t.join() # wait mutex released
+        self.assertEqual(self.fakeout.readline(), "Test Text\n")
+        self.assertFalse(self.ktk.mutex.get('stdout').locked())
+
+    def test_TRACE(self):
+        f = self.ktk.trace_file
+        self.assertFalse(os.path.exists(f))
+        self.ktk.TRACE("Test Text")
+        self.assertTrue(os.path.exists(f))
+        os.remove(f)
 
 if __name__ == '__main__':
     KyanToolKit_Py.KyanToolKit_Py().clearScreen()
