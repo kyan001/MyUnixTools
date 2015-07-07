@@ -31,9 +31,9 @@ class KyanToolKit_Py(object):
 			ktk_codes = ktk_req.read()
 			with open("KyanToolKit_Py.py", "wb") as ktk_file:
 				ktk_file.write(ktk_codes);
-			self.info("KyanToolKit_Py.py update Success")
+			print("\n(KyanToolKit_Py.py update Success)\n")
 		except Exception as e:
-			self.warn("KyanToolKit_Py Update Failed: " + str(e))
+			print("\n(KyanToolKit_Py Update Failed: " + str(e) + ")\n")
 
 #--Text Process---------------------------------------------------
 	def banner(self,content_="Well Come"):
