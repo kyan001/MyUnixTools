@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 ##################################################################
-# Version 2.3
+# Version 2.4
 ##################################################################
 import os, sys
 import time
 import getpass
 import subprocess, shlex
-import urllib.request
+import urllib.request, hashlib
 import threading, queue
 
 class KyanToolKit_Py(object):
@@ -171,14 +171,15 @@ class KyanToolKit_Py(object):
         try:
             ktk_req = urllib.request.urlopen(ktk_url)
             ktk_codes = ktk_req.read()
-            ktk_codes_size = len(ktk_codes)
-            current_codes_size = os.path.getsize("KyanToolKit_Py.py")
-            if ktk_codes_size != current_codes_size:
+            ktk_codes_md5 = hashlib.md5(ktk_codes).hexdigest();
+            with open("KyanToolKit_Py.py", "rb") as ktk_file:
+                ktk_file_md5 = hashlib.md5(ktk_file.read()).hexdigest()
+            if ktk_codes_md5 != ktk_file_md5:
                 with open("KyanToolKit_Py.py", "wb") as ktk_file:
                     ktk_file.write(ktk_codes);
-                self.asyncPrint("\n\n[KyanToolKit_Py.py] Updated ({0} bytes => {1} bytes)\n\n".format(current_codes_size, ktk_codes_size))
+                self.asyncPrint("\n\n[KyanToolKit_Py.py] Updated \n({0} => {1})\n\n".format(ktk_codes_md5, ktk_file_md5))
             else:
-                self.asyncPrint("\n\n[KyanToolKit_Py.py] No Need Update ({0} bytes => {1} bytes)\n\n".format(current_codes_size, ktk_codes_size))
+                self.asyncPrint("\n\n[KyanToolKit_Py.py] No Need Update \n({0})\n\n".format(ktk_codes_md5, ktk_file_md5))
         except Exception as e:
             self.asyncPrint("\n\n[KyanToolKit_Py.py] Update Failed ({0})\n\n".format(str(e)))
             self.asyncPrint("\n")
