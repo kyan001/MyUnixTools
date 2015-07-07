@@ -102,7 +102,7 @@ class KyanToolKit_Py(object):
 		if '' != question:
 			print(question)
 		#PY2# return raw_input(prompt_).strip()
-		return input(prompt).strip()
+		return str(input(prompt)).strip()
 
 	def getChoice(self,choices_):
 		out_print = ""
