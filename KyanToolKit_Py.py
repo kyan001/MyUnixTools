@@ -7,17 +7,35 @@ import time
 import getpass
 import subprocess, shlex
 import urllib.request
-import threading
+import threading, queue
 
 class KyanToolKit_Py(object):
-	def __init__(self,trace_file_="trace.xml"):
-		self.trace_file = trace_file_
+	def __init__(self,trace_file="trace.xml"):
+		self.trace_file = trace_file
+        self.q = {
+            'stdout' : queue.Queue()
+        }
+        self.mutex = {
+            'stdout' : threading.Lock()
+        }
 		pass
 
 	def __del__(self):
 		pass
 
+    def lockStdout(input_func): #decorator
+        '使函数占住stdout，执行期间不让其他线程打印'
+        def callInputFunc(*args, **kwargs):
+            mutex = self.mutex.get('stdout')
+            if mutex.acquire():
+                try:
+                    return input_func(*args, **kwargs)
+                finally:
+                    mutex.release()
+        return callInputFunc
+
 	def async(input_func): #decorator
+        '使函数单开一个线程执行'
 		def callInputFunc(*args, **kwargs):
 			t = threading.Thread(target=input_func, args=args, kwargs=kwargs)
 			return t.start()
@@ -31,9 +49,9 @@ class KyanToolKit_Py(object):
 			ktk_codes = ktk_req.read()
 			with open("KyanToolKit_Py.py", "wb") as ktk_file:
 				ktk_file.write(ktk_codes);
-			print("\n(KyanToolKit_Py.py update Success)\n")
+            self.mutexPrint("\n(KyanToolKit_Py.py update Success)\n")
 		except Exception as e:
-			print("\n(KyanToolKit_Py Update Failed: " + str(e) + ")\n")
+			self.mutexPrint("\n(KyanToolKit_Py Update Failed: " + str(e) + ")\n")
 
 #--Text Process---------------------------------------------------
 	def banner(self,content_="Well Come"):
@@ -99,12 +117,15 @@ class KyanToolKit_Py(object):
 
 #--Get Information------------------------------------------------
 	def getInput(self,question='',prompt='> '):
+        self.mutex['stdout'] = threading.Lock()
 		if '' != question:
 			print(question)
 		#PY2# return raw_input(prompt_).strip()
 		return str(input(prompt)).strip()
+        self.mutex['stdout'].release()
 
 	def getChoice(self,choices_):
+        self.mutex['stdout'] = threading.Lock()
 		out_print = ""
 		index = 1
 		for item in choices_:
@@ -169,3 +190,12 @@ class KyanToolKit_Py(object):
 
 	def getUser(self):
 		return getpass.getuser();
+
+    def mutexPrint(self, words):
+        mutex = self.mutex.get('stdout')
+        q = self.q.get('stdout')
+        if words:
+            q.put(words)
+        if mutex.acquire():
+            while not q.empty():
+                print(q.get())
