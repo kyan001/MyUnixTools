@@ -29,10 +29,12 @@ class KyanToolKit_Py(object):
             self = args[0]
             mutex = self.mutex.get('stdout')
             if mutex.acquire():
+                print("locked")
                 try:
                     return input_func(*args, **kwargs)
                 finally:
                     mutex.release()
+                    print("unlocked")
         return callInputFunc
 
     def async(input_func): #decorator
