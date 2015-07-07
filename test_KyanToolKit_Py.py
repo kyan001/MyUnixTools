@@ -140,10 +140,11 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_TRACE(self):
         f = self.ktk.trace_file
-        self.assertFalse(os.path.exists(f))
+        old_trace_exist = os.path.exists(f)
         self.ktk.TRACE("Test Text")
         self.assertTrue(os.path.exists(f))
-        os.remove(f)
+        if not old_trace_exist:
+            os.remove(f)
 
 if __name__ == '__main__':
     KyanToolKit_Py.KyanToolKit_Py().clearScreen()
