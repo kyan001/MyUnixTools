@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
+import queue
 class FakeOs:
     '''用于重定向 os.system'''
     def __init__(self):
-        self.call_list = [] #(list)
+        self.call_q = queue.LifoQueue() #(stack)
 
     def system(self, cmd):
-        self.call_list.append(cmd);
+        self.call_q.put(cmd);
         return 0;
 
-    def read(self):
-        return self.call_list
-
     def readline(self):
-        return self.call_list.pop();
+        if self.call_q.empty():
+            return None
+        else:
+            return self.call_q.get()
 
     def clean(self):
-        self.call_list = []
+        self.call_q = queue.LifoQueue()

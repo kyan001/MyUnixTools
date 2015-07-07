@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+import queue
 class FakeOut:
     '''
     用于重定向 sys.stdout
     系统默认调用 sys.stdout.write()
     '''
     def __init__(self):
-        self.list = [] #(list)
+        self.q = queue.LifoQueue() #(stack)
         self.buffer = ""
 
     def write(self, words):
@@ -14,11 +15,14 @@ class FakeOut:
             self.flush();
 
     def readline(self):
-        return self.list.pop()
+        if self.q.empty():
+            return None
+        else:
+            return self.q.get()
 
     def flush(self):
-        self.list.append(self.buffer)
+        self.q.put(self.buffer)
 
     def clean(self):
-        self.list = [] #(list)
+        self.q = queue.LifoQueue() #(stack)
         self.buffer = ""
