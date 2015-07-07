@@ -176,14 +176,14 @@ class KyanToolKit_Py(object):
             if ktk_codes_size != current_codes_size:
                 with open("KyanToolKit_Py.py", "wb") as ktk_file:
                     ktk_file.write(ktk_codes);
-                self.asyncPrint("\n(KyanToolKit_Py.py: Updated)")
-                self.asyncPrint("({0} bytes => {1} bytes)\n".format(current_codes_size, ktk_codes_size))
+                self.asyncPrint("\n\t\t[KyanToolKit_Py.py] Updated \
+                    ({0} bytes => {1} bytes)\n".format(current_codes_size, ktk_codes_size))
             else:
-                self.asyncPrint("\n(KyanToolKit_Py.py: No Need Update")
-                self.asyncPrint("({0} bytes => {1} bytes)\n".format(current_codes_size, ktk_codes_size))
+                self.asyncPrint("\n\t\t[KyanToolKit_Py.py] No Need Update \
+                    ({0} bytes => {1} bytes)\n".format(current_codes_size, ktk_codes_size))
         except Exception as e:
-            self.asyncPrint("\n(KyanToolKit_Py.py: Update Failed)")
-            self.asyncPrint("(" + str(e) + ")\n")
+            self.asyncPrint("\n\t\t[KyanToolKit_Py.py] Update Failed ({0})\n".format(str(e)))
+            self.asyncPrint("\n")
 
 #--Internal Uses-------------------------------------------------
     def checkResult(self, result):
