@@ -171,11 +171,19 @@ class KyanToolKit_Py(object):
         try:
             ktk_req = urllib.request.urlopen(ktk_url)
             ktk_codes = ktk_req.read()
-            with open("KyanToolKit_Py.py", "wb") as ktk_file:
-                ktk_file.write(ktk_codes);
-            self.asyncPrint("\n(KyanToolKit_Py.py update Success)\n")
+            ktk_codes_size = len(ktk_codes)
+            current_codes_size = os.path.getsize("KyanToolKit_Py.py")
+            if ktk_codes_size != current_codes_size:
+                with open("KyanToolKit_Py.py", "wb") as ktk_file:
+                    ktk_file.write(ktk_codes);
+                self.asyncPrint("\n(KyanToolKit_Py.py: Updated)")
+                self.asyncPrint("({0} bytes => {1} bytes)\n".format(current_codes_size, ktk_codes_size))
+            else:
+                self.asyncPrint("\n(KyanToolKit_Py.py: No Need Update")
+                self.asyncPrint("({0} bytes => {1} bytes)\n".format(current_codes_size, ktk_codes_size))
         except Exception as e:
-            self.asyncPrint("\n(KyanToolKit_Py Update Failed: " + str(e) + ")\n")
+            self.asyncPrint("\n(KyanToolKit_Py.py: Update Failed)")
+            self.asyncPrint("(" + str(e) + ")\n")
 
 #--Internal Uses-------------------------------------------------
     def checkResult(self, result):

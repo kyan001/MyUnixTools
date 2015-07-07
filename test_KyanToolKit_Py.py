@@ -132,9 +132,12 @@ class test_KyanToolKitPy(unittest.TestCase):
                 mutex.release() #放锁
         t = threading.Thread(target=lockMutex)
         t.start() # mutex locked
+        time.sleep(0.3) # wait lock
         self.ktk.asyncPrint("Test Text")
+        time.sleep(0.3) # wait enough time to be printed
         asyncPrint_called.set()
         t.join() # wait mutex released
+        time.sleep(0.3) # wait enough time to be printed
         self.assertEqual(self.fakeout.readline(), "Test Text\n")
         self.assertFalse(self.ktk.mutex.get('stdout').locked())
 
