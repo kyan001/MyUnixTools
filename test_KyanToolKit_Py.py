@@ -56,6 +56,18 @@ class test_KyanToolKitPy(unittest.TestCase):
         self.ktk.err("Test Text")
         self.assertEqual(self.fakeout.readline(), "[ERROR] Test Text\n")
 
+    def test_md5_string(self):
+        md5 = self.ktk.md5("Test Text")
+        self.assertEqual(md5, 'f1feeaa3d698685b6a6179520449e206')
+
+    def test_md5_int(self):
+        md5 = self.ktk.md5(123)
+        self.assertEqual(md5, '202cb962ac59075b964b07152d234b70')
+
+    def test_md5_bytes(self):
+        md5 = self.ktk.md5(b'Test Text')
+        self.assertEqual(md5, 'f1feeaa3d698685b6a6179520449e206')
+
     def test_clearScreen(self):
         self.ktk.clearScreen()
         self.assertEqual(self.fakeos.readline(), "cls");

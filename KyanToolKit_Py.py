@@ -3,7 +3,7 @@
 # Version 2.4
 ##################################################################
 import os, sys
-import time
+import time, types
 import getpass
 import subprocess, shlex
 import urllib.request, hashlib
@@ -70,6 +70,12 @@ class KyanToolKit_Py(object):
 
     def err(self, words):
         print("[ERROR] " + words)
+
+    def md5(self, words):
+        if type(words) != bytes: # md5的输入必须为bytes类型
+            words = str(words).encode()
+        return hashlib.md5(words).hexdigest();
+
 
 #--System Fucntions-----------------------------------------------
     def clearScreen(self):
@@ -171,9 +177,9 @@ class KyanToolKit_Py(object):
         try:
             ktk_req = urllib.request.urlopen(ktk_url)
             ktk_codes = ktk_req.read()
-            ktk_codes_md5 = hashlib.md5(ktk_codes).hexdigest();
+            ktk_codes_md5 = self.md5(ktk_codes);
             with open("KyanToolKit_Py.py", "rb") as ktk_file:
-                ktk_file_md5 = hashlib.md5(ktk_file.read()).hexdigest()
+                ktk_file_md5 = self.md5(ktk_file.read());
             if ktk_codes_md5 != ktk_file_md5:
                 with open("KyanToolKit_Py.py", "wb") as ktk_file:
                     ktk_file.write(ktk_codes);
