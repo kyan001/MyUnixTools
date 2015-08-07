@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+##################################################################
+# For KTK Version 2.5
+##################################################################
 import unittest
 import KyanToolKit_Py
 import FakeOut, FakeIn, FakeOs
