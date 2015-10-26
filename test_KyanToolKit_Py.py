@@ -128,6 +128,13 @@ class test_KyanToolKitPy(unittest.TestCase):
         self.assertEqual(self.ktk.getChoice(["Test", "Text"]), "Text")
         self.assertEqual(self.fakeout.readline(), "\n1 - Test\n2 - Text\n> ")
 
+    def test_ajax_get(self):
+        url = 'https://api.douban.com/v2/movie/search'
+        param = {'q':'胜者即是正义', 'count':1}
+        result = self.ktk.ajax(url, param, 'get')
+        cast = result.get('subjects')[0].get('casts')[1].get('name')
+        self.assertEqual(cast, '新垣结衣')
+
     def test_needPlatform(self):
         self.ktk.needPlatform(sys.platform)
         self.assertEqual(self.fakeout.readline(), "[INFO] Platform Require: " + sys.platform + ", Current: " + sys.platform + "\n[INFO] Done\n\n");
