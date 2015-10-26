@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##################################################################
-# Version 2.6
+# Version 2.7
 ##################################################################
 import os, sys
 import time, types
@@ -198,10 +198,9 @@ class KyanToolKit_Py(object):
                 with open("KyanToolKit_Py.py", "wb") as ktk_file:
                     ktk_file.write(ktk_codes);
                 self.asyncPrint("\n\n[KyanToolKit_Py.py] Updated \n({0} => {1})\n\n".format(ktk_codes_md5, ktk_file_md5))
-                return True
             else:
                 self.asyncPrint("\n\n[KyanToolKit_Py.py] No Need Update \n({0})\n\n".format(ktk_codes_md5, ktk_file_md5))
-                return True
+            return True
         except Exception as e:
             self.asyncPrint("\n\n[KyanToolKit_Py.py] Update Failed ({0})\n\n".format(str(e)))
             self.asyncPrint("\n")
