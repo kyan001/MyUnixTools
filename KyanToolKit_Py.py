@@ -10,7 +10,7 @@ import urllib.request, hashlib, json
 import threading, queue
 
 class KyanToolKit_Py(object):
-    version = '2.7'
+    version = '2.8'
     def __init__(self,trace_file="trace.xml"):
         self.trace_file = trace_file
         self.q = {
@@ -237,3 +237,7 @@ class KyanToolKit_Py(object):
         q = self.q.get('stdout')
         while not q.empty():
             print(q.get())
+
+if __name__ == '__main__':
+    ktk = KyanToolKit_Py()
+    ktk.update()
