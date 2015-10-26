@@ -10,6 +10,7 @@ import urllib.request, hashlib, json
 import threading, queue
 
 class KyanToolKit_Py(object):
+    version = '2.7'
     def __init__(self,trace_file="trace.xml"):
         self.trace_file = trace_file
         self.q = {
@@ -188,6 +189,7 @@ class KyanToolKit_Py(object):
     @async
     def update(self):
         ktk_url = "https://raw.githubusercontent.com/kyan001/KyanToolKit_Unix/master/KyanToolKit_Py.py"
+        version_old = self.version
         try:
             ktk_req = urllib.request.urlopen(ktk_url)
             ktk_codes = ktk_req.read()
@@ -197,9 +199,9 @@ class KyanToolKit_Py(object):
             if ktk_codes_md5 != ktk_file_md5:
                 with open("KyanToolKit_Py.py", "wb") as ktk_file:
                     ktk_file.write(ktk_codes);
-                self.asyncPrint("\n\n[KyanToolKit_Py.py] Updated \n({0} => {1})\n\n".format(ktk_codes_md5, ktk_file_md5))
+                self.asyncPrint("\n\n[KyanToolKit_Py.py] Updated \n(From Version: {0})\n\n".format(version_old))
             else:
-                self.asyncPrint("\n\n[KyanToolKit_Py.py] No Need Update \n({0})\n\n".format(ktk_codes_md5, ktk_file_md5))
+                self.asyncPrint("\n\n[KyanToolKit_Py.py] No Need Update \n(Version: {0})\n\n".format(version_old))
             return True
         except Exception as e:
             self.asyncPrint("\n\n[KyanToolKit_Py.py] Update Failed ({0})\n\n".format(str(e)))
