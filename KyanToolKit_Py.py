@@ -58,8 +58,8 @@ class KyanToolKit_Py(object):
                         + itsays \
                         + str(self.space_char * int(effective_length/self.GOLDENSECTION*(1-self.GOLDENSECTION)/2)) \
                         + self.special_char
-        content_line_lenght = len(content_line)
-        banner_border = self.special_char * content_line_lenght
+        content_line_length = len(content_line)
+        banner_border = self.special_char * content_line_length
         return banner_border + '\n' + content_line + '\n' + banner_border
 
     def info(self, words):
