@@ -119,14 +119,16 @@ class test_KyanToolKitPy(unittest.TestCase):
         self.assertEqual(self.fakeout.readline(), "> ")
 
     def test_getChoice_1(self):
+        ''' by enter a index number '''
         self.fakein.write("1");
-        self.assertEqual(self.ktk.getChoice(["Test", "Text"]), "Test")
-        self.assertEqual(self.fakeout.readline(), "\n1 - Test\n2 - Text\n> ")
+        self.assertEqual(self.ktk.getChoice(["Txt 1", "Txt 2"]), "Txt 1")
+        self.assertEqual(self.fakeout.readline(), "\n1 - Txt 1\n2 - Txt 2\n> ")
 
     def test_getChoice_2(self):
-        self.fakein.write("Text");
-        self.assertEqual(self.ktk.getChoice(["Test", "Text"]), "Text")
-        self.assertEqual(self.fakeout.readline(), "\n1 - Test\n2 - Text\n> ")
+        ''' by enter the text '''
+        self.fakein.write("Txt 2");
+        self.assertEqual(self.ktk.getChoice(["Txt 1", "Txt 2"]), "Txt 2")
+        self.assertEqual(self.fakeout.readline(), "\n1 - Txt 1\n2 - Txt 2\n> ")
 
     def test_ajax_get(self):
         url = 'https://api.douban.com/v2/movie/search'
@@ -167,6 +169,18 @@ class test_KyanToolKitPy(unittest.TestCase):
         f = self.ktk.trace_file
         old_trace_exist = os.path.exists(f)
         self.ktk.TRACE("Test Text")
+        self.assertTrue(os.path.exists(f))
+        if not old_trace_exist:
+            os.remove(f)
+
+    def test_inTrace(self):
+        f = self.ktk.trace_file
+        old_trace_exist = os.path.exists(f)
+        @self.ktk.inTrace
+        def inTrace():
+            print("Test Text")
+        inTrace()
+        self.assertEqual(self.fakeout.readline(), "Test Text\n")
         self.assertTrue(os.path.exists(f))
         if not old_trace_exist:
             os.remove(f)

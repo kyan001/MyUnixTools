@@ -10,8 +10,8 @@ import urllib.request, hashlib, json
 import threading, queue
 
 class KyanToolKit_Py(object):
-    version = '2.9'
-    def __init__(self,trace_file="trace.xml"):
+    version = '3.0'
+    def __init__(self, trace_file="trace.xml"):
         self.trace_file = trace_file
         self.q = {
             'stdout' : queue.Queue()
@@ -45,7 +45,7 @@ class KyanToolKit_Py(object):
 
 
 #--Text Process---------------------------------------------------
-    def banner(self,content_="Well Come"):
+    def banner(self, content_="Well Come"):
         # char def
         self.special_char = "#"
         self.space_char = " "
@@ -88,11 +88,11 @@ class KyanToolKit_Py(object):
             self.err("No clearScreen for " + sys.platform)
 
     @lockStdout
-    def pressToContinue(self,input_="\nPress Enter to Continue...\n"):
+    def pressToContinue(self, input_="\nPress Enter to Continue...\n"):
         #PY2# raw_input(input_)
         input(input_)
 
-    def byeBye(self,input_="See you later"): #BWC
+    def byeBye(self, input_="See you later"): #BWC
         self.bye(input_)
 
     def bye(self, input_='See you later'):
@@ -115,19 +115,19 @@ class KyanToolKit_Py(object):
 
 #--Get Information------------------------------------------------
     @lockStdout
-    def getInput(self,question='',prompt='> '):
+    def getInput(self, question='', prompt='> '):
         if '' != question:
             print(question)
         #PY2# return raw_input(prompt_).strip()
         return str(input(prompt)).strip()
 
-    def getChoice(self,choices_):
-        out_print = ""
+    def getChoice(self, choices_):
+        assemble_print = ""
         index = 1
         for item in choices_:
-            out_print += "\n" + str(index) + " - " + str(item)
+            assemble_print += "\n" + str(index) + " - " + str(item)
             index += 1
-        user_choice = self.getInput(out_print);
+        user_choice = self.getInput(assemble_print);
         if user_choice in choices_:
             return user_choice;
         elif user_choice.isdigit():
@@ -173,7 +173,7 @@ class KyanToolKit_Py(object):
             self.info("Done\n");
 
 #--Debug---------------------------------------------------------
-    def TRACE(self,input_,trace_type='INFO'):
+    def TRACE(self, input_, trace_type='INFO'):
         trace_content = ''.join(input_)
         current_time = time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
         current_function = sys._getframe().f_back
@@ -187,6 +187,14 @@ class KyanToolKit_Py(object):
                 + ' FUNC="' + current_function_name + '()">\n'
         with open(self.trace_file,'a') as trace:
             trace.write(trace_header + trace_content + "\n</" + trace_type + ">\n")
+
+    def inTrace(self, func): #decorator
+        def call(*args, **kwargs):
+            self.TRACE("Enter " + func.__qualname__ + "()")
+            result = func(*args,**kwargs)
+            self.TRACE("Leave " + func.__qualname__ + "()")
+            return result
+        return call
 
     @async
     def update(self):
