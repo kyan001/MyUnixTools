@@ -101,8 +101,8 @@ class test_KyanToolKitPy(unittest.TestCase):
         self.ktk.runCmd("echo x")
         expect_word = '[INFO] CMD: echo x\n'
         expect_word += '[INFO] Done\n'
-        expect_word = "\n============ Run Command : start ============\n" + expect_word
-        expect_word += "============ Run Command : end   ============\n"
+        expect_word = self.ktk.banner("Run Command") + "\n" + expect_word
+        expect_word += "============ Run Command : end   ============\n\n"
         self.assertEqual(self.fakeout.readline(), expect_word)
         self.assertEqual(self.fakeos.readline(), "echo x")
 
@@ -141,8 +141,8 @@ class test_KyanToolKitPy(unittest.TestCase):
         expect_word = "[INFO] Platform Require: {0}\n".format(sys.platform)
         expect_word += "[INFO] Current: {0}\n".format(sys.platform)
         expect_word += "[INFO] Done\n"
-        expect_word = "\n============ Checking Platform : start ============\n" + expect_word
-        expect_word += "============ Checking Platform : end   ============\n"
+        expect_word = self.ktk.banner("Checking Platform") + "\n" + expect_word
+        expect_word += "============ Checking Platform : end   ============\n\n"
         self.assertEqual(self.fakeout.readline(), expect_word);
 
     def test_needUser(self):
@@ -151,8 +151,8 @@ class test_KyanToolKitPy(unittest.TestCase):
         expect_word = "[INFO] Required User: {0}\n".format(current_user)
         expect_word += "[INFO] Current User: {0}\n".format(current_user)
         expect_word += "[INFO] Done\n"
-        expect_word = "\n============ Checking User : start ============\n" + expect_word
-        expect_word += "============ Checking User : end   ============\n"
+        expect_word = self.ktk.banner("Checking User") + "\n" + expect_word
+        expect_word += "============ Checking User : end   ============\n\n"
         self.assertEqual(self.fakeout.readline(), expect_word);
 
 
