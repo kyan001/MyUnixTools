@@ -89,22 +89,21 @@ class test_KyanToolKitPy(unittest.TestCase):
         self.assertRaises(SystemExit, self.ktk.bye, None)
         #self.assertEqual(self.fakeout.readline(), "See you later")
 
-    def test_breakCommands(self):
-        real_word = self.ktk.breakCommands("Test Text -param 1 -param2")
-        expect_word = '##########################.\n# Test Text\n# \t-param 1\n# \t-param2\n##########################.'
-        self.assertEqual(real_word, expect_word)
-
     def test_checkResult_1(self):
         self.ktk.checkResult(0)
-        self.assertEqual(self.fakeout.readline(), "[INFO] Done\n\n")
+        self.assertEqual(self.fakeout.readline(), "[INFO] Done\n")
 
     def test_checkResult_2(self):
         self.ktk.checkResult(1)
-        self.assertEqual(self.fakeout.readline(), "[WARNING] Failed\n\n")
+        self.assertEqual(self.fakeout.readline(), "[WARNING] Failed\n")
 
     def test_runCmd(self):
         self.ktk.runCmd("echo x")
-        self.assertEqual(self.fakeout.readline(), "##########\n# echo x #\n##########\n[INFO] Done\n\n")
+        expect_word = '[INFO] CMD: echo x\n'
+        expect_word += '[INFO] Done\n'
+        expect_word = "\n============ Run Command : start ============\n" + expect_word
+        expect_word += "============ Run Command : end   ============\n"
+        self.assertEqual(self.fakeout.readline(), expect_word)
         self.assertEqual(self.fakeos.readline(), "echo x")
 
     def test_getUser(self):
@@ -139,7 +138,23 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_needPlatform(self):
         self.ktk.needPlatform(sys.platform)
-        self.assertEqual(self.fakeout.readline(), "[INFO] Platform Require: " + sys.platform + ", Current: " + sys.platform + "\n[INFO] Done\n\n");
+        expect_word = "[INFO] Platform Require: {0}\n".format(sys.platform)
+        expect_word += "[INFO] Current: {0}\n".format(sys.platform)
+        expect_word += "[INFO] Done\n"
+        expect_word = "\n============ Checking Platform : start ============\n" + expect_word
+        expect_word += "============ Checking Platform : end   ============\n"
+        self.assertEqual(self.fakeout.readline(), expect_word);
+
+    def test_needUser(self):
+        current_user = self.ktk.getUser()
+        self.ktk.needUser(current_user)
+        expect_word = "[INFO] Required User: {0}\n".format(current_user)
+        expect_word += "[INFO] Current User: {0}\n".format(current_user)
+        expect_word += "[INFO] Done\n"
+        expect_word = "\n============ Checking User : start ============\n" + expect_word
+        expect_word += "============ Checking User : end   ============\n"
+        self.assertEqual(self.fakeout.readline(), expect_word);
+
 
     def test_asyncPrint_simple(self):
         self.ktk.asyncPrint("Test Text");
