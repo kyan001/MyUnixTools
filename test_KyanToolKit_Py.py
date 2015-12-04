@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##################################################################
-# For KTK Version 2.5
+# For KTK Version 3.2
 ##################################################################
 import unittest
 import KyanToolKit_Py
@@ -70,6 +70,11 @@ class test_KyanToolKitPy(unittest.TestCase):
     def test_md5_bytes(self):
         md5 = self.ktk.md5(b'Test Text')
         self.assertEqual(md5, 'f1feeaa3d698685b6a6179520449e206')
+
+    def test_imageToColor(self):
+        test_url = "http://portal.superfarmer.net/static/img/index/div3_products.png"
+        color = self.ktk.imageToColor(test_url)
+        self.assertEqual(color, (5, 147, 208))
 
     def test_clearScreen(self):
         self.ktk.clearScreen()
