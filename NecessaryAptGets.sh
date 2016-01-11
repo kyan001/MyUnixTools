@@ -3,15 +3,7 @@
 #=================================================================
 # AutoCreateUser.sh
 #   Install necessary softwares on Ubuntu Linux by using apt-get install command.
-#   The list of softwares/libs:
-#	1.tcsh
-#	2.vnc4server
-#	3.vim-gtk
-#   4.kde-workspace-bin
-#	5.konsole
-#	6.python3
-#	7.pptpd
-#	8.iptables
+#   The list of softwares/libs
 #
 # HISTORY
 #-----------------------------------------------------------------
@@ -77,6 +69,8 @@ AptGetInstall "vim-gtk"
 AptGetInstall "kde-workspace-bin"
 AptGetInstall "konsole"
 AptGetInstall "python3"
+AptGetInstall "python3-pip"
+AptGetInstall "vim"
 AptGetInstall "pptpd"
 AptGetInstall "iptables"
 # RunCmd "sudo apt-get update"
