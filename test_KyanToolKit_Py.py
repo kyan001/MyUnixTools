@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##################################################################
-# For KTK Version 3.3
+# For KTK
 ##################################################################
 import unittest
 import KyanToolKit_Py
@@ -12,6 +12,7 @@ class test_KyanToolKitPy(unittest.TestCase):
     '''
     用于测试 KyanToolKit_Py
     '''
+    ktk_version = '3.4'
     def setUp(self):
         self.ktk = KyanToolKit_Py.KyanToolKit_Py()
         # redirect stdout
@@ -36,6 +37,9 @@ class test_KyanToolKitPy(unittest.TestCase):
         sys.stdout = self.console_out
         sys.stdin = self.console_in
         os.system = self.os_system
+
+    def test_version(self):
+        self.assertEqual(self.ktk_version, self.ktk.version)
 
     def test_init(self):
         'testing __init__()'
