@@ -26,4 +26,7 @@ with open(log_path) as f:
             value = clients.setdefault(key, 0)
             clients[key] = value + 1
 print("\nTotal: {} clients:".format(len(clients)))
-print(clients)
+if clients:
+    for (k, v) in clients.items():
+        print("{} : {}".format(k, v))
+
