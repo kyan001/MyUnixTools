@@ -13,6 +13,7 @@
 import re, os, KyanToolKit_Py
 ktk = KyanToolKit_Py.KyanToolKit_Py()
 log_path = '/var/log/dante.log'
+backup_path = '/var/log/dante.log.backup'
 if not os.path.exists(log_path):
     ktk.err("Please enter a valid log path.")
     ktk.bye()
@@ -30,3 +31,12 @@ if clients:
     for (k, v) in clients.items():
         print("{} : {}".format(k, v))
 
+answer = ktk.getInput("Need clear the log? (Y/n)")
+if "Y" == answer.upper():
+    ktk.runCmd("sudo echo")
+    if os.path.exists(backup_path):
+        ktk.runCmd("sudo rm {}".format(backup_path))
+        ktk.runCmd("sudo mv {log} {bck}".format(log=log_path, bck=backup_path))
+        ktk.runCmd("sudo touch {})".format(log_path))
+        ktk.runCmd("sudo chown proxyuser {}".format(log_path))
+        ktk.info("Finish clear the log, old log @ {}".format(backup_path))
