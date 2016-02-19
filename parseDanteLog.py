@@ -37,6 +37,6 @@ if "Y" == answer.upper():
     if os.path.exists(backup_path):
         ktk.runCmd("sudo rm {}".format(backup_path))
         ktk.runCmd("sudo mv {log} {bck}".format(log=log_path, bck=backup_path))
-        ktk.runCmd("sudo touch {})".format(log_path))
+        ktk.runCmd("sudo touch {}".format(log_path))
         ktk.runCmd("sudo chown proxyuser {}".format(log_path))
         ktk.info("Finish clear the log, old log @ {}".format(backup_path))
