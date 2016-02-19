@@ -22,7 +22,7 @@ with open(log_path) as f:
         pattern = re.compile(r': ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*45\.32\.45\.176\.10080')
         matches = pattern.findall(ln)
         if matches:
-            key = matches(1)
+            key = matches[1]
             value = clients.setdefault(key, 0)
             clients[key] = value + 1
 print("\nTotal: {} clients:".format(len(clients)))
