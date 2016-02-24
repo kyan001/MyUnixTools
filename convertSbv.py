@@ -2,6 +2,9 @@ import re, sys
 import KyanToolKit_Py
 ktk = KyanToolKit_Py.KyanToolKit_Py()
 
+# usage：py convertSbv.py ori.sbv srt
+# for .bat：py convertSbv.py %1
+
 if len(sys.argv) > 1:
     filename = sys.argv[1]
     if not '.sbv' in filename:
