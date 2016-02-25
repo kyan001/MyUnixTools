@@ -2,21 +2,16 @@
 #
 # Auto Parse Dante Log
 #
-# HISTORY
-#-----------------------------------------------------------------
-#     DATE    |     AUTHOR     |  VERSION | COMMENT
-#-------------+----------------+----------+-----------------------
-#  2016-02-19 |     YAN Kai    |   V1.0   | Script Creation
-#             |                |          |
-#-----------------------------------------------------------------
-#
 import re, os, KyanToolKit_Py
 ktk = KyanToolKit_Py.KyanToolKit_Py()
+
 log_path = '/var/log/dante.log'
 backup_path = '/var/log/dante.log.backup'
 if not os.path.exists(log_path):
     ktk.err("Please enter a valid log path.")
     ktk.bye()
+
+# go through the log
 clients = {}
 with open(log_path) as f:
     for ln in f:
@@ -26,13 +21,22 @@ with open(log_path) as f:
             key = matches[0]
             value = clients.setdefault(key, 0)
             clients[key] = value + 1
-print("\nTotal: {} clients:".format(len(clients)))
+
+# print
+threshold = 5
+ktk.info("\nSee clients lower than {} ?".format(str(threshold)))
+see_all = ktk.getChoice(['Yes','No'])
+ktk.info("\nTotal: {} clients:".format(len(clients)))
 if clients:
     for (k, v) in clients.items():
-        print("{} : {}".format(k, v))
+        if v < threshold and see_all == 'No':
+            continue;
+        ktk.info("{} : {}".format(k, v))
 
-answer = ktk.getInput("Need clear the log? (Y/n)")
-if "Y" == answer.upper():
+# clear
+ktk.info("\nNeed clear the log?")
+need_clear = ktk.getChoice(['Yes','No'])
+if "Y" == need_clear.upper():
     ktk.runCmd("sudo echo")
     if os.path.exists(backup_path):
         ktk.runCmd("sudo rm {}".format(backup_path))

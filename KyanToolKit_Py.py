@@ -11,7 +11,7 @@ import threading, queue
 from functools import wraps
 
 class KyanToolKit_Py(object):
-    version = '3.4'
+    version = '3.5'
     def __init__(self, trace_file="trace.xml"):
         self.trace_file = trace_file
         self.q = {
@@ -180,10 +180,8 @@ class KyanToolKit_Py(object):
 
     def getChoice(self, choices_):
         assemble_print = ""
-        index = 1
-        for item in choices_:
-            assemble_print += "\n" + str(index) + " - " + str(item)
-            index += 1
+        for index,item in enumerate(choices_):
+            assemble_print += "\n" + str(index+1) + " - " + str(item)
         user_choice = self.getInput(assemble_print);
         if user_choice in choices_:
             return user_choice;

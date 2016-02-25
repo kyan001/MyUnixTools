@@ -12,7 +12,7 @@ class test_KyanToolKitPy(unittest.TestCase):
     '''
     用于测试 KyanToolKit_Py
     '''
-    ktk_version = '3.4'
+    ktk_version = '3.5'
     def setUp(self):
         self.ktk = KyanToolKit_Py.KyanToolKit_Py()
         # redirect stdout
@@ -76,15 +76,14 @@ class test_KyanToolKitPy(unittest.TestCase):
         self.assertEqual(md5, 'f1feeaa3d698685b6a6179520449e206')
 
     def test_imageToColor_rgb(self):
-        test_url = "http://portal.superfarmer.net/static/img/index/div3_products.png"
+        test_url = "http://www.superfarmer.net/static/img/index/div_card_products.png"
         color = self.ktk.imageToColor(test_url)
         self.assertEqual(color, (5, 147, 208))
 
-    def test_imageToColor_rgb(self):
-        test_url = "http://portal.superfarmer.net/static/img/index/div3_products.png"
+    def test_imageToColor_hex(self):
+        test_url = "http://www.superfarmer.net/static/img/index/div_card_products.png"
         color = self.ktk.imageToColor(test_url, mode='hex')
         self.assertEqual(color, '#0593D0')
-
 
     def test_clearScreen(self):
         self.ktk.clearScreen()
