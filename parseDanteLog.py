@@ -24,7 +24,7 @@ with open(log_path) as f:
 
 # print
 threshold = 5
-ktk.info("\nSee clients lower than {} ?".format(str(threshold)))
+print(ktk.banner("See clients lower than {} ?".format(str(threshold))))
 see_all = ktk.getChoice(['Yes','No'])
 ktk.info("\nTotal: {} clients:".format(len(clients)))
 if clients:
@@ -34,9 +34,9 @@ if clients:
         ktk.info("{} : {}".format(k, v))
 
 # clear
-ktk.info("\nNeed clear the log?")
+print(ktk.banner(("Need clear the log?")))
 need_clear = ktk.getChoice(['Yes','No'])
-if "Y" == need_clear.upper():
+if "Yes" == need_clear:
     ktk.runCmd("sudo echo")
     if os.path.exists(backup_path):
         ktk.runCmd("sudo rm {}".format(backup_path))
