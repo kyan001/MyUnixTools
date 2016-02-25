@@ -26,7 +26,7 @@ with open(log_path) as f:
 threshold = 5
 print(ktk.banner("See clients lower than {} ?".format(str(threshold))))
 see_all = ktk.getChoice(['Yes','No'])
-ktk.info("\nTotal: {} clients:".format(len(clients)))
+ktk.info("Total: {} clients:".format(len(clients)))
 if clients:
     for (k, v) in clients.items():
         if v < threshold and see_all == 'No':
