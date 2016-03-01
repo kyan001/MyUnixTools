@@ -31,6 +31,10 @@ if clients:
     for (k, v) in clients.items():
         if v < threshold and see_all == 'No':
             continue;
+        if k == '173.230.148.199':
+            k += ' (superfarmer.net)'
+        if k == '106.186.20.163':
+            k += ' (lnhote.me)'
         ktk.info("{} : {}".format(k, v))
 
 # clear
