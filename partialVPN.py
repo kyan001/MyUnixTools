@@ -5,12 +5,18 @@ ktk = KyanToolKit_Py.KyanToolKit_Py()
 
 ktk.needPlatform('win')
 ip_list = [
-
+    '80.239.173.156',
+    '80.239.173.151',
+    '184.50.87.33',
+    '184.51.198.91',
+    '184.51.198.73',
+    '213.248.126.138',
+    '213.248.126.137',
+    '213.248.126.155',
 ]
 if not ip_list:
     ktk.err('Ip List is empty').bye()
 vpn_route = '10.100.0.1' # duetime
-ktk.info('Ip list = {}'.format(ip_list))
 ktk.info('VPN route = {}'.format(vpn_route))
 
 # get mode, delete / set / print
