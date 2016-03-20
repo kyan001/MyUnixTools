@@ -1,3 +1,5 @@
+# http://tieba.baidu.com/p/3727427042
+
 import KyanToolKit_Py, sys
 ktk = KyanToolKit_Py.KyanToolKit_Py()
 
