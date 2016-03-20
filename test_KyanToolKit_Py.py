@@ -12,7 +12,7 @@ class test_KyanToolKitPy(unittest.TestCase):
     '''
     用于测试 KyanToolKit_Py
     '''
-    ktk_version = '3.5'
+    ktk_version = '3.6'
     def setUp(self):
         self.ktk = KyanToolKit_Py.KyanToolKit_Py()
         # redirect stdout

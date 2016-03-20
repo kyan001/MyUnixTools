@@ -11,7 +11,7 @@ import threading, queue
 from functools import wraps
 
 class KyanToolKit_Py(object):
-    version = '3.5'
+    version = '3.6'
     def __init__(self, trace_file="trace.xml"):
         self.trace_file = trace_file
         self.q = {
@@ -91,12 +91,15 @@ class KyanToolKit_Py(object):
 
     def info(self, words):
         print("[INFO] " + words)
+        return self
 
     def warn(self, words):
         print("[WARNING] " + words)
+        return self
 
     def err(self, words):
         print("[ERROR] " + words)
+        return self
 
     def md5(self, words=""):
         if type(words) != bytes: # md5的输入必须为bytes类型
