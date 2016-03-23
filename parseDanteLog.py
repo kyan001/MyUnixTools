@@ -23,10 +23,14 @@ with open(log_path) as f:
             clients[key] = value + 1
 
 # print
+clients_count = len(clients)
+if clients_count == 0:
+    ktk.err("0 client logged").bye()
+print(ktk.banner("Total: {} clients:".format(clients_count)))
+
 threshold = 5
-print(ktk.banner("See clients lower than {} ?".format(str(threshold))))
+print(ktk.banner("See clients lower than {} ?".format(threshold)))
 see_all = ktk.getChoice(['Yes','No'])
-ktk.info("Total: {} clients:".format(len(clients)))
 if clients:
     for (k, v) in clients.items():
         if v < threshold and see_all == 'No':
