@@ -12,7 +12,7 @@ class test_KyanToolKitPy(unittest.TestCase):
     '''
     用于测试 KyanToolKit_Py
     '''
-    ktk_version = '3.7'
+    ktk_version = '3.8'
     def setUp(self):
         self.ktk = KyanToolKit_Py.KyanToolKit_Py()
         # redirect stdout
@@ -117,7 +117,7 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_runCmd(self):
         self.ktk.runCmd("echo x")
-        expect_word = "\n*\n"
+        expect_word = "*\n"
         expect_word += '| [Start] Run Command\n'
         expect_word += '| [Command] echo x\n'
         expect_word += '| [Result] Done\n'
@@ -158,7 +158,7 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_needPlatform(self):
         self.ktk.needPlatform(sys.platform)
-        expect_word = "\n*\n"
+        expect_word = "*\n"
         expect_word += '| [Start] Platform Check\n'
         expect_word += "| [Info]    Need: {0}\n".format(sys.platform)
         expect_word += "| [Info] Current: {0}\n".format(sys.platform)
@@ -169,7 +169,7 @@ class test_KyanToolKitPy(unittest.TestCase):
     def test_needUser(self):
         current_user = self.ktk.getUser()
         self.ktk.needUser(current_user)
-        expect_word = "\n*\n"
+        expect_word = "*\n"
         expect_word += '| [Start] User Check\n'
         expect_word += "| [Info]    Need: {0}\n".format(current_user)
         expect_word += "| [Info] Current: {0}\n".format(current_user)

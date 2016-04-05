@@ -11,7 +11,7 @@ import threading, queue
 from functools import wraps
 
 class KyanToolKit_Py(object):
-    version = '3.7'
+    version = '3.8'
     def __init__(self, trace_file="trace.xml"):
         self.trace_file = trace_file
         self.q = {
@@ -52,7 +52,7 @@ class KyanToolKit_Py(object):
             @wraps(input_func)
             def callInputFunc(*args, **kwargs):
                 self = args[0]
-                print("\n*")
+                print("*")
                 self.echo(decorator_param, "start");
                 result = input_func(*args, **kwargs)
                 self.echo(decorator_param, "end");
