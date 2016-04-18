@@ -12,7 +12,7 @@ class test_KyanToolKitPy(unittest.TestCase):
     '''
     用于测试 KyanToolKit_Py
     '''
-    ktk_version = '4.0'
+    ktk_version = '4.1'
     def setUp(self):
         self.ktk = KyanToolKit_Py.KyanToolKit_Py()
         # redirect stdout
@@ -109,22 +109,24 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_checkResult_1(self):
         self.ktk.checkResult(0)
-        self.assertEqual(self.fakeout.readline(), "|  (Result) Done\n")
+        self.assertTrue("Done" in self.fakeout.readline())
 
     def test_checkResult_2(self):
         self.ktk.checkResult(1)
-        self.assertEqual(self.fakeout.readline(), "|  (Result) Failed\n")
+        self.assertTrue("Failed" in self.fakeout.readline())
 
     def test_runCmd(self):
-        self.ktk.runCmd("echo x")
+        self.ktk.runCmd("echo Test Text")
+        self.assertEqual(self.fakeos.readline(), "echo Test Text")
+
+    def test_printStartAndEnd(self):
+        self.ktk.runCmd("echo Test Text")
         expect_word = "*\n"
-        expect_word += '|-----[ Run Command ]-----\n'
-        expect_word += '| (Command) echo x\n'
-        expect_word += '|  (Result) Done\n'
-        expect_word += '|-------------------------\n'
+        expect_word += '@ Run Command\n'
+        expect_word += "| (Command) echo Test Text\n"
+        expect_word += "|  (Result) Done\n"
         expect_word += '|\n'
-        self.assertEqual(self.fakeout.readline(), expect_word)
-        self.assertEqual(self.fakeos.readline(), "echo x")
+        self.assertEqual(self.fakeout.readline(), expect_word);
 
     def test_getUser(self):
         self.assertEqual(self.ktk.getUser(), os.getlogin())
@@ -141,13 +143,13 @@ class test_KyanToolKitPy(unittest.TestCase):
         ''' by enter a index number '''
         self.fakein.write("1");
         self.assertEqual(self.ktk.getChoice(["Txt 1", "Txt 2"]), "Txt 1")
-        self.assertEqual(self.fakeout.readline(), "\n1 - Txt 1\n2 - Txt 2\n> ")
+        self.assertEqual(self.fakeout.readline(), "\n| 1 - Txt 1\n| 2 - Txt 2\n> ")
 
     def test_getChoice_2(self):
         ''' by enter the text '''
         self.fakein.write("Txt 2");
         self.assertEqual(self.ktk.getChoice(["Txt 1", "Txt 2"]), "Txt 2")
-        self.assertEqual(self.fakeout.readline(), "\n1 - Txt 1\n2 - Txt 2\n> ")
+        self.assertEqual(self.fakeout.readline(), "\n| 1 - Txt 1\n| 2 - Txt 2\n> ")
 
     def test_ajax_get(self):
         url = 'https://api.douban.com/v2/movie/search'
@@ -158,24 +160,20 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_needPlatform(self):
         self.ktk.needPlatform(sys.platform)
-        expect_word = "*\n"
-        expect_word += '|-----[ Platform Check ]-----\n'
-        expect_word += "|    (Info)    Need: {0}\n".format(sys.platform)
-        expect_word += "|    (Info) Current: {0}\n".format(sys.platform)
-        expect_word += '|----------------------------\n'
-        expect_word += '|\n'
-        self.assertEqual(self.fakeout.readline(), expect_word);
+        expect_word_need = "Need: {0}\n".format(sys.platform)
+        expect_word_current = "Current: {0}\n".format(sys.platform)
+        test_output = self.fakeout.readline()
+        self.assertTrue(expect_word_need in test_output);
+        self.assertTrue(expect_word_current in test_output);
 
     def test_needUser(self):
         current_user = self.ktk.getUser()
         self.ktk.needUser(current_user)
-        expect_word = "*\n"
-        expect_word += '|-----[ User Check ]-----\n'
-        expect_word += "|    (Info)    Need: {0}\n".format(current_user)
-        expect_word += "|    (Info) Current: {0}\n".format(current_user)
-        expect_word += '|------------------------\n'
-        expect_word += '|\n'
-        self.assertEqual(self.fakeout.readline(), expect_word);
+        expect_word_need = "Need: {0}\n".format(current_user)
+        expect_word_current = "Current: {0}\n".format(current_user)
+        test_output = self.fakeout.readline()
+        self.assertTrue(expect_word_need in test_output);
+        self.assertTrue(expect_word_current in test_output);
 
     def test_asyncPrint_simple(self):
         self.ktk.asyncPrint("Test Text");
