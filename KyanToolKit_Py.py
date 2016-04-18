@@ -53,9 +53,9 @@ class KyanToolKit_Py(object):
             def callInputFunc(*args, **kwargs):
                 self = args[0]
                 print("*")
-                print("|@{}".format(func_title))
+                print("| {}:".format(func_title))
                 result = input_func(*args, **kwargs)
-                print("|")
+                print("!")
                 return result
             return callInputFunc
         return get_func

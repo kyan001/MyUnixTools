@@ -122,10 +122,10 @@ class test_KyanToolKitPy(unittest.TestCase):
     def test_printStartAndEnd(self):
         self.ktk.runCmd("echo Test Text")
         expect_word = "*\n"
-        expect_word += '|@Run Command\n'
+        expect_word += '| Run Command:\n'
         expect_word += "| (Command) echo Test Text\n"
         expect_word += "|  (Result) Done\n"
-        expect_word += '|\n'
+        expect_word += '!\n'
         self.assertEqual(self.fakeout.readline(), expect_word);
 
     def test_getUser(self):
