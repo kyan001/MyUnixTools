@@ -143,13 +143,13 @@ class test_KyanToolKitPy(unittest.TestCase):
         ''' by enter a index number '''
         self.fakein.write("1");
         self.assertEqual(self.ktk.getChoice(["Txt 1", "Txt 2"]), "Txt 1")
-        self.assertEqual(self.fakeout.readline(), "\n| 1 - Txt 1\n| 2 - Txt 2\n> ")
+        self.assertEqual(self.fakeout.readline(), "\n|  1 - Txt 1\n|  2 - Txt 2\n> ")
 
     def test_getChoice_2(self):
         ''' by enter the text '''
         self.fakein.write("Txt 2");
         self.assertEqual(self.ktk.getChoice(["Txt 1", "Txt 2"]), "Txt 2")
-        self.assertEqual(self.fakeout.readline(), "\n| 1 - Txt 1\n| 2 - Txt 2\n> ")
+        self.assertEqual(self.fakeout.readline(), "\n|  1 - Txt 1\n|  2 - Txt 2\n> ")
 
     def test_ajax_get(self):
         url = 'https://api.douban.com/v2/movie/search'

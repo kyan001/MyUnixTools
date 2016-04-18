@@ -188,7 +188,7 @@ class KyanToolKit_Py(object):
     def getChoice(self, choices_):
         assemble_print = ""
         for index,item in enumerate(choices_):
-            assemble_print += "\n| " + str(index+1) + " - " + str(item)
+            assemble_print += "\n| " + str(index+1).rjust(2) + " - " + str(item)
         user_choice = self.getInput(assemble_print);
         if user_choice in choices_:
             return user_choice;
