@@ -12,7 +12,7 @@ class test_KyanToolKitPy(unittest.TestCase):
     '''
     用于测试 KyanToolKit_Py
     '''
-    ktk_version = '3.8'
+    ktk_version = '4.0'
     def setUp(self):
         self.ktk = KyanToolKit_Py.KyanToolKit_Py()
         # redirect stdout
@@ -53,19 +53,19 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_echo(self):
         self.ktk.echo("Test Text", "test")
-        self.assertEqual(self.fakeout.readline(), "| [Test] Test Text\n")
+        self.assertEqual(self.fakeout.readline(), "|    (Test) Test Text\n")
 
     def test_info(self):
         self.ktk.info("Test Text")
-        self.assertEqual(self.fakeout.readline(), "| [Info] Test Text\n")
+        self.assertEqual(self.fakeout.readline(), "|    (Info) Test Text\n")
 
     def test_warn(self):
         self.ktk.warn("Test Text")
-        self.assertEqual(self.fakeout.readline(), "| [Warning] Test Text\n")
+        self.assertEqual(self.fakeout.readline(), "| (Warning) Test Text\n")
 
     def test_err(self):
         self.ktk.err("Test Text")
-        self.assertEqual(self.fakeout.readline(), "| [Error] Test Text\n")
+        self.assertEqual(self.fakeout.readline(), "|   (Error) Test Text\n")
 
     def test_md5_string(self):
         md5 = self.ktk.md5("Test Text")
@@ -109,20 +109,20 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_checkResult_1(self):
         self.ktk.checkResult(0)
-        self.assertEqual(self.fakeout.readline(), "| [Result] Done\n")
+        self.assertEqual(self.fakeout.readline(), "|  (Result) Done\n")
 
     def test_checkResult_2(self):
         self.ktk.checkResult(1)
-        self.assertEqual(self.fakeout.readline(), "| [Result] Failed\n")
+        self.assertEqual(self.fakeout.readline(), "|  (Result) Failed\n")
 
     def test_runCmd(self):
         self.ktk.runCmd("echo x")
         expect_word = "*\n"
-        expect_word += '| [Start] Run Command\n'
-        expect_word += '| [Command] echo x\n'
-        expect_word += '| [Result] Done\n'
-        expect_word += '| [End] Run Command\n'
-        expect_word += "|\n"
+        expect_word += '|-----[ Run Command ]-----\n'
+        expect_word += '| (Command) echo x\n'
+        expect_word += '|  (Result) Done\n'
+        expect_word += '|-------------------------\n'
+        expect_word += '|\n'
         self.assertEqual(self.fakeout.readline(), expect_word)
         self.assertEqual(self.fakeos.readline(), "echo x")
 
@@ -159,10 +159,10 @@ class test_KyanToolKitPy(unittest.TestCase):
     def test_needPlatform(self):
         self.ktk.needPlatform(sys.platform)
         expect_word = "*\n"
-        expect_word += '| [Start] Platform Check\n'
-        expect_word += "| [Info]    Need: {0}\n".format(sys.platform)
-        expect_word += "| [Info] Current: {0}\n".format(sys.platform)
-        expect_word += '| [End] Platform Check\n'
+        expect_word += '|-----[ Platform Check ]-----\n'
+        expect_word += "|    (Info)    Need: {0}\n".format(sys.platform)
+        expect_word += "|    (Info) Current: {0}\n".format(sys.platform)
+        expect_word += '|----------------------------\n'
         expect_word += '|\n'
         self.assertEqual(self.fakeout.readline(), expect_word);
 
@@ -170,10 +170,10 @@ class test_KyanToolKitPy(unittest.TestCase):
         current_user = self.ktk.getUser()
         self.ktk.needUser(current_user)
         expect_word = "*\n"
-        expect_word += '| [Start] User Check\n'
-        expect_word += "| [Info]    Need: {0}\n".format(current_user)
-        expect_word += "| [Info] Current: {0}\n".format(current_user)
-        expect_word += '| [End] User Check\n'
+        expect_word += '|-----[ User Check ]-----\n'
+        expect_word += "|    (Info)    Need: {0}\n".format(current_user)
+        expect_word += "|    (Info) Current: {0}\n".format(current_user)
+        expect_word += '|------------------------\n'
         expect_word += '|\n'
         self.assertEqual(self.fakeout.readline(), expect_word);
 
