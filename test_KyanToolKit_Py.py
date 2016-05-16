@@ -12,7 +12,7 @@ class test_KyanToolKitPy(unittest.TestCase):
     '''
     用于测试 KyanToolKit_Py
     '''
-    ktk_version = '4.1'
+    ktk_version = '4.2'
     def setUp(self):
         self.ktk = KyanToolKit_Py.KyanToolKit_Py()
         # redirect stdout
@@ -53,11 +53,27 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_echo(self):
         self.ktk.echo("Test Text", "test")
-        self.assertEqual(self.fakeout.readline(), "|    (Test) Test Text\n")
+        self.assertEqual(self.fakeout.readline(), "| (Test) Test Text\n")
+
+    def test_echo_lvl(self):
+        self.ktk.echo("Test", lvl=2)
+        self.assertEqual(self.fakeout.readline(), "| {t}Test\n".format(t='    '*2))
+
+    def test_pStart(self):
+        self.ktk.pStart()
+        self.assertEqual(self.fakeout.readline(), '*\n')
+
+    def test_pEnd(self):
+        self.ktk.pEnd()
+        self.assertEqual(self.fakeout.readline(), '!\n')
+
+    def test_pTitle(self):
+        self.ktk.pTitle('test')
+        self.assertEqual(self.fakeout.readline(), '| test:\n')
 
     def test_info(self):
         self.ktk.info("Test Text")
-        self.assertEqual(self.fakeout.readline(), "|    (Info) Test Text\n")
+        self.assertEqual(self.fakeout.readline(), "| (Info) Test Text\n")
 
     def test_warn(self):
         self.ktk.warn("Test Text")
@@ -65,7 +81,7 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_err(self):
         self.ktk.err("Test Text")
-        self.assertEqual(self.fakeout.readline(), "|   (Error) Test Text\n")
+        self.assertEqual(self.fakeout.readline(), "| (Error) Test Text\n")
 
     def test_md5_string(self):
         md5 = self.ktk.md5("Test Text")
@@ -124,7 +140,7 @@ class test_KyanToolKitPy(unittest.TestCase):
         expect_word = "*\n"
         expect_word += '| Run Command:\n'
         expect_word += "| (Command) echo Test Text\n"
-        expect_word += "|  (Result) Done\n"
+        expect_word += "| (Result) Done\n"
         expect_word += '!\n'
         self.assertEqual(self.fakeout.readline(), expect_word);
 
@@ -143,13 +159,13 @@ class test_KyanToolKitPy(unittest.TestCase):
         ''' by enter a index number '''
         self.fakein.write("1");
         self.assertEqual(self.ktk.getChoice(["Txt 1", "Txt 2"]), "Txt 1")
-        self.assertEqual(self.fakeout.readline(), "\n|  1 - Txt 1\n|  2 - Txt 2\n> ")
+        self.assertEqual(self.fakeout.readline(), "|  1 - Txt 1\n|  2 - Txt 2\n> ")
 
     def test_getChoice_2(self):
         ''' by enter the text '''
         self.fakein.write("Txt 2");
         self.assertEqual(self.ktk.getChoice(["Txt 1", "Txt 2"]), "Txt 2")
-        self.assertEqual(self.fakeout.readline(), "\n|  1 - Txt 1\n|  2 - Txt 2\n> ")
+        self.assertEqual(self.fakeout.readline(), "|  1 - Txt 1\n|  2 - Txt 2\n> ")
 
     def test_ajax_get(self):
         url = 'https://api.douban.com/v2/movie/search'
