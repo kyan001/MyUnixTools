@@ -4,15 +4,21 @@
 ##################################################################
 import unittest
 import KyanToolKit_Py
-import FakeOut, FakeIn, FakeOs
-import sys, os
-import threading, time
+import FakeOut
+import FakeIn
+import FakeOs
+import sys
+import os
+import threading
+import time
+
 
 class test_KyanToolKitPy(unittest.TestCase):
     '''
     用于测试 KyanToolKit_Py
     '''
-    ktk_version = '4.3'
+    ktk_version = '4.4'
+
     def setUp(self):
         self.ktk = KyanToolKit_Py.KyanToolKit_Py()
         # redirect stdout
@@ -57,7 +63,8 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_echo_lvl(self):
         self.ktk.echo("Test", lvl=2)
-        self.assertEqual(self.fakeout.readline(), "| {t}Test\n".format(t='    '*2))
+        expect_word = "| {t}Test\n".format(t='    ' * 2)
+        self.assertEqual(self.fakeout.readline(), expect_word)
 
     def test_pStart(self):
         self.ktk.pStart()
@@ -107,21 +114,21 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_clearScreen(self):
         self.ktk.clearScreen()
-        self.assertEqual(self.fakeos.readline(), "cls");
+        self.assertEqual(self.fakeos.readline(), "cls")
 
     def test_pressToContinue_1(self):
-        self.fakein.write();
+        self.fakein.write()
         self.ktk.pressToContinue()
-        self.assertEqual(self.fakeout.readline(), "\nPress Enter to Continue...\n")
+        expect_word = "\nPress Enter to Continue...\n"
+        self.assertEqual(self.fakeout.readline(), expect_word)
 
     def test_pressToContinue_2(self):
-        self.fakein.write();
+        self.fakein.write()
         self.ktk.pressToContinue("Test Custom Text:")
         self.assertEqual(self.fakeout.readline(), "Test Custom Text:")
 
     def test_bye(self):
         self.assertRaises(SystemExit, self.ktk.bye, None)
-        #self.assertEqual(self.fakeout.readline(), "See you later")
 
     def test_checkResult_1(self):
         self.ktk.checkResult(0)
@@ -142,7 +149,7 @@ class test_KyanToolKitPy(unittest.TestCase):
         expect_word += "| (Command) echo Test Text\n"
         expect_word += "| (Result) Done\n"
         expect_word += '!\n'
-        self.assertEqual(self.fakeout.readline(), expect_word);
+        self.assertEqual(self.fakeout.readline(), expect_word)
 
     def test_getUser(self):
         self.assertEqual(self.ktk.getUser(), os.getlogin())
@@ -157,19 +164,21 @@ class test_KyanToolKitPy(unittest.TestCase):
 
     def test_getChoice_1(self):
         ''' by enter a index number '''
-        self.fakein.write("1");
+        self.fakein.write("1")
         self.assertEqual(self.ktk.getChoice(["Txt 1", "Txt 2"]), "Txt 1")
-        self.assertEqual(self.fakeout.readline(), "|  1) Txt 1\n|  2) Txt 2\n> ")
+        expect_word = "|  1) Txt 1\n|  2) Txt 2\n> "
+        self.assertEqual(self.fakeout.readline(), expect_word)
 
     def test_getChoice_2(self):
         ''' by enter the text '''
-        self.fakein.write("Txt 2");
+        self.fakein.write("Txt 2")
         self.assertEqual(self.ktk.getChoice(["Txt 1", "Txt 2"]), "Txt 2")
-        self.assertEqual(self.fakeout.readline(), "|  1) Txt 1\n|  2) Txt 2\n> ")
+        expect_word = "|  1) Txt 1\n|  2) Txt 2\n> "
+        self.assertEqual(self.fakeout.readline(), expect_word)
 
     def test_ajax_get(self):
         url = 'https://api.douban.com/v2/movie/search'
-        param = {'q':'胜者即是正义', 'count':1}
+        param = {'q': '胜者即是正义', 'count': 1}
         result = self.ktk.ajax(url, param, 'get')
         cast = result.get('subjects')[0].get('casts')[1].get('name')
         self.assertEqual(cast, '新垣结衣')
@@ -179,8 +188,8 @@ class test_KyanToolKitPy(unittest.TestCase):
         expect_word_need = "Need: {0}\n".format(sys.platform)
         expect_word_current = "Current: {0}\n".format(sys.platform)
         test_output = self.fakeout.readline()
-        self.assertTrue(expect_word_need in test_output);
-        self.assertTrue(expect_word_current in test_output);
+        self.assertTrue(expect_word_need in test_output)
+        self.assertTrue(expect_word_current in test_output)
 
     def test_needUser(self):
         current_user = self.ktk.getUser()
@@ -188,30 +197,31 @@ class test_KyanToolKitPy(unittest.TestCase):
         expect_word_need = "Need: {0}\n".format(current_user)
         expect_word_current = "Current: {0}\n".format(current_user)
         test_output = self.fakeout.readline()
-        self.assertTrue(expect_word_need in test_output);
-        self.assertTrue(expect_word_current in test_output);
+        self.assertTrue(expect_word_need in test_output)
+        self.assertTrue(expect_word_current in test_output)
 
     def test_asyncPrint_simple(self):
-        self.ktk.asyncPrint("Test Text");
+        self.ktk.asyncPrint("Test Text")
         self.assertEqual(self.fakeout.readline(), "Test Text\n")
         self.assertFalse(self.ktk.mutex.get('stdout').locked())
 
     def test_asyncPrint_full(self):
-        mutex = self.ktk.mutex.get('stdout');
+        mutex = self.ktk.mutex.get('stdout')
         asyncPrint_called = threading.Event()
+
         def lockMutex():
-            if mutex.acquire(): #上锁
-                asyncPrint_called.wait() # wait until asyncPrint called
+            if mutex.acquire():  # 上锁
+                asyncPrint_called.wait()  # wait until asyncPrint called
                 self.assertIsNone(self.fakeout.readline())
-                mutex.release() #放锁
+                mutex.release()  # 放锁
         t = threading.Thread(target=lockMutex)
-        t.start() # mutex locked
-        time.sleep(0.3) # wait lock
+        t.start()  # mutex locked
+        time.sleep(0.3)  # wait lock
         self.ktk.asyncPrint("Test Text")
-        time.sleep(0.3) # wait enough time to be printed
+        time.sleep(0.3)  # wait enough time to be printed
         asyncPrint_called.set()
-        t.join() # wait mutex released
-        time.sleep(0.3) # wait enough time to be printed
+        t.join()  # wait mutex released
+        time.sleep(0.3)  # wait enough time to be printed
         self.assertEqual(self.fakeout.readline(), "Test Text\n")
         self.assertFalse(self.ktk.mutex.get('stdout').locked())
 
@@ -224,11 +234,11 @@ class test_KyanToolKitPy(unittest.TestCase):
             os.remove(f)
 
     def test_inTrace(self):
-        f = self.ktk.trace_file
-        old_trace_exist = os.path.exists(f)
         @self.ktk.inTrace
         def inTrace():
             print("Test Text")
+        f = self.ktk.trace_file
+        old_trace_exist = os.path.exists(f)
         inTrace()
         self.assertEqual(self.fakeout.readline(), "Test Text\n")
         self.assertTrue(os.path.exists(f))
@@ -237,5 +247,5 @@ class test_KyanToolKitPy(unittest.TestCase):
 
 if __name__ == '__main__':
     KyanToolKit_Py.KyanToolKit_Py().clearScreen()
-    unittest.main(verbosity=2, exit=False) #更多屏显信息，最后不调用sys.exit()
+    unittest.main(verbosity=2, exit=False)  # 更多屏显信息，最后不调用sys.exit()
     KyanToolKit_Py.KyanToolKit_Py().pressToContinue()
