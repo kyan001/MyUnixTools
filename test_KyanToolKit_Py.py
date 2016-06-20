@@ -2,15 +2,16 @@
 ##################################################################
 # For KTK
 ##################################################################
-import unittest
-import KyanToolKit_Py
-import FakeOut
-import FakeIn
-import FakeOs
 import sys
 import os
 import threading
 import time
+import unittest
+
+import FakeOut
+import FakeIn
+import FakeOs
+import KyanToolKit_Py
 
 
 class test_KyanToolKitPy(unittest.TestCase):
@@ -45,7 +46,7 @@ class test_KyanToolKitPy(unittest.TestCase):
         os.system = self.os_system
 
     def test_version(self):
-        self.assertEqual(self.ktk_version, self.ktk.version)
+        self.assertEqual(self.ktk_version, self.ktk.__version__)
 
     def test_init(self):
         'testing __init__()'

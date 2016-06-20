@@ -18,7 +18,8 @@ from functools import wraps
 
 
 class KyanToolKit_Py(object):
-    version = '4.4'
+
+    __version__ = '4.4'
 
     def __init__(self, trace_file="trace.xml"):
         self.trace_file = trace_file
@@ -33,8 +34,8 @@ class KyanToolKit_Py(object):
         pass
 
 # -Decorators-----------------------------------------------------
-    def lockStdout(input_func):  # decorator
-        '使函数占住stdout，执行期间不让其他线程打印'
+    def lockStdout(input_func: callable):  # decorator
+        '使函数占住 stdout，执行期间不让其他线程打印'
         @wraps(input_func)
         def callInputFunc(*args, **kwargs):
             self = args[0]
@@ -46,7 +47,7 @@ class KyanToolKit_Py(object):
                     mutex.release()
         return callInputFunc
 
-    def async(input_func):  # decorator
+    def async(input_func: callable):  # decorator
         '使函数单开一个线程执行'
         @wraps(input_func)
         def callInputFunc(*args, **kwargs):
@@ -55,8 +56,8 @@ class KyanToolKit_Py(object):
         return callInputFunc
 
     def printStartAndEnd(func_title="function"):  # decorator
-        '使函数执行前和执行完毕后打印start/end'
-        def get_func(input_func):
+        '使函数执行前和执行完毕后打印 start/end'
+        def get_func(input_func: callable):
             @wraps(input_func)
             def callInputFunc(*args, **kwargs):
                 self = args[0]
@@ -68,7 +69,7 @@ class KyanToolKit_Py(object):
             return callInputFunc
         return get_func
 
-    def inTrace(self, func):  # decorator
+    def inTrace(self, func: callable):  # decorator
         '将被修饰函数的进入和退出写入日志'
         @wraps(func)
         def call(*args, **kwargs):
@@ -127,8 +128,8 @@ class KyanToolKit_Py(object):
         return hashlib.md5(words).hexdigest()
 
 # -Image Process--------------------------------------------------
-    def imageToColor(self, url, scale=200, mode='rgb'):
-        '将url指向的图片提纯为一个颜色'
+    def imageToColor(self, url: str, scale=200, mode='rgb'):
+        '将 url 指向的图片提纯为一个颜色'
         from PIL import Image
         import colorsys
         if url:
@@ -162,6 +163,7 @@ class KyanToolKit_Py(object):
 
 # -System Fucntions-----------------------------------------------
     def clearScreen(self):
+        """清屏"""
         if "win" in sys.platform:
             os.system('cls')
         elif "linux" in sys.platform:
@@ -171,23 +173,27 @@ class KyanToolKit_Py(object):
 
     @lockStdout
     def pressToContinue(self, msg="\nPress Enter to Continue...\n"):
+        """按任意键继续"""
         # PY2: raw_input(msg)
         input(msg)
 
     def byeBye(self, msg="See you later"):  # BWC
+        """打印消息并退出程序"""
         self.bye(msg)
 
     def bye(self, msg=''):
+        """打印消息并退出程序"""
         exit(msg)
 
     @printStartAndEnd('Run Command')
-    def runCmd(self, cmd):
-        'run command and show if success or failed'
+    def runCmd(self, cmd: str) -> bool:
+        """run command and show if success or failed"""
         self.echo(cmd, "command")
         result = os.system(cmd)
         self.checkResult(result)
 
-    def readCmd(self, cmd):
+    def readCmd(self, cmd: str) -> str:
+        """run command and return the str format stdout"""
         args = shlex.split(cmd)
         proc = subprocess.Popen(args, stdout=subprocess.PIPE)
         (proc_stdout, proc_stderr) = proc.communicate(input=None)  # proc_stdin
@@ -201,7 +207,8 @@ class KyanToolKit_Py(object):
         # PY2: return raw_input(prompt_).strip()
         return str(input(prompt)).strip()
 
-    def getChoice(self, choices_):
+    def getChoice(self, choices_: list) -> str:
+        """用户可输入选项数字或选项内容，得到用户选择的内容"""
         assemble_print = ""
         for index, item in enumerate(choices_):
             assemble_print += '\n' if index else ''
@@ -218,7 +225,7 @@ class KyanToolKit_Py(object):
             self.err("Please enter a valid choice")
             return self.getChoice(choices_)
 
-    def ajax(self, url, param={}, method='get'):
+    def ajax(self, url: str, param={}, method='get') -> dict:
         param = urllib.parse.urlencode(param)
         if method.lower() == 'get':
             req = urllib.request.Request(url + '?' + param)
@@ -236,21 +243,21 @@ class KyanToolKit_Py(object):
 
 # -Pre-checks---------------------------------------------------
     @printStartAndEnd("Platform Check")
-    def needPlatform(self, expect_platform):
+    def needPlatform(self, expect_platform: str):
         self.info("Need: " + expect_platform)
         self.info("Current: " + sys.platform)
         if expect_platform not in sys.platform:
             self.byeBye("Platform Check Failed")
 
     @printStartAndEnd("User Check")
-    def needUser(self, expect_user):
+    def needUser(self, expect_user: str):
         self.info("Need: " + expect_user)
         self.info("Current: " + self.getUser())
         if self.getUser() != expect_user:
             self.byeBye("User Check Failed")
 
 # -Debug---------------------------------------------------------
-    def TRACE(self, input_, trace_type='INFO'):
+    def TRACE(self, input_: str, trace_type='INFO'):
         trace_content = ''.join(input_)
         current_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
         current_function = sys._getframe().f_back
@@ -287,7 +294,7 @@ class KyanToolKit_Py(object):
             return False
 
 # -Internal Uses-------------------------------------------------
-    def checkResult(self, result):
+    def checkResult(self, result: bool):
         if 0 == result:
             self.echo("Done", "result")
         else:
@@ -296,7 +303,7 @@ class KyanToolKit_Py(object):
     def getUser(self):
         return getpass.getuser()
 
-    def asyncPrint(self, words):
+    def asyncPrint(self, words: str):
         '不直接打印，等 stdout 线程锁打开时再输出'
         q = self.q.get('stdout')
         if words:
