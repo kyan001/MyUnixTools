@@ -19,7 +19,9 @@ from functools import wraps
 
 class KyanToolKit_Py(object):
 
-    __version__ = '4.4'
+    @property
+    def version(self):
+        return '4.5'
 
     def __init__(self, trace_file="trace.xml"):
         self.trace_file = trace_file
@@ -48,7 +50,7 @@ class KyanToolKit_Py(object):
         return callInputFunc
 
     def async(input_func: callable):  # decorator
-        '使函数单开一个线程执行'
+        """使函数单开一个线程执行"""
         @wraps(input_func)
         def callInputFunc(*args, **kwargs):
             t = threading.Thread(target=input_func, args=args, kwargs=kwargs)
@@ -56,21 +58,21 @@ class KyanToolKit_Py(object):
         return callInputFunc
 
     def printStartAndEnd(func_title="function"):  # decorator
-        '使函数执行前和执行完毕后打印 start/end'
+        """使函数执行前和执行完毕后打印 start/end"""
         def get_func(input_func: callable):
             @wraps(input_func)
             def callInputFunc(*args, **kwargs):
-                self = args[0]
-                self.pStart()
-                self.pTitle(func_title)
+                cls = args[0]
+                cls.pStart()
+                cls.pTitle(func_title)
                 result = input_func(*args, **kwargs)
-                self.pEnd()
+                cls.pEnd()
                 return result
             return callInputFunc
         return get_func
 
     def inTrace(self, func: callable):  # decorator
-        '将被修饰函数的进入和退出写入日志'
+        """将被修饰函数的进入和退出写入日志"""
         @wraps(func)
         def call(*args, **kwargs):
             self.TRACE("Enter " + func.__qualname__ + "()")
@@ -80,7 +82,8 @@ class KyanToolKit_Py(object):
         return call
 
 # -Text Process---------------------------------------------------
-    def banner(self, content_="Well Come"):
+    @classmethod
+    def banner(cls, content_="Well Come"):
         '生成占3行的字符串'
         # char def
         sp_char = "#"
@@ -94,41 +97,50 @@ class KyanToolKit_Py(object):
         banner_border = sp_char * content_line_length
         return banner_border + '\n' + content_line + '\n' + banner_border
 
-    def echo(self, words, prefix="", lvl=0):
+    @classmethod
+    def echo(cls, words, prefix="", lvl=0):
         words = str(words)
         if prefix:
             prefix = '({})'.format(prefix.capitalize()) + ' '
         tabs = '    ' * int(lvl) if int(lvl) else ''
         print("| {p}{t}{w}".format(p=prefix, t=tabs, w=words))
-        return self
+        return cls
 
-    def pStart(self):
+    @classmethod
+    def pStart(cls):
         print('*')
-        return self
+        return cls
 
-    def pEnd(self):
+    @classmethod
+    def pEnd(cls):
         print('!')
-        return self
+        return cls
 
-    def pTitle(self, words):
-        return self.echo(words + ":")
+    @classmethod
+    def pTitle(cls, words):
+        return cls.echo(words + ":")
 
-    def info(self, words, **options):
-        return self.echo(words, "info", **options)
+    @classmethod
+    def info(cls, words, **options):
+        return cls.echo(words, "info", **options)
 
-    def warn(self, words, **options):
-        return self.echo(words, "warning", **options)
+    @classmethod
+    def warn(cls, words, **options):
+        return cls.echo(words, "warning", **options)
 
-    def err(self, words, **options):
-        return self.echo(words, "error", **options)
+    @classmethod
+    def err(cls, words, **options):
+        return cls.echo(words, "error", **options)
 
-    def md5(self, words=""):
+    @classmethod
+    def md5(cls, words=""):
         if type(words) != bytes:  # md5的输入必须为bytes类型
             words = str(words).encode()
         return hashlib.md5(words).hexdigest()
 
 # -Image Process--------------------------------------------------
-    def imageToColor(self, url: str, scale=200, mode='rgb'):
+    @staticmethod
+    def imageToColor(url: str, scale=200, mode='rgb'):
         '将 url 指向的图片提纯为一个颜色'
         from PIL import Image
         import colorsys
@@ -162,37 +174,42 @@ class KyanToolKit_Py(object):
             return False
 
 # -System Fucntions-----------------------------------------------
-    def clearScreen(self):
+    @classmethod
+    def clearScreen(cls):
         """清屏"""
         if "win" in sys.platform:
             os.system('cls')
         elif "linux" in sys.platform:
             os.system('clear')
         else:
-            self.err("No clearScreen for " + sys.platform)
+            cls.err("No clearScreen for " + sys.platform)
 
     @lockStdout
-    def pressToContinue(self, msg="\nPress Enter to Continue...\n"):
+    def pressToContinue(cls, msg="\nPress Enter to Continue...\n"):
         """按任意键继续"""
         # PY2: raw_input(msg)
         input(msg)
 
-    def byeBye(self, msg="See you later"):  # BWC
+    @classmethod
+    def byeBye(cls, msg="See you later"):  # BWC
         """打印消息并退出程序"""
-        self.bye(msg)
+        cls.bye(msg)
 
-    def bye(self, msg=''):
+    @classmethod
+    def bye(cls, msg=''):
         """打印消息并退出程序"""
         exit(msg)
 
+    @classmethod
     @printStartAndEnd('Run Command')
-    def runCmd(self, cmd: str) -> bool:
+    def runCmd(cls, cmd: str) -> bool:
         """run command and show if success or failed"""
-        self.echo(cmd, "command")
+        cls.echo(cmd, "command")
         result = os.system(cmd)
-        self.checkResult(result)
+        cls.checkResult(result)
 
-    def readCmd(self, cmd: str) -> str:
+    @classmethod
+    def readCmd(cls, cmd: str) -> str:
         """run command and return the str format stdout"""
         args = shlex.split(cmd)
         proc = subprocess.Popen(args, stdout=subprocess.PIPE)
@@ -225,7 +242,8 @@ class KyanToolKit_Py(object):
             self.err("Please enter a valid choice")
             return self.getChoice(choices_)
 
-    def ajax(self, url: str, param={}, method='get') -> dict:
+    @classmethod
+    def ajax(cls, url: str, param={}, method='get') -> dict:
         param = urllib.parse.urlencode(param)
         if method.lower() == 'get':
             req = urllib.request.Request(url + '?' + param)
@@ -242,19 +260,21 @@ class KyanToolKit_Py(object):
         return None
 
 # -Pre-checks---------------------------------------------------
+    @classmethod
     @printStartAndEnd("Platform Check")
-    def needPlatform(self, expect_platform: str):
-        self.info("Need: " + expect_platform)
-        self.info("Current: " + sys.platform)
+    def needPlatform(cls, expect_platform: str):
+        cls.info("Need: " + expect_platform)
+        cls.info("Current: " + sys.platform)
         if expect_platform not in sys.platform:
-            self.byeBye("Platform Check Failed")
+            cls.byeBye("Platform Check Failed")
 
+    @classmethod
     @printStartAndEnd("User Check")
-    def needUser(self, expect_user: str):
-        self.info("Need: " + expect_user)
-        self.info("Current: " + self.getUser())
-        if self.getUser() != expect_user:
-            self.byeBye("User Check Failed")
+    def needUser(cls, expect_user: str):
+        cls.info("Need: " + expect_user)
+        cls.info("Current: " + cls.getUser())
+        if cls.getUser() != expect_user:
+            cls.byeBye("User Check Failed")
 
 # -Debug---------------------------------------------------------
     def TRACE(self, input_: str, trace_type='INFO'):
@@ -294,13 +314,15 @@ class KyanToolKit_Py(object):
             return False
 
 # -Internal Uses-------------------------------------------------
-    def checkResult(self, result: bool):
+    @classmethod
+    def checkResult(cls, result: bool):
         if 0 == result:
-            self.echo("Done", "result")
+            cls.echo("Done", "result")
         else:
-            self.echo("Failed", "result")
+            cls.echo("Failed", "result")
 
-    def getUser(self):
+    @classmethod
+    def getUser(cls):
         return getpass.getuser()
 
     def asyncPrint(self, words: str):

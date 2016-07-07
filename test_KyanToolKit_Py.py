@@ -18,7 +18,7 @@ class test_KyanToolKitPy(unittest.TestCase):
     '''
     用于测试 KyanToolKit_Py
     '''
-    ktk_version = '4.4'
+    ktk_version = '4.5'
 
     def setUp(self):
         self.ktk = KyanToolKit_Py.KyanToolKit_Py()
@@ -46,7 +46,7 @@ class test_KyanToolKitPy(unittest.TestCase):
         os.system = self.os_system
 
     def test_version(self):
-        self.assertEqual(self.ktk_version, self.ktk.__version__)
+        self.assertEqual(self.ktk_version, self.ktk.version)
 
     def test_init(self):
         'testing __init__()'
@@ -118,13 +118,13 @@ class test_KyanToolKitPy(unittest.TestCase):
         self.assertEqual(self.fakeos.readline(), "cls")
 
     def test_pressToContinue_1(self):
-        self.fakein.write()
+        self.fakein.write()  # simulate press enter
         self.ktk.pressToContinue()
         expect_word = "\nPress Enter to Continue...\n"
         self.assertEqual(self.fakeout.readline(), expect_word)
 
     def test_pressToContinue_2(self):
-        self.fakein.write()
+        self.fakein.write()  # simulate press enter
         self.ktk.pressToContinue("Test Custom Text:")
         self.assertEqual(self.fakeout.readline(), "Test Custom Text:")
 
