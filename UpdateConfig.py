@@ -56,9 +56,11 @@ def menu():
             config(conf)
         cit.info('Done')
         cit.pause('Press Enter to exit ...')
+        cit.bye()
+    elif choice == 'exit':
+        cit.bye()
     else:
         return choice
-    cit.bye()
 
 
 @cit.as_session('Configing')
