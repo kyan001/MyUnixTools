@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import os
 import shutil
+import getpass
 import consoleiotools as cit
 
 
@@ -31,8 +32,11 @@ def copy_my_file(from_, to_):
     if os.path.isfile(to_):
         cit.err('target file exists, copy cancelled', lvl=1)
         cit.bye()
+    cit.info('Copying file ...')
     shutil.copyfile(from_, to_)
-    cit.info('Copy done.')
+    cit.info('Changing file owner ...')
+    current_user = getpass.getuser()
+    shutil.chown(to_, user=current_user)
 
 
 def main():
