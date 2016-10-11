@@ -1,7 +1,8 @@
 # http://tieba.baidu.com/p/3727427042
 
-import KyanToolKit_Py, sys
-ktk = KyanToolKit_Py.KyanToolKit_Py()
+import consoleiotools as cit
+import KyanToolKit
+ktk = KyanToolKit.KyanToolKit()
 
 ktk.needPlatform('win')
 ip_list = [
@@ -17,17 +18,17 @@ ip_list = [
     '52.76.139.242',
 ]
 if not ip_list:
-    ktk.err('Ip List is empty').bye()
-vpn_route = '10.100.0.1' # duetime
-ktk.info('VPN route = {}'.format(vpn_route))
+    cit.err('Ip List is empty').bye()
+vpn_route = '10.100.0.1'  # duetime
+cit.info('VPN route = {}'.format(vpn_route))
 
 # get mode, delete / set / print
 available_modes = ['set', 'delete', 'print']
 print(ktk.banner("Choose mode:"))
-mode = ktk.getChoice(available_modes)
+mode = cit.get_choice(available_modes)
 if mode not in available_modes:
-    ktk.err('Mode {} is not supported, available modes: {}'.format(mode, available_modes)).bye()
-ktk.info('Mode = {}'.format(mode))
+    cit.err('Mode {} is not supported, available modes: {}'.format(mode, available_modes)).bye()
+cit.info('Mode = {}'.format(mode))
 
 if mode == 'set':
     for ip in ip_list:
@@ -40,4 +41,4 @@ elif mode == 'delete':
 elif mode == 'print':
     cmd = 'route print'
     ktk.runCmd(cmd)
-ktk.pressToContinue()
+cit.pause()

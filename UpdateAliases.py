@@ -1,43 +1,45 @@
 #!/usr/bin/python3
 #
-#=================================================================
+# ================================================================
 # UpdateAliases.py
 #   update users /home/{user}/.aliases_{user}
 #
 # HISTORY
-#-----------------------------------------------------------------
+# ----------------------------------------------------------------
 #     DATE    |     AUTHOR     |  VERSION | COMMENT
-#-------------+----------------+----------+-----------------------
+# ------------+----------------+----------+-----------------------
 #  2014-05-08 |     YAN Kai    |   V1.0   | Script Creation
 #             |                |          |
-#-----------------------------------------------------------------
-#=================================================================
+# ----------------------------------------------------------------
+# ================================================================
 #
 import os
 import sys
-import KyanToolKit_Py
 import getpass
-ktk = KyanToolKit_Py.KyanToolKit_Py()
+
+import consoleiotools as cit
+import KyanToolKit
+ktk = KyanToolKit.KyanToolKit()
 user = getpass.getuser()
 
-#--Pre-conditions Check-------------------------------------------
-ktk.needPlatform("linux");
-#--get user-------------------------------------------------------
+# -Pre-conditions Check-------------------------------------------
+ktk.needPlatform("linux")
+# -get user-------------------------------------------------------
 if len(sys.argv) <= 1:
-	ktk.warn("User not passed, using current user.")
+    cit.warn("User not passed, using current user.")
 else:
-	user = sys.argv[1]
+    user = sys.argv[1]
 alias_file = "/home/" + user + "/.aliases_" + user
-ktk.info("User = " + user)
-ktk.info("File = " + alias_file)
-#--touch file and change owner-----------------------------------
+cit.info("User = " + user)
+cit.info("File = " + alias_file)
+# -touch file and change owner-----------------------------------
 if not os.path.exists(alias_file):
-	ktk.info(alias_file + " not exists. Create one")
-	ktk.runCmd("touch " + alias_file)
-	ktk.runCmd("chown " + user + " " + alias_file)
+    cit.info(alias_file + " not exists. Create one")
+    ktk.runCmd("touch " + alias_file)
+    ktk.runCmd("chown " + user + " " + alias_file)
 else:
-	ktk.info(alias_file + " already exists")
-#--write file----------------------------------------------------
+    cit.info(alias_file + " already exists")
+# -write file----------------------------------------------------
 # \!:1 = 1st argument
 alias_template = """# -----
 # basic commands
@@ -59,13 +61,13 @@ alias LS '${KyanToolKit_Unix_Folder}/ClearAndPwd.sh -noclear'
 source '${KyanToolKit_Unix_Folder}/PurePrompt.SourceMe'
 # -----"""
 # alias arg def
-KyanToolKit_Unix_Folder="/home/kyan001/KyanToolKit_Unix"
+KyanToolKit_Unix_Folder = "/home/kyan001/KyanToolKit_Unix"
 v_username = user
 # file open
-a_file = open(alias_file,'w')
+a_file = open(alias_file, 'w')
 # replace variables
-final_string = alias_template.replace("${v_username}",v_username).replace("${KyanToolKit_Unix_Folder}",KyanToolKit_Unix_Folder)
+final_string = alias_template.replace("${v_username}", v_username).replace("${KyanToolKit_Unix_Folder}", KyanToolKit_Unix_Folder)
 # write and close
 a_file.write(final_string)
 a_file.close()
-ktk.info("Done. Enjoy.")
+cit.info("Done. Enjoy.")
