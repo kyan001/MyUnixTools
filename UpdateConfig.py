@@ -23,16 +23,16 @@ def generate_filepath(filename):
 
 
 @cit.as_session('Copying my file')
-def copy_my_file(template, to_):
+def copy_my_file(config_name, to_):
     # deal from
-    if not os.path.isabs(template):
+    if not os.path.isabs(config_name):
         current_dir = os.path.dirname(os.path.realpath(__file__))
-        from_ = os.path.join(current_dir, template)
+        from_ = os.path.join(current_dir, config_name)
     else:
-        from_ = template
+        from_ = config_name
     cit.info('From\t: {}'.format(from_))
     if not os.path.isfile(from_):
-        cit.err("my.file does not exists, copy cancelled", lvl=1)
+        cit.err("config file does not exists, copy cancelled", lvl=1)
         cit.bye()
     # deal to
     cit.info('To\t: {}'.format(to_))
@@ -46,9 +46,31 @@ def copy_my_file(template, to_):
     shutil.chown(to_, user=current_user)
 
 
+@cit.as_session('Menu')
+def menu():
+    confs = ['.vimrc', '.tcshrc', '.aliases', '.promptrc']
+    cit.ask('Which config file to update:')
+    choice = cit.get_choice(['ALL'] + confs + ['exit'])
+    if choice == 'ALL':
+        for conf in confs:
+            config(conf)
+        cit.info('Done')
+        cit.pause('Press Enter to exit ...')
+    else:
+        return choice
+    cit.bye()
+
+
+@cit.as_session('Configing')
+def config(name):
+    new_file = generate_filepath(name)
+    copy_my_file('config' + name, new_file)
+
+
 def main():
-    new_file = generate_filepath('.vimrc')
-    copy_my_file('my.vimrc', new_file)
+    while True:
+        conf = menu()
+        config(conf)
 
 if __name__ == '__main__':
     main()

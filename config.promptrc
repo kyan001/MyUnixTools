@@ -1,18 +1,8 @@
+# Please Source Me
 #=================================================================
-# PurePrompt.sh
+# .promptrc
 #   Make the prompt more easy to read.
 #	Only run this by source in TCSH!
-#
-# HISTORY
-#-----------------------------------------------------------------
-#     DATE    |     AUTHOR     |  VERSION | COMMENT
-#-------------+----------------+----------+-----------------------
-#  2013-11-08 |     YAN Kai    |   V1.0   | Script Creation
-#  2013-11-12 |     YAN Kai    |   V1.1   | Improve \n
-#  2014-03-14 |     YAN Kai    |   V1.2   | Change default dir show
-#             |                |          |
-#-----------------------------------------------------------------
-#=================================================================
 #
 #--Variables Defination-------------------------------------------
 # N=Normal B=Bold U=Underline G=Gray R=Red P=Purple
