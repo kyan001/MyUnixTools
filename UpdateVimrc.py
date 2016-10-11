@@ -23,14 +23,18 @@ def generate_filepath(filename):
 
 
 @cit.as_session('Copying my file')
-def copy_my_file(from_, to_):
+def copy_my_file(template, to_):
+    # deal from
+    if not os.path.isabs(template):
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        from_ = os.path.join(current_dir, template)
+    else:
+        from_ = template
     cit.info('From\t: {}'.format(from_))
     if not os.path.isfile(from_):
         cit.err("my.file does not exists, copy cancelled", lvl=1)
         cit.bye()
-    if not os.path.isabs(to_):
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-        to_ = os.path.join(current_dir, to_)
+    # deal to
     cit.info('To\t: {}'.format(to_))
     if os.path.isfile(to_):
         cit.err('target file exists, copy cancelled', lvl=1)
