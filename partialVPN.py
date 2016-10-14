@@ -24,7 +24,7 @@ cit.info('VPN route = {}'.format(vpn_route))
 
 # get mode, delete / set / print
 available_modes = ['set', 'delete', 'print']
-print(ktk.banner("Choose mode:"))
+cit.ask("Choose mode:")
 mode = cit.get_choice(available_modes)
 if mode not in available_modes:
     cit.err('Mode {} is not supported, available modes: {}'.format(mode, available_modes)).bye()

@@ -29,10 +29,10 @@ with open(log_path) as f:
 clients_count = len(clients)
 if clients_count == 0:
     cit.err("0 client logged").bye()
-print(ktk.banner("Total: {} clients:".format(clients_count)))
+cit.title("Total: {} clients:".format(clients_count))
 
 threshold = 5
-print(ktk.banner("See clients lower than {} ?".format(threshold)))
+cit.ask("See clients lower than {} ?".format(threshold))
 see_all = cit.get_choice(['Yes', 'No'])
 if clients:
     for (k, v) in clients.items():
@@ -45,7 +45,7 @@ if clients:
         cit.info("{} : {}".format(k, v))
 
 # clear
-print(ktk.banner(("Need clear the log?")))
+cit.ask("Need clear the log?")
 need_clear = cit.get_choice(['Yes', 'No'])
 if "Yes" == need_clear:
     ktk.runCmd("sudo echo")
