@@ -123,13 +123,6 @@ else
 		RunCmd "mkdir /home/${v_username}/"
 		RunCmd "chown ${v_username} /home/${v_username}/"
 
-		# Create user .tcshrc
-		RunCmd "touch /home/${v_username}/.tcshrc"
-		RunCmd "chown ${v_username} /home/${v_username}/.tcshrc"
-		pInfo "[ Write .tcshrc file ] \t... \c"
-		echo "source .aliases_${v_username}" > /home/${v_username}/.tcshrc
-		CheckResult
-
 		# Make user sudoer
 		pInfo "[ Write /etc/sudoers file ] \t... \c"
 		echo "${v_username} ALL=(ALL:ALL) ALL" >> /etc/sudoers
@@ -138,18 +131,7 @@ else
 		# Set Default user shell = tcsh
 		RunCmd "chsh -s /bin/tcsh ${v_username}"
 
-		# Create user asliases file
-		RunCmd "touch /home/${v_username}/.aliases_${v_username}"
-		RunCmd "chown ${v_username} /home/${v_username}/.aliases_${v_username}"
-		pInfo "[ Write /home/${v_username}/.aliases_${v_username} file ] \t..."
-		python3 "./UpdateAliases.py" ${v_username}
-		CheckResult
-
-		# Create user .vimrc file
-		RunCmd "touch /home/${v_username}/.vimrc"
-		RunCmd "chown ${v_username} /home/${v_username}/.vimrc"
-		pInfo "[ Write /home/${v_username}/.vimrc file ] \t..."
-		python3 "./UpdateVimrc.py" ${v_username}
-		CheckResult
+		$ Set up config files
+		echo "Please run UpdateConfig.py manually after login."
 	fi
 fi
