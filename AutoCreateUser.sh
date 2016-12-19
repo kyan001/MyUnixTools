@@ -1,4 +1,4 @@
-#!/usr/bin／env bash
+#!/usr/bin/env bash
 #
 #=================================================================
 # AutoCreateUser.sh
@@ -131,7 +131,7 @@ else
 		# Set Default user shell = tcsh
 		RunCmd "chsh -s /bin/tcsh ${v_username}"
 
-		$ Set up config files
+		# Set up config files
 		echo "Please run UpdateConfig.py manually after login."
 	fi
 fi

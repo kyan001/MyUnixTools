@@ -1,4 +1,4 @@
-#!/usr/bin／env python3
+#!/usr/bin/env python3
 # http://tieba.baidu.com/p/3727427042
 
 import consoleiotools as cit
