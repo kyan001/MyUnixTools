@@ -10,15 +10,15 @@ def generate_filepath(filename):
     home_dir = os.path.expanduser('~')
     cit.info("Home Dir\t: {}".format(home_dir))
     if not os.path.isdir(home_dir):
-        cit.warn('Home Dir does not exist, creating it', lvl=1)
+        cit.warn('Home Dir does not exist, creating it')
         os.makedirs(home_dir)
     new_file = os.path.join(home_dir, filename)
     cit.info("Target File\t: {}".format(new_file))
     if os.path.exists(new_file):
         backup = '{}.old'.format(new_file)
         os.rename(new_file, backup)
-        cit.warn("Target file is already exist.", lvl=1)
-        cit.warn('Old target file renamed as {}'.format(backup), lvl=1)
+        cit.warn("Target file is already exist.")
+        cit.warn('Old target file renamed as {}'.format(backup))
     return new_file
 
 
@@ -32,12 +32,12 @@ def copy_my_file(config_name, to_):
         from_ = config_name
     cit.info('From\t: {}'.format(from_))
     if not os.path.isfile(from_):
-        cit.err("config file does not exists, copy cancelled", lvl=1)
+        cit.err("config file does not exists, copy cancelled")
         cit.bye()
     # deal to
     cit.info('To\t: {}'.format(to_))
     if os.path.isfile(to_):
-        cit.err('target file exists, copy cancelled', lvl=1)
+        cit.err('target file exists, copy cancelled')
         cit.bye()
     cit.info('Copying file ...')
     shutil.copyfile(from_, to_)
