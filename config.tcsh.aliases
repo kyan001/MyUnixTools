@@ -2,7 +2,7 @@
 alias ll 'ls -lh'
 alias lsgp 'ls | grep -i'
 alias llgp 'll | grep -i'
-alias fd 'find -L . -name "\!:1"'
+alias fd 'find -L . -iname "\!:1"'
 alias hgp 'history | grep -i --color'
 alias gp 'grep -i --color "\!:1" *'
 alias py 'python3'
