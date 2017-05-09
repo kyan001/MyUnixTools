@@ -58,7 +58,7 @@ then
 	exit 1
 fi
 
-if [ `whoami` != "root" ]
+if [ "$(whoami)" != "root" ]
 	then	pErr "This shell must be done in ROOT user!"
 	exit 1
 fi
@@ -93,8 +93,8 @@ done
 
 #--Main-----------------------------------------------------------
 # Check if user already exsit
-grep "${v_username}" /etc/passwd > /dev/null
-if [ $? -eq 0 ]
+
+if "grep '${v_username}' /etc/passwd > /dev/null"
 	then	user_exsit_flag=1
 fi
 
@@ -117,7 +117,7 @@ else
 
 		# Set user password
 		pInfo "[ passwd ${v_username} ]"
-		passwd ${v_username}
+		passwd "${v_username}"
 
 		# Make user home folder"
 		RunCmd "mkdir /home/${v_username}/"

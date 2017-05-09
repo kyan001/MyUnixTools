@@ -1,2 +1,2 @@
-source '.aliases'
-source '.promptrc'
+source ~/.tcsh.aliases
+source ~/.tcsh.prompt

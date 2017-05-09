@@ -1,0 +1,9 @@
+# basic commands
+alias ll='ls -lh | lolcat'
+alias lsgp='ls | grep -i'
+alias llgp='ll | grep -i'
+alias fd='find -L . -name "\!:1"'
+alias hgp='history | grep -i --color'
+alias gp='grep -i --color "\!:1" *'
+alias py='python3'
+alias bfg="java -jar /usr/local/opt/bfg/bfg.jar"

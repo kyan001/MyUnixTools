@@ -48,7 +48,7 @@ def copy_my_file(config_name, to_):
 
 @cit.as_session('Menu')
 def menu():
-    confs = ['.vimrc', '.tcshrc', '.aliases', '.promptrc']
+    confs = ['.vimrc', '.tcshrc', '.bashrc', '.tcsh.aliases', '.tcsh.prompt', '.bash.aliases', '.bash.prompt']
     cit.ask('Which config file to update:')
     choice = cit.get_choice(['ALL'] + confs + ['exit'])
     if choice == 'ALL':
