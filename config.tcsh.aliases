@@ -1,5 +1,5 @@
 # basic commands
-alias ll 'ls -lh'
+alias ll 'ls -alhF'
 alias lsgp 'ls | grep -i'
 alias llgp 'll | grep -i'
 alias fd 'find -L . -iname "\!:1"'
