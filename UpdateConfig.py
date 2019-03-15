@@ -75,9 +75,7 @@ def apply_config(config_name):
         if not diffs:
             cit.warn("Files are same, stop configing.")
             return True
-        cit.warn("Diffs found:")
-        for diff_line in diffs:
-            cit.warn("\n".join(diff_line))
+        cit.warn("Diffs found:\n" + "".join(diffs))
         backup = '{}.old'.format(target_conf)
         os.rename(target_conf, backup)
         cit.warn("Old config file renamed as {}".format(backup))
