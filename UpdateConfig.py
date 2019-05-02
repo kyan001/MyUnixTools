@@ -67,7 +67,8 @@ def menu():
 
 @cit.as_session('Configing')
 def apply_config(config_name):
-    new_conf = "config" + config_name
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    new_conf = os.path.join(current_dir, "config" + config_name)
     target_conf = generate_filepath(config_name)
     if os.path.exists(target_conf):
         cit.warn("Target file is already exist.")
