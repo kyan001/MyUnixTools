@@ -9,4 +9,5 @@ alias fd='_fd(){ find -L . -iname "*$1*"; }; _fd'
 alias gp='_gp(){ grep -i --color "$1" *; }; _gp'
 alias py='python3'
 alias bfg='java -jar /usr/local/opt/bfg/bfg.jar'
-alias pcat='pygmentize -g'
+alias pcat='pygmentize -g'  # for pygments
+alias typora="open -a typora"  # for Typora
