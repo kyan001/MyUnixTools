@@ -1,2 +1,2 @@
-source ~/.bash.aliases
-source ~/.bash.prompt
+source ~/.bash_aliases
+source ~/.bash_prompt

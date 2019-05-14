@@ -1,2 +1,2 @@
-source ~/.tcsh.aliases
-source ~/.tcsh.prompt
+source ~/.tcsh_aliases
+source ~/.tcsh_prompt
