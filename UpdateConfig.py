@@ -57,13 +57,13 @@ def menu():
         return [filename for filename in all_files if filename.startswith('config.')]
     confs = [filename.replace("config", "") for filename in config_filenames()]
     cit.ask('Which config file to update:')
-    choice = cit.get_choice(['ALL'] + sorted(confs) + ['exit'])
-    if choice == 'ALL':
+    choice = cit.get_choice(['** ALL **'] + sorted(confs) + ['** EXIT **'])
+    if choice == '** ALL **':
         for conf in confs:
             apply_config(conf)
         cit.info('Done')
         cit.bye()
-    elif choice == 'exit':
+    elif choice == '** EXIT **':
         cit.bye()
     else:
         return choice
