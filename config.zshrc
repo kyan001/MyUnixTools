@@ -71,11 +71,11 @@ DEFAULT_USER="kyan001"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     git  # git suggestion
-    colored-man-pages  # man page 彩色化
-    colorize  # ccat 彩色 cat
+    colored-man-pages  # man page colorized
+    colorize  # ccat = colorized cat, using pygmentize
     history  # h -- history；hsi KEY -- history search case insensitive
     z  # auto jump to history changed dir
-    # _Completions 补全___________
+    # _Completions___________
     httpie  # HTTPie completion
     django  # django manage.py completion
     docker  # docker completion
