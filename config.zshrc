@@ -73,7 +73,7 @@ plugins=(
     git  # git suggestion
     colored-man-pages  # man page colorized
     colorize  # ccat = colorized cat, using pygmentize
-    history  # h -- history；hsi KEY -- history search case insensitive
+    history  # h -- history; hsi KEY -- history search case insensitive
     z  # auto jump to history changed dir
     # _Completions___________
     httpie  # HTTPie completion
