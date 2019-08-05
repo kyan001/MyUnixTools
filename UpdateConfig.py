@@ -7,9 +7,9 @@ import difflib
 
 
 def diff(from_path: str, to_path: str):
-    with open(from_path) as f:
+    with open(from_path, encoding='utf-8') as f:
         from_lines = f.readlines()
-    with open(to_path) as f:
+    with open(to_path, encoding='utf-8') as f:
         to_lines = f.readlines()
     return list(difflib.unified_diff(from_lines, to_lines))
 
