@@ -3,15 +3,7 @@ import os
 import shutil
 import getpass
 import consoleiotools as cit
-import difflib
-
-
-def diff(from_path: str, to_path: str):
-    with open(from_path, encoding='utf-8') as f:
-        from_lines = f.readlines()
-    with open(to_path, encoding='utf-8') as f:
-        to_lines = f.readlines()
-    return list(difflib.unified_diff(from_lines, to_lines))
+from KyanToolKit import KyanToolKit as ktk
 
 
 @cit.as_session('Generate Filepath')
@@ -76,11 +68,11 @@ def apply_config(config_name):
     target_conf = generate_filepath(config_name)
     if os.path.exists(target_conf):
         cit.warn("Target file is already exist.")
-        diffs = diff(target_conf, new_conf)
+        diffs = ktk.diff(target_conf, new_conf)
         if not diffs:
             cit.warn("Files are same, stop configing.")
             return True
-        cit.warn("Diffs found:\n" + "".join(diffs))
+        cit.warn("Diffs found:\n" + "\n".join(diffs))
         backup = '{}.old'.format(target_conf)
         os.rename(target_conf, backup)
         cit.warn("Old config file renamed as {}".format(backup))
