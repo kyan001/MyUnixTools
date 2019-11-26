@@ -10,7 +10,7 @@ powerlevel10k_name="powerlevel10k"
 powerlevel10k_dir="${HOME}/.oh-my-zsh/custom/themes/${powerlevel10k_name}"
 if [ ! -d "${powerlevel10k_dir}" ]; then
     echo "${powerlevel10k_name} is not exist. Installing ..."
-    git clone https://github.com/romkatv/${powerlevel10k_name}.git ${powerlevel10k_dir}
+    git clone --depth=1 https://github.com/romkatv/${powerlevel10k_name}.git ${powerlevel10k_dir}
 else
     echo "${powerlevel10k_name} already installed."
 fi
