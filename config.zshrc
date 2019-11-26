@@ -8,8 +8,7 @@
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="powerlevel9k/powerlevel9k"
-DEFAULT_USER="kyan001"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -70,12 +69,11 @@ DEFAULT_USER="kyan001"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-    git  # git suggestion
     colored-man-pages  # man page colorized
     colorize  # ccat = colorized cat, using pygmentize
-    history  # h -- history; hsi KEY -- history search case insensitive
     z  # auto jump to history changed dir
     # _Completions___________
+    git  # git suggestion
     httpie  # HTTPie completion
     django  # django manage.py completion
     docker  # docker completion
@@ -83,6 +81,7 @@ plugins=(
     pip  # pip completion
     python  # python completion
     redis-cli  # redis-cli completion
+    coffee  # CoffeeScript completion
     supervisor  # Supervisor completion
     # _3rd party's___________
     zsh-nvm  # 3rd party plugins. add wraps of nvm command.
@@ -96,10 +95,6 @@ esac
 export NVM_LAZY_LOAD=true  # lazy load for zsh-nvm
 
 source $ZSH/oh-my-zsh.sh
-
-
-# User configuration
-export POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=($POWERLEVEL9K_LEFT_PROMPT_ELEMENTS virtualenv)  # add python virtualenv support
 
 # export MANPATH="/usr/local/man:$MANPATH"
 

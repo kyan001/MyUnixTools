@@ -6,13 +6,13 @@ else
     echo "oh-my-zsh already installed."
 fi
 
-powerlevel9k_name="powerlevel9k"
-powerlevel9k_dir="${HOME}/.oh-my-zsh/custom/themes/${powerlevel9k_name}"
-if [ ! -d "${powerlevel9k_dir}" ]; then
-    echo "${powerlevel9k_name} is not exist. Installing ..."
-    git clone https://github.com/bhilburn/${powerlevel9k_name}.git ${powerlevel9k_dir}
+powerlevel10k_name="powerlevel10k"
+powerlevel10k_dir="${HOME}/.oh-my-zsh/custom/themes/${powerlevel10k_name}"
+if [ ! -d "${powerlevel10k_dir}" ]; then
+    echo "${powerlevel10k_name} is not exist. Installing ..."
+    git clone https://github.com/romkatv/${powerlevel10k_name}.git ${powerlevel10k_dir}
 else
-    echo "${powerlevel9k_name} already installed."
+    echo "${powerlevel10k_name} already installed."
 fi
 
 zsh_syntax_highlighting_name="zsh-syntax-highlighting"
