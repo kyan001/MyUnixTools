@@ -56,7 +56,7 @@ fi
 
 #--Flags----------------------------------------------------------
 delete_flag=0;
-user_exsit_flag=0;
+user_exist_flag=0;
 
 #--Variables------------------------------------------------------
 until [ $# = 0 ]
@@ -83,24 +83,24 @@ do
 done
 
 #--Main-----------------------------------------------------------
-# Check if user already exsit
+# Check if user already exist
 
 if "grep '${v_username}' /etc/passwd > /dev/null"
-	then	user_exsit_flag=1
+	then	user_exist_flag=1
 fi
 
 if [ $delete_flag -eq 1 ]
 then
-	if [ $user_exsit_flag -eq 1 ]
+	if [ $user_exist_flag -eq 1 ]
 	then
 		RunCmd "userdel -r ${v_username}"
 		pWarn " Remove sudo by \"sudo vim /etc/sudoers\""
 		exit 0
 	fi
 else
-	if [ $user_exsit_flag -eq 1 ]
+	if [ $user_exist_flag -eq 1 ]
 	then
-		pErr "User $v_username already exsits!"
+		pErr "User $v_username already exists!"
 		exit 1
 	else
 		# Add user
