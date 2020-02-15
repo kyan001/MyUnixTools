@@ -120,7 +120,7 @@ else
 		CheckResult
 
 		# Set Default user shell = tcsh
-		pInfo "If you need change the default shell, use `chsh -s /bin/tcsh ${v_username}`"
+		pInfo "If you need change the default shell, use 'chsh -s /bin/tcsh ${v_username}'"
 
 		# Set up config files
 		echo "Please run UpdateConfig.py manually after login."
