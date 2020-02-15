@@ -3,15 +3,6 @@
 #=================================================================
 # AutoCreateUser.sh
 #   Create user automatically.
-#
-# HISTORY
-#-----------------------------------------------------------------
-#     DATE    |     AUTHOR     |  VERSION | COMMENT
-#-------------+----------------+----------+-----------------------
-#  2013-11-01 |     YAN Kai    |   V1.0   | Script Creation
-#  2013-11-03 |     YAN Kai    |   V1.1   | Add .vimrc support
-#             |                |          |
-#-----------------------------------------------------------------
 #=================================================================
 #
 
@@ -129,7 +120,7 @@ else
 		CheckResult
 
 		# Set Default user shell = tcsh
-		RunCmd "chsh -s /bin/tcsh ${v_username}"
+		pInfo "If you need change the default shell, use `chsh -s /bin/tcsh ${v_username}`"
 
 		# Set up config files
 		echo "Please run UpdateConfig.py manually after login."
