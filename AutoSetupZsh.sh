@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 if [ ! -d "$HOME/.oh-my-zsh/" ]; then  # dir not exist
     echo "oh-my-zsh is not exist. Installing ..."
-    bash -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 else
     echo "oh-my-zsh already installed."
 fi
