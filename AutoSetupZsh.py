@@ -48,7 +48,7 @@ def install_if_needed(path: str, cmds: list, name: str):
         cit.info("Path = {}".format(path))
         for cmd in cmds:
             cmd = cmd.format(path=path)
-            cit.run_cmd(cmd)
+            cct.run_cmd(cmd)
     else:
         cit.info("Component is already installed.")
 
