@@ -2,7 +2,7 @@
 import os
 
 import consoleiotools as cit
-from KyanToolKit import KyanToolKit as ktk
+import consolecmdtools as cct
 
 COMPONENTS = {
     "oh-my-zsh": {
@@ -48,7 +48,7 @@ def install_if_needed(path: str, cmds: list, name: str):
         cit.info("Path = {}".format(path))
         for cmd in cmds:
             cmd = cmd.format(path=path)
-            ktk.runCmd(cmd)
+            cit.run_cmd(cmd)
     else:
         cit.info("Component is already installed.")
 
