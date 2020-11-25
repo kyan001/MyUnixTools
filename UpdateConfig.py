@@ -3,7 +3,7 @@ import os
 import shutil
 import getpass
 import consoleiotools as cit
-from KyanToolKit import KyanToolKit as ktk
+import consolecmdtools as cct
 
 
 @cit.as_session('Generate Filepath')
@@ -68,7 +68,7 @@ def apply_config(config_name):
     target_conf = generate_filepath(config_name)
     if os.path.exists(target_conf):
         cit.warn("Target file is already exist.")
-        diffs = ktk.diff(target_conf, new_conf)
+        diffs = cct.diff(target_conf, new_conf)
         if not diffs:
             cit.warn("Files are same, stop configing.")
             return True
