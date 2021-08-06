@@ -6,30 +6,30 @@ import consoleiotools as cit
 import consolecmdtools as cct
 
 
-@cit.as_session('Generate Filepath')
+@cit.as_session
 def generate_filepath(filename):
     home_dir = os.path.expanduser('~')
-    cit.info("Home Dir\t: {}".format(home_dir))
+    cit.info("  Home Dir: {}".format(home_dir))
     if not os.path.isdir(home_dir):
         cit.warn('Home Dir does not exist, creating it')
         os.makedirs(home_dir)
-    new_file = os.path.join(home_dir, filename)
-    cit.info("Target File\t: {}".format(new_file))
-    return new_file
+    new_path = os.path.join(home_dir, filename)
+    cit.info("Target File: {}".format(new_path))
+    return new_path
 
 
-@cit.as_session('Copying my file')
+@cit.as_session
 def copy(from_path: str, to_path: str) -> bool:
-    # deal from
+    # check source file
     if not os.path.isabs(from_path):
-        current_dir = os.path.dirname(os.path.realpath(__file__))
+        current_dir = cct.get_dir(__file__)
         from_path = os.path.join(current_dir, from_path)
-    cit.info('From\t: {}'.format(from_path))
+    cit.info('From: {}'.format(from_path))
     if not os.path.isfile(from_path):
         cit.err("config file does not exists, copy cancelled")
         return False
-    # deal to
-    cit.info('To\t: {}'.format(to_path))
+    # check destination file
+    cit.info('  To: {}'.format(to_path))
     if os.path.isfile(to_path):
         cit.err('target file exists, copy cancelled')
         return False
@@ -41,27 +41,19 @@ def copy(from_path: str, to_path: str) -> bool:
     return True
 
 
-@cit.as_session('Menu')
-def menu():
-    def config_filenames() -> list:
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-        all_files = os.listdir(current_dir)
-        return [filename for filename in all_files if filename.startswith('config.')]
-    confs = [filename.replace("config", "") for filename in config_filenames()]
+def get_conf_names(dir: str = None) -> list:
+    all_files = os.listdir(dir or cct.get_dir(__file__))
+    return [filename for filename in all_files if filename.startswith('config.')]
+
+
+@cit.as_session
+def show_menu(filenames):
+    confs = [filename.replace("config", "") for filename in filenames]
     cit.ask('Which config file to update:')
-    choice = cit.get_choice(['** ALL **'] + sorted(confs) + ['** EXIT **'])
-    if choice == '** ALL **':
-        for conf in confs:
-            apply_config(conf)
-        cit.info('Done')
-        cit.bye()
-    elif choice == '** EXIT **':
-        cit.bye()
-    else:
-        return choice
+    return cit.get_choices(sorted(confs), exitable=True, allable=True)
 
 
-@cit.as_session('Configing')
+@cit.as_session
 def apply_config(config_name):
     current_dir = os.path.dirname(os.path.realpath(__file__))
     new_conf = os.path.join(current_dir, "config" + config_name)
@@ -80,10 +72,9 @@ def apply_config(config_name):
 
 
 def main():
-    while True:
-        conf = menu()
-        if not apply_config(conf):
-            cit.bye()
+    conf_names = get_conf_names()
+    for conf in show_menu(conf_names):
+        apply_config(conf)
 
 
 if __name__ == '__main__':
