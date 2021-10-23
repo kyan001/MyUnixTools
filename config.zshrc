@@ -75,7 +75,6 @@ plugins=(
     # _Completions___________
     git  # git suggestion
     httpie  # HTTPie completion
-    django  # django manage.py completion
     docker  # docker completion
     npm  # npm completion
     pip  # pip completion
