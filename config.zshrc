@@ -95,10 +95,12 @@ case $(uname -a) in  # this problem only on Windows Subsystem Linux
 esac
 
 export NVM_LAZY_LOAD=true  # lazy load for zsh-nvm
+export PATH="$(python3 -m site --user-base)/bin:$PATH"  # Python User Site-Package Binaries
 
 source $ZSH/oh-my-zsh.sh
 
-
+# if p10k config is already done, uncomment the following line.
+# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
