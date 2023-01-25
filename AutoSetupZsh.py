@@ -8,7 +8,7 @@ COMPONENTS = {
     "oh-my-zsh": {
         "path": "{HOME}/.oh-my-zsh/",
         "cmds": [
-            'bash -c $(curl -fsSL https://github.com/ohmyzsh/ohmyzsh/raw/master/tools/install.sh)',
+            'bash -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"',
         ],
     },
     "powerlevel10k": {
