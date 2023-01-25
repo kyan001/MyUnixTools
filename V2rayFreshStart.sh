@@ -11,5 +11,7 @@ if [ "$USER" = "root" ]; then
 else
     git clone https://github.com/kyan001/MyUnixTools  # Clone Git Repo under /home/$USERNAME/
     cd MyUnixTools || exit  # ~/MyUnixTools, if failed exit.
-
+    python3 AutoSetupZsh.py
+    python3 UpdateConfig.py
+    zsh  # init and exit after
 fi
