@@ -37,11 +37,14 @@ else
     echo "[Info] Downloading v2ray & bbr shells"
     curl -s -L https://git.io/v2ray.sh > v2ray-233boy.sh  # v2ray setup script
     curl -Lso- https://git.io/kernel.sh > v2ray-bbr.sh  # BBR setup script
+    curl -fsSL git.io/warp.sh > v2ray-warp.sh  # WARP setup script
     echo "[Warning] Please make sure your domain pointed to this IP."
     echo "[Info] Installing v2ray ..."
     sudo -E bash ~/v2ray-233boy.sh  # WebSocket + TLS
     echo "[Info] Enabling BBR Plus ..."
     sudo -E bash ~/v2ray-bbr.sh  # select "(1) FQ"
+    echo "[Info] Install WireGuard and IPv6 WARP ..."
+    sudo -E bash ~/v2ray-warp.sh 6  # select wg
     echo "[Info] Getting HTTPS ceritification ..."
     sudo certbot --nginx  # Choose Your Domain
     echo "[Info] Installing v2ray ..."
