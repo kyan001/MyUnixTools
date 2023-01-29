@@ -22,10 +22,10 @@ function pprint {
             ;;
     esac
     if command -v rich >& /dev/null; then
-        rich --print "$prefix[$style]$*"
+        rich --print "[dim]${prefix}[/][${style}]${*}"
     else
         echo ""
-        echo "  $prefix$*"
+        echo "  ${prefix}${*}"
         echo ""
     fi
 }
