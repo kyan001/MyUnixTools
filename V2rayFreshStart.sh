@@ -7,7 +7,7 @@ function pprint {
     echo ""
 }
 
-if [ "$USER" == "root" ]; then
+if [[ $USER == "root" ]]; then
     echo -n "  [?] Please enter your username: "  # do not add \n
     read -r username  # get user raw input
     pprint "info" "Installing necessary apps ..."
@@ -18,17 +18,17 @@ if [ "$USER" == "root" ]; then
         pprint "warning" "User already exist."
     else
         pprint "info" "Creating unix user ..."
-        bash AutoCreateUser.sh -user $username  # Enter password manually
+        bash AutoCreateUser.sh -user "$username"  # Enter password manually
     fi
     # User Env Setup
-    if [ -f "/home/$username/.zshrc" ]; then
+    if [[ -f /home/$username/.zshrc ]]; then
         pprint "warning" "User Zsh already initialized."
     else
         pprint "info" "Initializing zsh ..."
-        touch /home/$username/.zshrc  # init zsh
+        touch /home/"$username"/.zshrc  # init zsh
     fi
     pprint "info" "Set zsh as user default shell"
-    chsh -s /bin/zsh $username  # set zsh as user's shell
+    chsh -s /bin/zsh "$username"  # set zsh as user's shell
     pprint "warning" "You can now relogin using $username"
 else
     pprint "info" "Install Python3 Packages ..."
@@ -50,7 +50,6 @@ else
     cd ~ || exit
     pprint "info" "Downloading v2ray & bbr shells"
     curl -s -L https://git.io/v2ray.sh > v2ray-233boy.sh  # v2ray setup script
-    curl -Lso- https://git.io/kernel.sh > v2ray-bbr.sh  # BBR setup script
     curl -fsSL git.io/warp.sh > v2ray-warp.sh  # WARP setup script
     pprint "warning" "Please make sure your domain pointed to this IP."
     pprint "info" "Installing v2ray ..."
