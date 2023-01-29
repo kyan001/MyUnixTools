@@ -3,7 +3,7 @@
 source ./pprint.sh
 
 if [[ $USER == "root" ]]; then
-    echo -n "  [?] Please enter your username: "  # do not add \n
+    echo -n "[?] Please enter your username: "  # do not add \n
     read -r username  # get user raw input
     pprint --info "Installing necessary apps ..."
     apt update  # update index
@@ -27,7 +27,7 @@ if [[ $USER == "root" ]]; then
     chsh -s /bin/zsh "$username"  # set zsh as user's shell
     pprint --warn "You can now relogin using $username"
 else
-    echo -n "  [?] Please enter your domain for v2ray: "  # do not add \n
+    echo -n "[?] Please enter your domain for v2ray: "  # do not add \n
     read -r domain  # get user raw input
     pprint --info "Install Python3 Packages ..."
     pip3 install --user consolecmdtools consoleiotools
