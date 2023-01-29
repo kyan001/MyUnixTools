@@ -48,16 +48,11 @@ else
     sudo nginx -t
     pprint "info" "Change dir to ~"
     cd ~ || exit
-    pprint "info" "Downloading v2ray & bbr shells"
+    pprint "info" "Downloading v2ray script"
     curl -s -L https://git.io/v2ray.sh > v2ray-233boy.sh  # v2ray setup script
-    curl -fsSL git.io/warp.sh > v2ray-warp.sh  # WARP setup script
     pprint "warning" "Please make sure your domain pointed to this IP."
     pprint "info" "Installing v2ray ..."
     sudo -E bash ~/v2ray-233boy.sh  # WebSocket + TLS
-    pprint "info" "Enabling BBR Plus ..."
-    sudo -E bash ~/v2ray-bbr.sh  # select "(1) FQ"
-    pprint "info" "Install WireGuard and IPv6 WARP ..."
-    sudo -E bash ~/v2ray-warp.sh 6  # select wg
     pprint "info" "Getting HTTPS ceritification ..."
     sudo certbot --nginx  # Choose Your Domain
     pprint "warning" "Done!"
