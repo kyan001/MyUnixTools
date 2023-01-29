@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 curl -Lso- https://git.io/kernel.sh > v2ray-bbr.sh  # BBR setup script
-echo ""
+sudo echo ""
 echo "  Select:"
 echo "      1. 中文"
 echo "      2. 开启 BBR 或 BBR2 加速, 开启 BBR2 需要安装 XanMod 内核"
