@@ -1,11 +1,13 @@
 #! /usr/bin/env bash
+# version 0.1.0
 echo -n "[?] Please enter your username: "  # do not add \n
 read -r username  # get user raw input
 if [ "$USER" == "root" ]; then
     echo "[Info] Installing necessary apps ..."
+    apt update  # update index
     apt install -y zsh python3-pip nginx certbot python3-certbot-nginx # install apps, automatically yes.
-    echo "[Info] Cloning MyUnixTools ..."
-    git clone https://github.com/kyan001/MyUnixTools  # Clone Git Repo under /root/
+    #echo "[Info] Cloning MyUnixTools ..."  # Consider done when running this script
+    #git clone https://github.com/kyan001/MyUnixTools  # Clone Git Repo under /root/
     cd MyUnixTools || exit  # /root/MyUnixTools, if failed exit.
     echo "[Info] Creating unix user ..."
     sh AutoCreateUser.sh -user $username  # Enter password manually
