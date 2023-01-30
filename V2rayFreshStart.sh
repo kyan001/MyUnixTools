@@ -51,9 +51,9 @@ else
     sudo -E bash ~/v2ray-233boy.sh  # WebSocket + TLS
     pprint --info "Getting HTTPS ceritification ..."
     sudo certbot --nginx  # Choose Your Domain
-    pprint --info "Setting up BBR"
+    pprint --info "Setting up BBR ..."
     bash ./V2raySetupBBR.sh
-    pprint --info "Setting up WARP"
+    pprint --info "Setting up WARP ..."
     bash ./V2raySetupWARP.sh
     pprint --warn "Done!"
 fi
