@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-curl -Lso- https://git.io/kernel.sh > v2ray-bbr.sh  # BBR setup script
+script_path=~/v2ray-bbr.sh
+curl -Lso- https://git.io/kernel.sh > $script_path  # BBR setup script
 sudo echo ""
 echo "  Select:"
 echo "      1. 中文"
@@ -14,4 +15,4 @@ sleep 1s
 echo -n "1... "
 sleep 1s
 echo "!"
-sudo -E bash ~/v2ray-bbr.sh
+sudo -E bash $script_path
