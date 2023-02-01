@@ -40,12 +40,14 @@ else
     sudo cp config.nginx_v2ray /etc/nginx/sites-available/v2ray  # copy nginx config for v2ray
     pprint --info "Please fill your domain '$domain' in nginx config ..."
     sudo sed "s/__your_domain__/$domain/" /etc/nginx/sites-available/v2ray  # update nginx config file
-    pprint --info "Linking nginx configs ..."
+    pprint --info "Linking Nginx configs ..."
     sudo ln -s /etc/nginx/sites-available/v2ray /etc/nginx/sites-enabled/
     pprint --info "Testing Nginx configs ..."
-    sudo nginx -t
+    if sudo nginx -t; then
+        sudo service nginx restart
+    fi
     pprint --info "Downloading v2ray script"
-    curl -s -L https://git.io/v2ray.sh > v2ray-233boy.sh  # v2ray setup script
+    curl -s -L https://git.io/v2ray.sh > ~/v2ray-233boy.sh  # v2ray setup script
     pprint --warn "Please make sure your domain pointed to this IP."
     pprint --title "Installing v2ray ..."
     sudo -E bash ~/v2ray-233boy.sh  # WebSocket + TLS
