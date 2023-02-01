@@ -13,7 +13,7 @@ if [[ $USER == "root" ]]; then
     if id "$username" >& /dev/null; then
         pprint --warn "User already exist."
     else
-        pprint --info "Creating unix user ..."
+        pprint --title "Creating unix user ..."
         bash AutoCreateUser.sh -user "$username"  # Enter password manually
     fi
     # User Env Setup
@@ -23,17 +23,17 @@ if [[ $USER == "root" ]]; then
         pprint --info "Initializing zsh ..."
         touch /home/"$username"/.zshrc  # init zsh
     fi
-    pprint --info "Set zsh as user default shell"
+    pprint --info "Setting zsh as user default shell"
     chsh -s /bin/zsh "$username"  # set zsh as user's shell
-    pprint --warn "You can now relogin using $username"
+    pprint --panel "You can now relogin using $username"
 else
     echo -n "[?] Please enter your domain for v2ray: "  # do not add \n
     read -r domain  # get user raw input
     pprint --info "Install Python3 Packages ..."
     pip3 install --user consolecmdtools consoleiotools
-    pprint --info "Setting up zsh ..."
+    pprint --title "Setting up zsh ..."
     python3 AutoSetupZsh.py
-    pprint --info "Updating user configs ..."
+    pprint --title "Updating user configs ..."
     python3 UpdateConfig.py
     pprint --info "Configing p10k ... (p10k config)"
     pprint --info "Copying nginx v2ray config file ..."
@@ -47,13 +47,13 @@ else
     pprint --info "Downloading v2ray script"
     curl -s -L https://git.io/v2ray.sh > v2ray-233boy.sh  # v2ray setup script
     pprint --warn "Please make sure your domain pointed to this IP."
-    pprint --info "Installing v2ray ..."
+    pprint --title "Installing v2ray ..."
     sudo -E bash ~/v2ray-233boy.sh  # WebSocket + TLS
     pprint --info "Getting HTTPS ceritification ..."
     sudo certbot --nginx  # Choose Your Domain
-    pprint --info "Setting up BBR ..."
+    pprint --title "Setting up BBR ..."
     bash ./V2raySetupBBR.sh
-    pprint --info "Setting up WARP ..."
+    pprint --title "Setting up WARP ..."
     bash ./V2raySetupWARP.sh
     pprint --warn "Done!"
 fi
