@@ -10,7 +10,7 @@ if [[ $USER == "root" ]]; then
     apt install -y zsh python3-pip nginx certbot python3-certbot-nginx  # install apps, automatically yes.
     pip3 install rich-cli
     # User Creation
-    if id "$USER" >& /dev/null; then
+    if id "$username" >& /dev/null; then
         pprint --warn "User already exist."
     else
         pprint --info "Creating unix user ..."
