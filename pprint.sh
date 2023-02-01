@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 function pprint {
+    local prefix=""
+    local style=""
+    local param=""
     case $1 in
         -i | --info)
             prefix="(Info) "
@@ -16,13 +19,31 @@ function pprint {
             style="on red"
             shift
             ;;
+        -t | --title)
+            param="--rule"
+            shift
+            ;;
+        -p | --panel)
+            param="--panel rounded"
+            shift
+            ;;
         *)
-            prefix=""
             style="white on black"
             ;;
     esac
     if command -v rich >& /dev/null; then
-        rich --print "[dim]${prefix}[/][${style}]${*}"
+        local content="${*}"
+        if [[ -n $style ]]; then
+            content="[${style}]$content"
+        fi
+        if [[ -n $prefix ]]; then
+            content="[dim]${prefix}[/]$content"
+        fi
+        if [[ -n $param ]]; then
+            rich --print "$content" $param
+        else
+            rich --print "$content"
+        fi
     else
         builtin echo ""
         builtin echo "  ${prefix}${*}"
