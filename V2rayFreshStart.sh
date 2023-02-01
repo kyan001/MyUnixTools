@@ -35,19 +35,25 @@ else
     python3 AutoSetupZsh.py
     pprint --title "Updating user configs ..."
     python3 UpdateConfig.py
-    pprint --info "Copying nginx v2ray config file ..."
-    sudo cp config.nginx_v2ray /etc/nginx/sites-available/v2ray  # copy nginx config for v2ray
-    pprint --info "Putting your domain '$domain' in nginx config ..."
-    sudo sed -i "s/__your_domain__/$domain/" /etc/nginx/sites-available/v2ray  # update nginx config file
-    pprint --info "Linking Nginx configs ..."
-    sudo ln -s /etc/nginx/sites-available/v2ray /etc/nginx/sites-enabled/
-    pprint --info "Testing Nginx configs ..."
-    if sudo nginx -t; then
-        sudo service nginx restart
+    echo "[?] Using Nginx for V2ray? [Y/n]"
+    echo -n "> "
+    read -r nginx_enabled
+    if [[ $nginx_enabled == [Yy] ]]; then
+        pprint --info "Copying nginx v2ray config file ..."
+        sudo cp config.nginx_v2ray /etc/nginx/sites-available/v2ray  # copy nginx config for v2ray
+        pprint --info "Putting your domain '$domain' in nginx config ..."
+        sudo sed -i "s/__your_domain__/$domain/" /etc/nginx/sites-available/v2ray  # update nginx config file
+        pprint --info "Linking Nginx configs ..."
+        sudo ln -s /etc/nginx/sites-available/v2ray /etc/nginx/sites-enabled/
+        pprint --info "Testing Nginx configs ..."
+        if sudo nginx -t; then
+            sudo service nginx restart
+        fi
+    else
+        pprint --warn "Nginx configuration ignored."
     fi
     pprint --info "Downloading v2ray script"
     curl -s -L https://git.io/v2ray.sh > ~/v2ray-233boy.sh  # v2ray setup script
-    sed -i 's/if \[\[ $v2ray_transport -eq 4 ]]/if \[\[ $v2ray_transport -eq 4 || $v2ray_transport -eq 33 ]]/' ~/v2ray-233boy.sh
     pprint --warn "Please make sure your domain pointed to this IP."
     pprint --title "Installing v2ray ..."
     sudo -E bash ~/v2ray-233boy.sh  # WebSocket + TLS
