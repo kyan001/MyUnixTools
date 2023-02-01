@@ -44,8 +44,6 @@ else
     sudo ln -s /etc/nginx/sites-available/v2ray /etc/nginx/sites-enabled/
     pprint --info "Testing Nginx configs ..."
     sudo nginx -t
-    pprint --info "Change dir to ~"
-    cd ~ || exit
     pprint --info "Downloading v2ray script"
     curl -s -L https://git.io/v2ray.sh > v2ray-233boy.sh  # v2ray setup script
     pprint --warn "Please make sure your domain pointed to this IP."
@@ -53,5 +51,9 @@ else
     sudo -E bash ~/v2ray-233boy.sh  # WebSocket + TLS
     pprint --info "Getting HTTPS ceritification ..."
     sudo certbot --nginx  # Choose Your Domain
+    pprint --info "Setting up BBR ..."
+    bash ./V2raySetupBBR.sh
+    pprint --info "Setting up WARP ..."
+    bash ./V2raySetupWARP.sh
     pprint --warn "Done!"
 fi

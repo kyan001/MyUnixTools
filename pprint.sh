@@ -24,8 +24,8 @@ function pprint {
     if command -v rich >& /dev/null; then
         rich --print "[dim]${prefix}[/][${style}]${*}"
     else
-        echo ""
-        echo "  ${prefix}${*}"
-        echo ""
+        builtin echo ""
+        builtin echo "  ${prefix}${*}"
+        builtin echo ""
     fi
 }
