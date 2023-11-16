@@ -22,7 +22,7 @@ def generate_filepath(filename):
 def copy(from_path: str, to_path: str) -> bool:
     # check source file
     if not os.path.isabs(from_path):
-        current_dir = cct.get_dir(__file__)
+        current_dir = cct.get_path(__file__).parent
         from_path = os.path.join(current_dir, from_path)
     cit.info('From: {}'.format(from_path))
     if not os.path.isfile(from_path):
@@ -42,7 +42,7 @@ def copy(from_path: str, to_path: str) -> bool:
 
 
 def get_conf_names(dir: str = None) -> list:
-    all_files = os.listdir(dir or cct.get_dir(__file__))
+    all_files = os.listdir(dir or cct.get_path(__file__).parent)
     return [filename for filename in all_files if filename.startswith('config.')]
 
 
