@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=$HOME/.oh-my-zsh
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -91,6 +91,9 @@ case $(uname -a) in  # this problem only on Windows Subsystem Linux
     *Microsoft*)
         unsetopt BG_NICE  # for "z", to avoid _z_precmd:1: nice(5) failed: operation not permitted
         export LS_COLORS="${LS_COLORS}ow=34;36:"  # change windows directory bg color.
+        ;;
+    *Darwin*)
+        eval $(/opt/homebrew/bin/brew shellenv)
         ;;
 esac
 
