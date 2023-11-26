@@ -102,6 +102,22 @@ export PATH="$(python3 -m site --user-base)/bin:$PATH"  # Python User Site-Packa
 
 source $ZSH/oh-my-zsh.sh
 
+proxy() {
+    local proxy_addr="socks://127.0.0.1:1088"
+    if [ -z "$ALL_PROXY" ] && [ -z "$HTTPS_PROXY" ] && [ -z "$HTTP_PROXY" ]
+    then
+        export ALL_PROXY=$proxy_addr
+        export HTTPS_PROXY=$proxy_addr
+        export HTTP_PROXY=$proxy_addr
+        echo "[Proxy] ALL_PROXY, HTTPS_PROXY and HTTP_PROXY set to $proxy_addr"
+    else
+        unset ALL_PROXY
+        unset HTTPS_PROXY
+        unset HTTP_PROXY
+        echo "ALL_PROXY, HTTPS_PROXY and HTTP_PROXY have been unset"
+    fi
+}
+
 # if p10k config is already done, uncomment the following line.
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
