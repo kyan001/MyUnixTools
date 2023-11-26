@@ -103,7 +103,7 @@ export PATH="$(python3 -m site --user-base)/bin:$PATH"  # Python User Site-Packa
 source $ZSH/oh-my-zsh.sh
 
 proxy() {
-    local proxy_addr="socks://127.0.0.1:1088"
+    local proxy_addr="socks5://127.0.0.1:1088"
     if [ -z "$ALL_PROXY" ] && [ -z "$HTTPS_PROXY" ] && [ -z "$HTTP_PROXY" ]
     then
         export ALL_PROXY=$proxy_addr
