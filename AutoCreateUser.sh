@@ -34,7 +34,7 @@ CheckResult(){
 RunCmd(){
 	pprint --code "\`$1\`"
 	$1
-	return $(CheckResult)
+	CheckResult
 }
 
 #--Preconditions--------------------------------------------------
