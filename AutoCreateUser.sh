@@ -10,7 +10,7 @@ source ./pprint.sh
 
 Usage(){
 	pprint ""
-	pprint --title "Usage:"
+	pprint --panel "Usage"
 	pprint "    $0 -u/ser <USERNAME>"
 	pprint "    $0 -u/ser <USERNAME> -del/ete"
 	pprint "    $0 -help"
@@ -30,7 +30,7 @@ CheckResult(){
 }
 
 RunCmd(){
-	pprint "(Command) \`$1\`"
+	pprint --code "\`$1\`"
 	$1
 	CheckResult
 }
@@ -78,45 +78,43 @@ do
 done
 
 #--Main-----------------------------------------------------------
-# Check if user already exist
-
-if "grep '${v_username}' /etc/passwd > /dev/null"
-then user_exist_flag=1
-fi
-
-if [ $delete_flag -eq 1 ]
-then
-	if [ $user_exist_flag -eq 1 ]
+# Check if user already exists
+if grep "${v_username}" /etc/passwd > /dev/null
+then  # User exists
+	if [ $delete_flag -eq 1 ]
 	then
 		RunCmd "userdel -r ${v_username}"
 		pprint --warn " Remove sudo by \"sudo vim /etc/sudoers\""
 		exit 0
-	fi
-else
-	if [ $user_exist_flag -eq 1 ]
-	then
+	else
 		pprint --err "User $v_username already exists!"
 		exit 1
+	fi
+else  # User not exists
+	if [ $delete_flag -eq 1 ]
+	then
+		pprint --err "User $v_username not exists!"
+		exit 1
 	else
-		# Add user
-		RunCmd "useradd ${v_username} -d /home/${v_username}/"
+	# Add user
+	RunCmd "useradd ${v_username} -d /home/${v_username}/"
 
-		# Set user password
-		RunCmd "passwd ${v_username}"
+	# Set user password
+	RunCmd "passwd ${v_username}"
 
-		# Make user home folder"
-		RunCmd "mkdir /home/${v_username}/"
-		RunCmd "chown ${v_username} /home/${v_username}/"
+	# Make user home folder"
+	RunCmd "mkdir /home/${v_username}/"
+	RunCmd "chown ${v_username} /home/${v_username}/"
 
-		# Make user sudoer
-		pprint --title "\`Write /etc/sudoers file\` ..."
-		echo "${v_username} ALL=(ALL:ALL) ALL" >> /etc/sudoers
-		CheckResult
+	# Make user sudoer
+	pprint --title "\`Write /etc/sudoers file\` ..."
+	echo "${v_username} ALL=(ALL:ALL) ALL" >> /etc/sudoers
+	CheckResult
 
-		# Set Default user shell = tcsh
-		pprint --info "If you need change the default shell, use \`chsh -s /bin/tcsh ${v_username}\`"
+	# Set Default user shell = tcsh
+	pprint --info "If you need change the default shell, use \`chsh -s /bin/tcsh ${v_username}\`"
 
-		# Set up config files
-		pprint --warn "Please run UpdateConfig.py manually after login."
+	# Set up config files
+	pprint --warn "Please run UpdateConfig.py manually after login."
 	fi
 fi
