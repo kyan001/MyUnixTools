@@ -4,12 +4,14 @@
 # Usage:
 # ```sh
 # source ./pprint.sh
-# pprint -i/--info "Hello, World!"
-# pprint -w/--warn "Hello, World!"
-# pprint -e/--err "Hello, World!"
-# pprint -t/--title "Hello, World!"
-# pprint -p/--panel "Hello, World!"
-# pprint "Hello, World!"
+# pprint -i/--info "Hello"
+# pprint -w/--warn "Hello"
+# pprint -e/--err "Hello"
+# pprint -c/--code "Hello"
+# pprint -t/--title "Hello"
+# pprint -p/--panel "Hello"
+# pprint "Hello"
+# pprint -d/--debug "Hello"
 # ```
 #
 function pprint {
@@ -17,7 +19,7 @@ function pprint {
     local rich_style=""
     local ansi_style=""
     local rich_param=""
-    case $1 in
+    case "$1" in
         -i | --info)
             prefix="(Info) "
             rich_style="yellow"
@@ -36,14 +38,27 @@ function pprint {
             ansi_style="\e[41m"  # red background
             shift
             ;;
+        -c | --code)
+            prefix="(Code) "
+            rich_style="italic"
+            ansi_style="\e[3m"  # italic
+            shift
+            ;;
         -t | --title)
             rich_param="--rule"
             ansi_style="\e[1m"  # bold
             shift
             ;;
         -p | --panel)
-            rich_param="--panel rounded"
+            prefix="| "
+            rich_style="underline"
             ansi_style="\e[4m"  # underline
+            shift
+            ;;
+        -d | --debug)
+            prefix="(Debug) "
+            rich_style="blink"
+            ansi_style="\e[5m"  # blink
             shift
             ;;
         *)
