@@ -38,13 +38,14 @@ RunCmd(){
 #--Preconditions--------------------------------------------------
 if [ $# = 0 ]
 then
-	pErr "No parameters detected."
+	pprint --err "No parameters detected."
 	Usage
 	exit 1
 fi
 
 if [ "$(whoami)" != "root" ]
-	then pprint --err "This shell must be done in ROOT user!"
+then
+	pprint --err "This shell must be done in ROOT user!"
 	exit 1
 fi
 
@@ -80,7 +81,7 @@ done
 # Check if user already exist
 
 if "grep '${v_username}' /etc/passwd > /dev/null"
-	then user_exist_flag=1
+then user_exist_flag=1
 fi
 
 if [ $delete_flag -eq 1 ]
@@ -116,6 +117,6 @@ else
 		pprint --info "If you need change the default shell, use \`chsh -s /bin/tcsh ${v_username}\`"
 
 		# Set up config files
-		echo "Please run UpdateConfig.py manually after login."
+		pprint --warn "Please run UpdateConfig.py manually after login."
 	fi
 fi
