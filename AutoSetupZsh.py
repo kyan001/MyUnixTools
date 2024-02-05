@@ -5,6 +5,12 @@ import consoleiotools as cit
 import consolecmdtools as cct
 
 COMPONENTS = {
+    "zsh": {
+        "path": "/bin/zsh",
+        "cmds": [
+            "sudo apt-get install zsh",
+        ],
+    },
     "oh-my-zsh": {
         "path": "{HOME}/.oh-my-zsh/",
         "cmds": [
