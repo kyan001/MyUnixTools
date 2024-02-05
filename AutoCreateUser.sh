@@ -25,7 +25,10 @@ Usage(){
 CheckResult(){
 	if [ $? -eq 0 ]
 	then pprint --info "Done"
-	else pprint --err "Failed"
+	else
+		pprint --err "Failed"
+		pprint --warn "Press any key to continue, or Ctrl+C to exit."
+		read  -n 1 -r
 	fi
 }
 
