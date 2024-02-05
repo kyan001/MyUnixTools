@@ -11,9 +11,9 @@ source ./pprint.sh
 Usage(){
 	pprint ""
 	pprint --title "Usage:"
-	pprint -e "\t$0 -u/ser <USERNAME>"
-	pprint -e "\t$0 -u/ser <USERNAME> -del/ete"
-	pprint -e "\t$0 -help"
+	pprint "    $0 -u/ser <USERNAME>"
+	pprint "    $0 -u/ser <USERNAME> -del/ete"
+	pprint "    $0 -help"
 	pprint ""
 	pprint "1. Must executed under ROOT user."
 	pprint "2. Use -del/ete option to delete user, otherwise will create."
