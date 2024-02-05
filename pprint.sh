@@ -60,7 +60,7 @@ function pprint {
             content="[dim]${prefix}[/]${content}"
         fi
         if [[ -n $rich_param ]]; then
-            rich --print "${$content}" "$rich_param"
+            rich --print "${content}" "$rich_param"
         else
             rich --print "${content}"
         fi
