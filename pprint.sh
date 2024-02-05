@@ -37,12 +37,12 @@ function pprint {
             shift
             ;;
         -t | --title)
-            rich_style="bold"
+            rich_param="--rule"
             ansi_style="\e[1m"  # bold
             shift
             ;;
         -p | --panel)
-            rich_param="--rule"
+            rich_param="--panel rounded"
             ansi_style="\e[4m"  # underline
             shift
             ;;
@@ -60,7 +60,7 @@ function pprint {
             content="[dim]${prefix}[/]${content}"
         fi
         if [[ -n $rich_param ]]; then
-            rich --print "{$content}" $rich_param
+            rich --print "${$content}" "$rich_param"
         else
             rich --print "${content}"
         fi
