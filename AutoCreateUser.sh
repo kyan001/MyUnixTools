@@ -30,7 +30,7 @@ CheckResult(){
 }
 
 RunCmd(){
-	pprint --info "\`$1\` ..."
+	pprint --info "Command: \`$1\` ..."
 	$1
 	CheckResult
 }
