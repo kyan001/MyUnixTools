@@ -23,19 +23,18 @@ Usage(){
 }
 
 CheckResult(){
-	if [ $? -eq 0 ]
+	local result=$?
+	if [ $result -eq 0 ]
 	then pprint --info "Done"
-	else
-		pprint --err "Failed"
-		pprint --warn "Press any key to continue, or Ctrl+C to exit."
-		read  -n 1 -r
+	else pprint --err "Failed"
 	fi
+	return $result
 }
 
 RunCmd(){
 	pprint --code "\`$1\`"
 	$1
-	CheckResult
+	return $(CheckResult)
 }
 
 #--Preconditions--------------------------------------------------
@@ -87,7 +86,7 @@ then  # User exists
 	if [ $delete_flag -eq 1 ]
 	then
 		RunCmd "userdel -r ${v_username}"
-		pprint --warn " Remove sudo by \"sudo vim /etc/sudoers\""
+		pprint --warn "Remove sudo by \"sudo vim /etc/sudoers\""
 		exit 0
 	else
 		pprint --err "User $v_username already exists!"
@@ -104,6 +103,11 @@ else  # User not exists
 
 	# Set user password
 	RunCmd "passwd ${v_username}"
+	if [ $? -ne 0 ]
+	then
+		pprint --err "Failed to set password for user ${v_username}"
+		exit 1
+	fi
 
 	# Make user home folder"
 	RunCmd "mkdir /home/${v_username}/"
