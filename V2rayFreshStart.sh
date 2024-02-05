@@ -17,10 +17,12 @@ if [[ $USER == "root" ]]; then
         bash AutoCreateUser.sh -user "$username"  # Enter password manually
     fi
     # User Env Setup
-    if [[ -f /home/$username/.zshrc ]]; then
-        pprint --warn "User Zsh already initialized."
-    else
-        pprint --info "Initializing zsh ..."
+    if [[ ! -f /bin/zsh ]]; then
+        pprint --warn "Zsh not found, installing ..."
+        apt install -y zsh  # install zsh
+    fi
+    if [[ ! -f /home/$username/.zshrc ]]; then
+        pprint --warn "Zsh not initialized, initializing ..."
         touch /home/"$username"/.zshrc  # init zsh
     fi
     pprint --info "Setting zsh as user default shell"
