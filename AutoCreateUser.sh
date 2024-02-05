@@ -4,39 +4,33 @@
 # AutoCreateUser.sh
 #   Create user automatically.
 #=================================================================
-#
 
-#--Variables Defination-------------------------------------------
-# Normal Bold Underline Gray Red Purple BLUE
-VN="\e[0m";VB="\e[1m";VU="\e[4m";VG="\e[2m";VR="\e[31m";VP="\e[35m";VBLUE="\e[34m";
+source ./pprint.sh
 
-#--Common Macros--------------------------------------------------
-Bold(){ echo -e "${VB}$1${VN}"; }
-pWarn(){ echo -e "${VB}${VU}[WARNING]${VN}${VU}$1${VN}"; }
-pErr(){ echo -e "${VB}${VR}[ERROR] $1${VN}" 1>&2; }
-pInfo(){ echo -e "${VB}${VU}[INFO]${VN} $1"; }
-pInfoGray(){ echo -e "${VB}${VG}${VU}[INFO]${VN} ${VG}$1${VN}"; }
+
 Usage(){
-	echo ""
-	Bold "Usage:"
-	echo -e "\t$0 -u/ser <USERNAME>"
-	echo -e "\t$0 -u/ser <USERNAME> -del/ete"
-	echo -e "\t$0 -help"
-	echo ""
-	echo "1. Must executed under ROOT user."
-	echo "2. Use -del/ete option to delete user, otherwise will create."
-	echo "3. Enter your password yourself."
-	echo ""
+	pprint ""
+	pprint --title "Usage:"
+	pprint -e "\t$0 -u/ser <USERNAME>"
+	pprint -e "\t$0 -u/ser <USERNAME> -del/ete"
+	pprint -e "\t$0 -help"
+	pprint ""
+	pprint "1. Must executed under ROOT user."
+	pprint "2. Use -del/ete option to delete user, otherwise will create."
+	pprint "3. Enter your password yourself."
+	pprint ""
 	exit 0
 }
+
 CheckResult(){
 	if [ $? -eq 0 ]
-	then	Bold "Done"
-	else	Bold "Failed"
+	then pprint --info "Done"
+	else pprint --err "Failed"
 	fi
 }
+
 RunCmd(){
-	pInfo "[ $1 ] \t... \c"
+	pprint --info "\`$1\` ..."
 	$1
 	CheckResult
 }
@@ -50,7 +44,7 @@ then
 fi
 
 if [ "$(whoami)" != "root" ]
-	then	pErr "This shell must be done in ROOT user!"
+	then pprint --err "This shell must be done in ROOT user!"
 	exit 1
 fi
 
@@ -76,7 +70,7 @@ do
 		shift
 		;;
 	*)
-		pErr "Wrong parameter: $1";
+		pprint --err "Wrong parameter: $1";
 		shift
 		;;
 	esac
@@ -86,7 +80,7 @@ done
 # Check if user already exist
 
 if "grep '${v_username}' /etc/passwd > /dev/null"
-	then	user_exist_flag=1
+	then user_exist_flag=1
 fi
 
 if [ $delete_flag -eq 1 ]
@@ -94,33 +88,32 @@ then
 	if [ $user_exist_flag -eq 1 ]
 	then
 		RunCmd "userdel -r ${v_username}"
-		pWarn " Remove sudo by \"sudo vim /etc/sudoers\""
+		pprint --warn " Remove sudo by \"sudo vim /etc/sudoers\""
 		exit 0
 	fi
 else
 	if [ $user_exist_flag -eq 1 ]
 	then
-		pErr "User $v_username already exists!"
+		pprint --err "User $v_username already exists!"
 		exit 1
 	else
 		# Add user
 		RunCmd "useradd ${v_username} -d /home/${v_username}/"
 
 		# Set user password
-		pInfo "[ passwd ${v_username} ]"
-		passwd "${v_username}"
+		RunCmd "passwd ${v_username}"
 
 		# Make user home folder"
 		RunCmd "mkdir /home/${v_username}/"
 		RunCmd "chown ${v_username} /home/${v_username}/"
 
 		# Make user sudoer
-		pInfo "[ Write /etc/sudoers file ] \t... \c"
+		pprint --title "\`Write /etc/sudoers file\` ..."
 		echo "${v_username} ALL=(ALL:ALL) ALL" >> /etc/sudoers
 		CheckResult
 
 		# Set Default user shell = tcsh
-		pInfo "If you need change the default shell, use 'chsh -s /bin/tcsh ${v_username}'"
+		pprint --info "If you need change the default shell, use \`chsh -s /bin/tcsh ${v_username}\`"
 
 		# Set up config files
 		echo "Please run UpdateConfig.py manually after login."
