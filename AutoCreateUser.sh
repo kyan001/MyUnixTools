@@ -81,7 +81,7 @@ done
 
 #--Main-----------------------------------------------------------
 # Check if user already exists
-if grep "${v_username}" /etc/passwd > /dev/null
+if id "$username" >& /dev/null
 then  # User exists
 	if [ $delete_flag -eq 1 ]
 	then
@@ -123,6 +123,6 @@ else  # User not exists
 	pprint --info "If you need change the default shell, use \`chsh -s /bin/tcsh ${v_username}\`"
 
 	# Set up config files
-	pprint --warn "Please run UpdateConfig.py manually after login."
+	pprint --panel "Please run UpdateConfig.py manually after login."
 	fi
 fi
