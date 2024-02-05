@@ -25,8 +25,8 @@ Usage(){
 CheckResult(){
 	local result=$?
 	if [ $result -eq 0 ]
-	then pprint --info "Done"
-	else pprint --err "Failed"
+	then pprint --info "Command Done"
+	else pprint --err "Command Failed"
 	fi
 	return $result
 }
@@ -106,6 +106,7 @@ else  # User not exists
 	if [ $? -ne 0 ]
 	then
 		pprint --err "Failed to set password for user ${v_username}"
+		RunCmd "userdel -r ${v_username}"
 		exit 1
 	fi
 
