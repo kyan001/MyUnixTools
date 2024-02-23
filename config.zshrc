@@ -118,6 +118,10 @@ proxy() {
     fi
 }
 
+fzfcd() {  # use fzf to select a file, and cd to its directory
+    cd $(dirname "$(fzf --preview 'pygmentize -g {}' --preview-window up)")
+}
+
 # if p10k config is already done, uncomment the following line.
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
