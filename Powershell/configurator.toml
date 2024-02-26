@@ -1,0 +1,7 @@
+[configurator]
+name = "Powershell"
+
+[[config]]
+name = "Powershell"
+src = "Microsoft.PowerShell_profile.ps1"
+dst = 'powershell -Command "Write-Host $PROFILE"'

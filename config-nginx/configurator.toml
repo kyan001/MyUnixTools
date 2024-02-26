@@ -1,0 +1,7 @@
+[[config]]
+name = "V2ray for Nginx"
+src = "nginx_v2ray"
+dst = "/etc/nginx/sites-available/nginx_v2ray"
+
+[[install]]
+name = "nginx"
