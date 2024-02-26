@@ -36,7 +36,7 @@ else
     pprint --title "Setting up zsh ..."
     python3 AutoSetupZsh.py
     pprint --title "Updating user configs ..."
-    python3 UpdateConfig.py
+    python3 configurator.py
     echo "[?] Using Nginx for V2ray? [Y/n]"
     echo -n "> "
     read -r nginx_enabled
