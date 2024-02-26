@@ -1,0 +1,9 @@
+[configurator]
+name = "Vim"
+
+[[config]]
+src = "vimrc"
+dst = "~/.vimrc"
+
+[[install]]
+name = "nvim"

@@ -1,0 +1,7 @@
+[[config]]
+name = "bat"
+src = "bat.conf"
+dst = "bat --config-file"
+
+[[install]]
+name = "bat"

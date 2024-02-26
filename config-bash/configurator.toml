@@ -1,0 +1,14 @@
+[configurator]
+name = "Bash"
+
+[[config]]
+src = "bashrc"
+dst = "~/.bashrc"
+
+[[config]]
+src = "bash_prompt"
+dst = "~/.bash_prompt"
+
+[[config]]
+src = "bash_aliases"
+dst = "~/.bash_aliases"

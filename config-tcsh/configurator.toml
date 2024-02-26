@@ -1,0 +1,18 @@
+[configurator]
+name = "Tcsh"
+
+[[config]]
+src = "tcshrc"
+dst = "~/.tcshrc"
+
+[[config]]
+src = "tcsh_prompt"
+dst = "~/.tcsh_prompt"
+
+[[config]]
+src = "tcsh_aliases"
+dst = "~/.tcsh_aliases"
+
+[[install]]
+name = "tcsh"
+cmd = "tcsh"
