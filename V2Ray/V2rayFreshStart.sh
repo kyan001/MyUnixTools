@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Pre-requirement: git clone https://github.com/kyan001/MyUnixTools
-source ./pprint.sh
+source $(dirname "$0")/../utils/pprint.sh  # MyUnixTools/utils/pprint.sh
 
 if [[ $USER == "root" ]]; then
     echo -n "[?] Please enter your username: "  # do not add \n

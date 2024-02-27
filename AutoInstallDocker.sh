@@ -1,5 +1,5 @@
 #! /usr/bin/env bash
-source ./pprint.sh
+source $(dirname "$0")/utils/pprint.sh  # MyUnixTools/utils/pprint.s
 
 pprint --title "Remove Old Docker Installations"
 sudo apt-get remove docker docker-engine docker.io containerd runc
