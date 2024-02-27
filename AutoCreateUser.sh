@@ -5,7 +5,7 @@
 #   Create user automatically.
 #=================================================================
 
-source ./pprint.sh
+source $(dirname "$0")/../utils/pprint.sh  # MyUnixTools/utils/pprint.s
 
 
 Usage(){

@@ -80,8 +80,8 @@ plugins=(
     pip  # pip completion
     python  # python completion
     redis-cli  # redis-cli completion
-    coffee  # CoffeeScript completion
-    supervisor  # Supervisor completion
+    #coffee  # CoffeeScript completion
+    #supervisor  # Supervisor completion
     # _3rd party's___________
     zsh-nvm  # 3rd party plugins. add wraps of nvm command.
     zsh-autosuggestions  # 3rd party plugins. gray suggestions in tail
