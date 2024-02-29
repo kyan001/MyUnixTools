@@ -123,6 +123,6 @@ else  # User not exists
 	pprint --info "If you need change the default shell, use \`chsh -s /bin/tcsh ${v_username}\`"
 
 	# Set up config files
-	pprint --panel "Please run configurator.py manually after login."
+	pprint --panel "Please run `cmgr` manually after login."
 	fi
 fi
