@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# * Install rich package for full features: `pip install --user rich-cli`
+# * Install rich package for full features: `pip install --user rich-cli` or `pipx install rich-cli`
+#
 # Usage:
 # ```sh
 # source ./pprint.sh
