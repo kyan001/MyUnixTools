@@ -70,7 +70,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     colored-man-pages  # man page colorized
-    colorize  # ccat = colorized cat, using pygmentize
+    #colorize  # ccat = colorized cat, using pygmentize
     z  # auto jump to history changed dir
     # _Completions___________
     git  # git suggestion
@@ -102,24 +102,8 @@ export PATH="$(python3 -m site --user-base)/bin:$PATH"  # Python User Site-Packa
 
 source $ZSH/oh-my-zsh.sh
 
-proxy() {
-    local proxy_addr="socks5://127.0.0.1:1088"
-    if [ -z "$ALL_PROXY" ] && [ -z "$HTTPS_PROXY" ] && [ -z "$HTTP_PROXY" ]
-    then
-        export ALL_PROXY=$proxy_addr
-        export HTTPS_PROXY=$proxy_addr
-        export HTTP_PROXY=$proxy_addr
-        echo "[Proxy] ALL_PROXY, HTTPS_PROXY and HTTP_PROXY set to $proxy_addr"
-    else
-        unset ALL_PROXY
-        unset HTTPS_PROXY
-        unset HTTP_PROXY
-        echo "ALL_PROXY, HTTPS_PROXY and HTTP_PROXY have been unset"
-    fi
-}
-
 fzfcd() {  # use fzf to select a file, and cd to its directory
-    cd $(dirname "$(fzf --preview 'pygmentize -g {}' --preview-window up)")
+    cd $(dirname "$(fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)")
 }
 
 # if p10k config is already done, uncomment the following line.
