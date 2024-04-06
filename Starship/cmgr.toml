@@ -1,0 +1,9 @@
+name = "Starship"
+
+[[config]]
+src = "starship.toml"
+dst = "~/.config/starship.toml"
+
+[[install]]
+name = "starship"
+cmd = "starship"

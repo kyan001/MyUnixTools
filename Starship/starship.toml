@@ -1,0 +1,118 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+#add_newline = true  # Shell prompt 之间插入空行。默认 true
+#scan_timeout = 30  # Starship 检查当前目录下文件的超时时间，单位毫秒。默认 30。
+#command_timeout = 500  # 执行命令的超时时间，单位毫秒。默认 500。
+format = """$all\
+$env_var\
+$sudo\
+$username\
+$hostname\
+$directory\
+$git_branch$git_commit$git_state$git_metrics$git_status\
+$package\
+$fill\
+$status\
+$cmd_duration\
+$time
+$golang$python$nodejs$lua$container$docker_context\
+$character"""  # Prompt 格式。默认 '$all'用 `format = '$all$extras'` 来额外添加变量并隐藏其其他实例。
+
+
+[character]  # 提示符。https://starship.rs/config/#character
+
+[sudo]  # Sudo。https://starship.rs/config/#sudo
+disabled = false  # 是否禁用。默认 true
+format = '[$symbol]($style)'  # 格式。默认 "[as $symbol]($style)"
+
+[username]  # Username。https://starship.rs/config/#username
+format = '[@$user]($style) '  # 格式。默认 "[$user]($style) in "
+
+[hostname]  # Hostname。https://starship.rs/config/#hostname
+format = '[$ssh_symbol$hostname]($style) '  # 格式。默认 "[$ssh_symbol$hostname]($style) in "
+
+[directory]  # 目录。https://starship.rs/config/#directory
+truncation_length = 0  # 保留的目录层级数。默认 3
+truncation_symbol = '.../'  # 删节的目录替换。默认 ""
+truncate_to_repo = false  # 是否删节至 Git 根目录。默认 true
+# #format = ''  # 格式。默认 "[$path]($style)[$read_only]($read_only_style) "
+
+[fill]  # 填充。https://starship.rs/config/#fill
+disabled = false  # 是否禁用。默认 true
+symbol = '·'  # 填充用字符。默认 '.'
+style = 'dimmed'  # 样式。默认 'bold black'
+
+[shell]  # Shell。https://starship.rs/config/#shell
+
+[time]  # 显示时间。https://starship.rs/config/#time
+disabled = false  # 启用时间显示。默认 true
+format = ' [$time]($style)'  # 时间显示格式。默认 'at [$time]($style)'
+
+[cmd_duration]  # 命令执行时间。https://starship.rs/config/#command-duration
+min_time = 0  # 显示执行时间的最低限，单位毫秒。默认 200。
+format = ' [$duration]($style)'  # 格式。默认 ' took [$duration]($style) '
+style = 'bold purple'  # 样式。默认 "bold yellow"
+show_notifications = true  # 显示命令执行完毕的桌面提示。默认 false。
+min_time_to_notify = 60_000  # 显示命令执行完毕的桌面提示的最低限，单位毫秒。默认 45_000。
+
+[status]  # 命令结果。https://starship.rs/config/#status
+disabled = false  # 是否禁用。默认 true
+format = ' [$symbol]($style)'  # 格式。默认 "[$symbol$status]($style) "
+
+[package]  # Package Version。https://starship.rs/config/#package-version
+format = '[$symbol$version]($style) '  # 格式。默认 "is [$symbol$version]($style) "
+symbol = '📦'  # 符号。默认 "📦 "
+
+[git_branch]  # Git Branch。https://starship.rs/config/#git-branch
+format = '[$symbol$branch(:$remote_branch)]($style) '  # 格式。默认 "on [$symbol$branch(:$remote_branch)]($style) "
+symbol = ''  # 符号。默认 " "
+
+[git_commit]  # Git Commit。https://starship.rs/config/#git-commit、
+
+[git_state]  # Git State。https://starship.rs/config/#git-state
+
+[git_metrics]  # Git Changes。https://starship.rs/config/#git-metrics
+disabled = false  # 是否禁用。默认 true
+
+[git_status]  # Git Status。https://starship.rs/config/#git-status
+
+[golang]  # GO。https://starship.rs/config/#go
+format = '[$symbol($version)]($style) '  # 格式。默认 "via [$symbol($version)]($style)"
+symbol = '🐹'  # 符号。默认 "🐹 "
+
+[python]  # Python。https://starship.rs/config/#python
+format = '[${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style) '  # 格式。默认 'via [${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+symbol = '🐍'  # 符号。默认 "🐍 "
+detect_extensions = []  # 探测后缀。默认 ["py"]
+
+[nodejs]  # Node.js。https://starship.rs/config/#node-js
+format = '[$symbol($version)]($style) '  # 格式。默认 "via [$symbol($version )]($style)"
+symbol = ""  # 符号。默认 " "
+detect_extensions = ["mjs", "cjs", "mts", "cts"]  # 探测后缀。默认 ["js", "mjs", "cjs", "ts", "mts", "cts"]
+
+[rust]  # Rust https://starship.rs/config/#rust
+format = '[$symbol($version)]($style) '  # 格式。默认 "via [$symbol($version )]($style)"
+symbol = '🦀'  # 符号。默认 "🦀 "
+
+[lua]  # Lua。https://starship.rs/config/#lua
+format = '[$symbol($version)]($style) '  # 格式。默认 "via [$symbol($version)]($style)"
+symbol = '🌙'  # 符号。默认 "🌙 "
+
+[container]  # Docker Container。https://starship.rs/config/#container
+format = '[$symbol\\[$name\\]]($style) '  # 格式。默认 "[$symbol \\[$name\\]]($style) "
+
+[docker_context]  # Docker Context。https://starship.rs/config/#docker-context
+format = '[$symbol$context]($style) '  # 格式。默认 "via [$symbol$context]($style) "
+symbol = "🐳"  # 符号。默认 "🐳 "
+
+[localip]  # Local IP。https://starship.rs/config/#local-ip
+
+[line_break]  # Line Break。https://starship.rs/config/#line-break
+
+[memory_usage]  # Memory Usage。https://starship.rs/config/#memory-usage
+
+[battery]  # Battery。https://starship.rs/config/#battery
+
+[env_var.HTTP_PROXY]  # Proxy Env https://starship.rs/config/#environment-variable
+symbol = "📡"
+format = "[$symbol]($style) "
