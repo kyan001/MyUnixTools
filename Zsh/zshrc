@@ -103,7 +103,7 @@ export PATH="$(python3 -m site --user-base)/bin:$PATH"  # Python User Site-Packa
 source $ZSH/oh-my-zsh.sh
 
 fzfcd() {  # use fzf to select a file, and cd to its directory
-    cd $(dirname "$(fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)")
+    cd "$(dirname "$(fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)")"
 }
 
 # if p10k config is already done, uncomment the following line.
