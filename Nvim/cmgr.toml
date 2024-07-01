@@ -1,0 +1,9 @@
+name = "Nvim"
+
+[[config]]
+src = "init.lua"
+dst = "~/.config/nvim/init.lua"
+
+[[install]]
+name = "nvim"
+cmd = "nvim"
