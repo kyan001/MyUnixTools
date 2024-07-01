@@ -26,10 +26,15 @@ function fzfcd {
     Set-Location (fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up | Split-Path -Parent)
 }
 function up {
+    Write-Host "`n→ python3 -m pip install --upgrade pip"
     python3 -m pip install --upgrade pip
+    Write-Host "`n→ pipx upgrade-all"
     pipx upgrade-all
+    Write-Host "`n→ scoop update *"
     scoop update *
+    Write-Host "`n→ scoop cleanup *"
     scoop cleanup *
+    Write-Host "`n→ scoop cache rm *"
     scoop cache rm *
 }
 Proxy
