@@ -106,6 +106,22 @@ fzfcd() {  # use fzf to select a file, and cd to its directory
     cd "$(dirname "$(fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)")"
 }
 
+upgrades() {  # upgrade all packages
+    python3 -m pip install --upgrade pip
+    pipx upgrade-all
+    case $(uname -a) in
+        *Darwin*)  # macOS
+            brew upgrade
+            #TODO
+            ;;
+        *)  # Linux
+            sudo apt update  # update package list
+            sudo apt dist-upgrade  # upgrade all packages
+            sudo apt auto-remove  # remove unused packages
+            ;;
+    esac
+}
+
 # if p10k config is already done, uncomment the following line.
 # [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
