@@ -6,7 +6,7 @@ function Proxy {  # toggle using proxy
         $env:ALL_PROXY = $proxy_addr
         $env:HTTPS_PROXY = $proxy_addr
         $env:HTTP_PROXY = $proxy_addr
-        Write-Host "[Proxy ON] ALL_PROXY, HTTPS_PROXY and HTTP_PROXY set to $proxy_addr"
+        Write-Host "[Proxy ON] ALL_PROXY, HTTPS_PROXY and HTTP_PROXY set to $proxy_addr. Use 'Proxy' to turn off."
     } else {
         if ($env:ALL_PROXY) {
             Remove-Item Env:\ALL_PROXY
@@ -23,5 +23,13 @@ function Proxy {  # toggle using proxy
     }
 }
 function fzfcd {
-    cd (fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up | Split-Path -Parent)
+    Set-Location (fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up | Split-Path -Parent)
 }
+function upgrades {
+    python3 -m pip install --upgrade pip
+    pipx upgrade-all
+    scoop update *
+    scoop cleanup *
+    scoop cache rm *
+}
+Proxy
