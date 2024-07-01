@@ -106,24 +106,40 @@ fzfcd() {  # use fzf to select a file, and cd to its directory
     cd "$(dirname "$(fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)")"
 }
 
+showcmd() {
+    echo "\n"
+    echo -e "> \033[0;33m$@\033[0m"
+}
+
 up() {  # upgrade all packages
+    showcmd "python3 -m pip install --upgrade pip"
     python3 -m pip install --upgrade pip
+    showcmd "pipx upgrade-all"
     pipx upgrade-all
-    case $(uname -a) in
-        *Darwin*)  # macOS
+    case $(uname -s) in
+        Darwin)  # macOS
+            showcmd "brew update"
+            brew update
+            showcmd "brew upgrade"
             brew upgrade
-            #TODO
+            showcmd "brew list --cask | xargs brew upgrade --cask"
+            brew list --cask | xargs brew upgrade --cask
+            showcmd "brew cleanup"
+            brew cleanup
             ;;
-        *)  # Linux
+        Linux)  # Linux
+            showcmd "sudo apt update"
             sudo apt update  # update package list
-            sudo apt dist-upgrade  # upgrade all packages
-            sudo apt auto-remove  # remove unused packages
+            showcmd "sudo apt dist-upgrade -y"
+            sudo apt dist-upgrade -y  # upgrade all packages
+            showcmd "sudo apt auto-remove -y"
+            sudo apt auto-remove -y  # remove unused packages
             ;;
     esac
 }
 
 # if p10k config is already done, uncomment the following line.
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
