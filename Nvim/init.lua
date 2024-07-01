@@ -16,6 +16,28 @@ vim.g.maplocalleader = "\\"
 require("lazy").setup({
   spec = {
     -- add your plugins here
+    {  -- One Half: Theme
+      "sonph/onehalf",
+      lazy = false, -- Load this at startup
+      priority = 1000, -- Load this first
+      config = function()  -- Load the colorscheme here
+        local rtp = vim.fn.stdpath('data') .. '/lazy/onehalf/vim'  -- Path of the color scheme subfolder in the project folder
+        vim.opt.rtp:append(rtp)  -- Add the path to Run-Time Path
+        vim.cmd([[colorscheme onehalfdark]])  -- Apply the color scheme
+      end,
+    },
+    {  -- Treesitter: Syntax Highlighting
+      "nvim-treesitter/nvim-treesitter",
+      lazy = true,
+      event = "BufRead",
+      build = ":TSUpdate",
+      config = function()
+        require("nvim-treesitter.configs").setup({
+          highlight = { enable = true },
+          indent = { enable = true },
+        })
+      end,
+    },
   },
   -- Configure any other settings here. See the documentation for more details.
   -- colorscheme that will be used when installing plugins.
