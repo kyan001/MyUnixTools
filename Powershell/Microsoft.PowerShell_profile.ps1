@@ -25,7 +25,7 @@ function Proxy {  # toggle using proxy
 function fzfcd {
     Set-Location (fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up | Split-Path -Parent)
 }
-function upgrades {
+function up {
     python3 -m pip install --upgrade pip
     pipx upgrade-all
     scoop update *
