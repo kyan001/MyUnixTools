@@ -5,6 +5,6 @@ src = "init.lua"
 dst = "~/.config/nvim/init.lua"
 
 [[install]]
-name = "nvim"
+name = {"Windows" = "neovim", "Darwin"= "neovim", "*" = "nvim --classic"}
 cmd = "nvim"
-manager = "snap"
+manager = {"Windows" = "scoop", "Darwin"= "brew", "Linux" = "snap"}
