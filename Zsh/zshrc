@@ -106,7 +106,7 @@ fzfcd() {  # use fzf to select a file, and cd to its directory
     cd "$(dirname "$(fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)")"
 }
 
-upgrades() {  # upgrade all packages
+up() {  # upgrade all packages
     python3 -m pip install --upgrade pip
     pipx upgrade-all
     case $(uname -a) in
