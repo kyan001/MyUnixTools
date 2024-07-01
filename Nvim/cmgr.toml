@@ -7,3 +7,4 @@ dst = "~/.config/nvim/init.lua"
 [[install]]
 name = "nvim"
 cmd = "nvim"
+manager = "snap"
