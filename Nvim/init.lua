@@ -17,19 +17,19 @@ require("lazy").setup({
     ui = {
         icons = {
             cmd = ">_",
-            config = "⚙",
+            config = "⛭",
             event = "☇",
             favorite = "★",
             ft = "⎗",
-            init = "⚙",
+            init = "⛭",
             import = "⎘",
             keys = "⌨",
-            lazy = "ᶻzZ",
+            lazy = "𝒵𝓏𝓏",
             loaded = "●",
             not_loaded = "○",
             plugin = "❒",
-            runtime = "⏲",
-            require = "➲",
+            runtime = "𝕍",
+            require = "⧂",
             source = "</>",
             start = "|>",
             task = "✔",
@@ -120,14 +120,6 @@ require("lazy").setup({
                     left_trunc_marker = "◀",
                     right_trunc_marker = "▶",
                     show_buffer_icons = false,  -- Disable buffer icons (need `nvim-web-devicons` and Nerd Font)
-                    offsets = {
-                        {
-                            filetype = "neo-tree",
-                            text = "Neo-tree",
-                            highlight = "Directory",
-                            text_align = "left",
-                        },
-                    },
                 },
             },
         },
@@ -150,14 +142,28 @@ require("lazy").setup({
             opts = {},
         },
 
-        -- neo-tree
+        -- nvim-cmp: auto completion
         {
-            "nvim-neo-tree/neo-tree.nvim",  -- https://github.com/nvim-neo-tree/neo-tree.nvim
+            "hrsh7th/nvim-cmp",  -- https://github.com/hrsh7th/nvim-cmp
+            event = "InsertEnter",
+            main = "cmp",
             dependencies = {
-                "nvim-lua/plenary.nvim",
-                -- "nvim-tree/nvim-web-devicons",
-                "MunifTanjim/nui.nvim",
+                "hrsh7th/cmp-buffer",
+                "hrsh7th/cmp-path",
             },
+            opts = function()
+                vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
+                local cmp = require("cmp")
+                local defaults = require("cmp.config.default")()
+                return {
+                    sources = cmp.config.sources({
+                        { name = "path" },
+                    }, {
+                        { name = "buffer" },
+                    }),
+                    sorting = defaults.sorting,
+                }
+            end,
         },
     },  -- $spec
     -- Configure any other settings here. See the documentation for more details.
