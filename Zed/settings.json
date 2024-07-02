@@ -15,12 +15,5 @@
     "metrics": false  // Disable metrics
   },
   "soft_warp": "editor_width",  // Soft wrap at the editor width
-  "languages": {
-    "Plain Text": {
-      "soft_wrap": "editor_width"  // Soft wrap at the editor width
-    },
-    "Markdown": {
-      "soft_wrap": "editor_width"  // Soft wrap at the editor width
-    }
-  }
+  "format_on_save": "off"  // Do not format on save
 }
