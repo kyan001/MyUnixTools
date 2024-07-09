@@ -25,7 +25,7 @@ function Proxy {  # toggle using proxy
 function fzfcd {
     Set-Location (fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up | Split-Path -Parent)
 }
-function up {
+function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
     Write-Host "`n→ python3 -m pip install --upgrade pip"
     python3 -m pip install --upgrade pip
     Write-Host "`n→ pipx upgrade-all"
@@ -36,5 +36,29 @@ function up {
     scoop cleanup *
     Write-Host "`n→ scoop cache rm *"
     scoop cache rm *
+}
+function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate
+    if ($env:VIRTUAL_ENV) {
+        Write-Host "→ deactivate"
+        deactivate
+    } elseif (Test-Path ".\.venv") {
+        Write-Host "→ .\.venv\Scripts\activate"
+        .\.venv\Scripts\activate
+    } else {
+        Write-Host "→ uv venv"
+        uv venv
+        if (Test-Path ".\requirements.txt") {
+            Write-Host "→ uv pip install -r .\requirements.txt"
+            uv pip install -r .\requirements.txt
+        }
+        if (Test-Path ".\requirements-dev.txt") {
+            Write-Host "→ uv pip install -r .\requirements-dev.txt"
+            uv pip install -r .\requirements-dev.txt
+        }
+        if (Test-Path ".\requirements-opt.txt") {
+            Write-Host "→ uv pip install -r .\requirements-opt.txt"
+            uv pip install -r .\requirements-opt.txt
+        }
+    }
 }
 Proxy

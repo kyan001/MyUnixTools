@@ -3,4 +3,9 @@ name = "Powershell"
 [[config]]
 name = "Powershell"
 src = "Microsoft.PowerShell_profile.ps1"
-dst = 'powershell -Command "Write-Host $PROFILE"'
+dst = 'powershell -NoProfile -Command "Write-Output $PROFILE"'
+
+[[config]]
+name = "pwsh.exe"
+src = "Microsoft.PowerShell_profile.ps1"
+dst = 'pwsh -NoProfile -Command "Write-Output $Profile"'
