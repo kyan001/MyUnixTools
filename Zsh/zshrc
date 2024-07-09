@@ -133,6 +133,22 @@ up() {  # upgrade all packages
     esac
 }
 
+venv() {  # deactivate if in a venv, or activate .venv/bin/activate
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        run_command "deactivate"
+    elif [[ -d "./.venv" ]]; then
+        run_command "source ./.venv/bin/activate"
+    else
+        run_command "uv venv"
+        for file in "requirements.txt" "requirements-dev.txt" "requirements-opt.txt"; do
+            if [[ -f "./$file" ]]; then
+                run_command "uv pip install -r ./$file"
+            fi
+        done
+        venv  # activate the venv
+    fi
+}
+
 # if p10k config is already done, uncomment the following line.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
