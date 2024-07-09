@@ -1,6 +1,14 @@
 Invoke-Expression (&starship init powershell)
-$env:PATH = (get-item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
-function Proxy {  # toggle using proxy
+$env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
+
+function Run-Command([string]$Command) {
+    $underline = "`e[4m"
+    $dim = "`e[2m"
+    $reset = "`e[0m"
+    Write-Host "`n$dim>_$reset $underline$Command$reset"
+    Invoke-Expression $Command
+}
+function proxy {  # toggle using proxy
     $proxy_addr = "http://127.0.0.1:1088"
     if (!$env:ALL_PROXY -and !$env:HTTPS_PROXY -and !$env:HTTP_PROXY) {
         $env:ALL_PROXY = $proxy_addr
@@ -26,39 +34,25 @@ function fzfcd {
     Set-Location (fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up | Split-Path -Parent)
 }
 function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
-    Write-Host "`n→ python3 -m pip install --upgrade pip"
-    python3 -m pip install --upgrade pip
-    Write-Host "`n→ pipx upgrade-all"
-    pipx upgrade-all
-    Write-Host "`n→ scoop update *"
-    scoop update *
-    Write-Host "`n→ scoop cleanup *"
-    scoop cleanup *
-    Write-Host "`n→ scoop cache rm *"
-    scoop cache rm *
+    Run-Command "python3 -m pip install --upgrade pip"
+    Run-Command "pipx upgrade-all"
+    Run-Command "scoop update *"
+    Run-Command "scoop cleanup *"
+    Run-Command "scoop cache rm *"
 }
 function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate
     if ($env:VIRTUAL_ENV) {
-        Write-Host "→ deactivate"
-        deactivate
+        Run-Command "deactivate"
     } elseif (Test-Path ".\.venv") {
-        Write-Host "→ .\.venv\Scripts\activate"
-        .\.venv\Scripts\activate
+        Run-Command ".\.venv\Scripts\activate"
     } else {
-        Write-Host "→ uv venv"
-        uv venv
-        if (Test-Path ".\requirements.txt") {
-            Write-Host "→ uv pip install -r .\requirements.txt"
-            uv pip install -r .\requirements.txt
+        Run-Command "uv venv"
+        foreach ($file in @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")) {
+            if (Test-Path ".\$file") {
+                Run-Command "uv pip install -r .\$file"
+            }
         }
-        if (Test-Path ".\requirements-dev.txt") {
-            Write-Host "→ uv pip install -r .\requirements-dev.txt"
-            uv pip install -r .\requirements-dev.txt
-        }
-        if (Test-Path ".\requirements-opt.txt") {
-            Write-Host "→ uv pip install -r .\requirements-opt.txt"
-            uv pip install -r .\requirements-opt.txt
-        }
+        venv  # activate the venv
     }
 }
-Proxy
+proxy
