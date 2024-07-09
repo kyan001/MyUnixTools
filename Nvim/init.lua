@@ -11,6 +11,11 @@ vim.opt.rtp:prepend(lazypath)
 -- This is also a good place to setup other settings (vim.opt)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
+vim.opt.number = true  -- Show line numbers
+vim.opt.expandtab = true  -- Use spaces instead of tabs
+vim.opt.shiftwidth = 4  -- Number of spaces to use for auto-indent
+vim.opt.tabstop = 4  -- Number of spaces that a <Tab> in the file counts for
+vim.opt.softtabstop = 4  -- Number of spaces that a <Tab> counts for while editing
 
 -- Setup lazy.nvim
 require("lazy").setup({
