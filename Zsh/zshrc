@@ -116,28 +116,19 @@ fzfcd() {  # use fzf to select a file, and cd to its directory
 }
 
 up() {  # upgrade all packages
-    run_command "python3 -m pip install --upgrade pip"
-    # python3 -m pip install --upgrade pip
     run_command "pipx upgrade-all"
-    # pipx upgrade-all
     case $(uname -s) in
         Darwin)  # macOS
+            run_command "python3 -m pip install --upgrade pip"
             run_command 'brew update'
-            # brew update
             run_command 'brew upgrade'
-            # brew upgrade
             run_command 'brew list --cask | xargs brew upgrade --cask'
-            # brew list --cask | xargs brew upgrade --cask
             run_command 'brew cleanup'
-            # brew cleanup
             ;;
         Linux)  # Linux
             run_command 'sudo apt update'
-            # sudo apt update  # update package list
             run_command 'sudo apt dist-upgrade -y'
-            # sudo apt dist-upgrade -y  # upgrade all packages
             run_command 'sudo apt auto-remove -y'
-            # sudo apt auto-remove -y  # remove unused packages
             ;;
     esac
 }
