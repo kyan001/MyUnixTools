@@ -102,38 +102,42 @@ export PATH="$(python3 -m site --user-base)/bin:$PATH"  # Python User Site-Packa
 
 source $ZSH/oh-my-zsh.sh
 
+
+run_command() {
+    underline=$'\e[4m'
+    dim=$'\e[2m'
+    reset=$'\e[0m'
+    echo "\n${dim}\$${reset} ${underline}$1${reset}"
+    eval $1
+}
+
 fzfcd() {  # use fzf to select a file, and cd to its directory
     cd "$(dirname "$(fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)")"
 }
 
-showcmd() {
-    echo "\n"
-    echo -e "> \033[0;33m$@\033[0m"
-}
-
 up() {  # upgrade all packages
-    showcmd "python3 -m pip install --upgrade pip"
-    python3 -m pip install --upgrade pip
-    showcmd "pipx upgrade-all"
-    pipx upgrade-all
+    run_command "python3 -m pip install --upgrade pip"
+    # python3 -m pip install --upgrade pip
+    run_command "pipx upgrade-all"
+    # pipx upgrade-all
     case $(uname -s) in
         Darwin)  # macOS
-            showcmd "brew update"
-            brew update
-            showcmd "brew upgrade"
-            brew upgrade
-            showcmd "brew list --cask | xargs brew upgrade --cask"
-            brew list --cask | xargs brew upgrade --cask
-            showcmd "brew cleanup"
-            brew cleanup
+            run_command 'brew update'
+            # brew update
+            run_command 'brew upgrade'
+            # brew upgrade
+            run_command 'brew list --cask | xargs brew upgrade --cask'
+            # brew list --cask | xargs brew upgrade --cask
+            run_command 'brew cleanup'
+            # brew cleanup
             ;;
         Linux)  # Linux
-            showcmd "sudo apt update"
-            sudo apt update  # update package list
-            showcmd "sudo apt dist-upgrade -y"
-            sudo apt dist-upgrade -y  # upgrade all packages
-            showcmd "sudo apt auto-remove -y"
-            sudo apt auto-remove -y  # remove unused packages
+            run_command 'sudo apt update'
+            # sudo apt update  # update package list
+            run_command 'sudo apt dist-upgrade -y'
+            # sudo apt dist-upgrade -y  # upgrade all packages
+            run_command 'sudo apt auto-remove -y'
+            # sudo apt auto-remove -y  # remove unused packages
             ;;
     esac
 }
