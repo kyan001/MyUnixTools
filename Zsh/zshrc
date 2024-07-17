@@ -116,7 +116,6 @@ fzfcd() {  # use fzf to select a file, and cd to its directory
 }
 
 up() {  # upgrade all packages
-    run_command "pipx upgrade-all"
     case $(uname -s) in
         Darwin)  # macOS
             run_command "python3 -m pip install --upgrade pip"
@@ -132,6 +131,7 @@ up() {  # upgrade all packages
             run_command 'sudo snap refresh'
             ;;
     esac
+    run_command "pipx upgrade-all"  # 20s
 }
 
 venv() {  # deactivate if in a venv, or activate .venv/bin/activate

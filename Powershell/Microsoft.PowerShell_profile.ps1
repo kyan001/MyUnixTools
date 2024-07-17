@@ -34,11 +34,11 @@ function fzfcd {
     Set-Location (fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up | Split-Path -Parent)
 }
 function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
-    Run-Command "python3 -m pip install --upgrade pip"
-    Run-Command "pipx upgrade-all"
-    Run-Command "scoop update *"
-    Run-Command "scoop cleanup *"
-    Run-Command "scoop cache rm *"
+    Run-Command "scoop update *"  # 10+ s
+    Run-Command "scoop cleanup *"  #  300+ ms
+    Run-Command "scoop cache rm *"  # ~100 ms
+    Run-Command "python3 -m pip install --upgrade pip"  # 3s
+    Run-Command "pipx upgrade-all"  # 20s
 }
 function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate
     if ($env:VIRTUAL_ENV) {
