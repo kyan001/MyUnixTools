@@ -3,7 +3,6 @@
 source $(dirname "$0")/../utils/pprint.sh  # MyUnixTools/utils/pprint.sh
 
 if [[ $USER == "root" ]]; then
-    autosetupzshpy_path="../Zsh/AutoSetupZsh.py"
     echo -n "[?] Please enter your username: "  # do not add \n
     read -r username  # get user raw input
     pprint --info "Installing necessary apps ..."
@@ -31,11 +30,13 @@ if [[ $USER == "root" ]]; then
     chsh -s /bin/zsh "$username"  # set zsh as user's shell
     pprint --panel "You can now relogin using $username"
 else
+    autosetupzshpy_path="../Zsh/AutoSetupZsh.py"
     nginx_v2ray_path="../Nginx/nginx_v2ray"
+    local_v2raysh_path="~/v2ray-233boy.sh"
     echo -n "[?] Please enter your domain for v2ray: "  # do not add \n
     read -r domain  # get user raw input
     pprint --info "Install Python3 Packages ..."
-    if pip3 list | grep -q "consolecmdtools"; then
+    if ! pip3 list | grep -q "consolecmdtools"; then
         pip3 install --user consolecmdtools --break-system-packages
     fi
     pprint --title "Setting up zsh ..."
@@ -60,11 +61,12 @@ else
         pprint --warn "Nginx configuration ignored."
     fi
     pprint --info "Downloading v2ray script"
-    # curl -s -L https://git.io/v2ray.sh > ~/v2ray-233boy.sh  # v2ray setup script
-    curl -s -L https://github.com/233boy/v2ray/blob/17786513942be03b562beaadd3f1676cab7b85a3/v2ray.sh > ~/v2ray-233boy.sh  # v2ray setup script
+    v2raysh_url="https://github.com/233boy/v2ray/raw/17786513942be03b562beaadd3f1676cab7b85a3/v2ray.sh"  # use old version v3.05
+    # v2raysh_url="https://git.io/v2ray.sh"  # latest v2ray 233boy script
+    curl -s -L $v2raysh_url > $local_v2raysh_path  # v2ray setup script
     pprint --warn "Please make sure your domain pointed to this IP."
     pprint --title "Installing v2ray ..."
-    sudo -E bash ~/v2ray-233boy.sh  # WebSocket + TLS
+    sudo -E bash $local_v2raysh_path  # WebSocket + TLS
     pprint --info "Getting HTTPS ceritification ..."
     sudo certbot --nginx  # Choose Your Domain
     pprint --warn "To setup BBR, use the following command:"
