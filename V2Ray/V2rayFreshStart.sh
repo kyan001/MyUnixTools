@@ -3,12 +3,14 @@
 source $(dirname "$0")/../utils/pprint.sh  # MyUnixTools/utils/pprint.sh
 
 if [[ $USER == "root" ]]; then
+    AutoSetupZshPy_Path = "../Zsh/AutoSetupZsh.py"
     echo -n "[?] Please enter your username: "  # do not add \n
     read -r username  # get user raw input
     pprint --info "Installing necessary apps ..."
     apt update  # update index
-    apt install -y zsh python3-pip nginx certbot python3-certbot-nginx  # install apps, automatically yes.
-    pip3 install rich-cli
+    apt install -y zsh python3-pip nginx certbot python3-certbot-nginx pipx  # install apps, automatically yes.
+    pipx ensurepath
+    pipx install rich-cli
     # User Creation
     if id "$username" >& /dev/null; then
         pprint --warn "User already exist."
@@ -29,12 +31,15 @@ if [[ $USER == "root" ]]; then
     chsh -s /bin/zsh "$username"  # set zsh as user's shell
     pprint --panel "You can now relogin using $username"
 else
+    nginx_v2ray_path = "../Nginx/nginx_v2ray"
     echo -n "[?] Please enter your domain for v2ray: "  # do not add \n
     read -r domain  # get user raw input
     pprint --info "Install Python3 Packages ..."
-    pip3 install --user consolecmdtools consoleiotools
+    if pip3 list | grep -q "consolecmdtools"; then
+        pip3 install --user consolecmdtools --break-system-packages
+    fi
     pprint --title "Setting up zsh ..."
-    python3 AutoSetupZsh.py
+    python3 $AutoSetupZshPy_Path
     pprint --title "Updating user configs ..."
     cmgr  # pip3 install cmgr
     echo "[?] Using Nginx for V2ray? [Y/n]"
@@ -42,7 +47,7 @@ else
     read -r nginx_enabled
     if [[ $nginx_enabled == [Yy] ]]; then
         pprint --info "Copying nginx v2ray config file ..."
-        sudo cp config.nginx_v2ray /etc/nginx/sites-available/v2ray  # copy nginx config for v2ray
+        sudo cp $nginx_v2ray_path /etc/nginx/sites-available/v2ray  # copy nginx config for v2ray
         pprint --info "Putting your domain '$domain' in nginx config ..."
         sudo sed -i "s/__your_domain__/$domain/" /etc/nginx/sites-available/v2ray  # update nginx config file
         pprint --info "Linking Nginx configs ..."
@@ -63,8 +68,8 @@ else
     sudo certbot --nginx  # Choose Your Domain
     pprint --title "Setting up BBR ..."
     bash ./V2raySetupBBR.sh
-    pprint --title "Setting up WARP ..."
-    bash ./V2raySetupWARP.sh
+    # pprint --title "Setting up WARP ..."
+    # bash ./V2raySetupWARP.sh
     pprint --title "Setting V2Ray AlterId=32"
     sudo sed -i 's/"alterId": 0/"alterId": 32/' /etc/v2ray/config.json
     sudo v2ray restart
