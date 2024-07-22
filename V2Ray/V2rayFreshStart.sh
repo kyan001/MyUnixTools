@@ -3,7 +3,7 @@
 source $(dirname "$0")/../utils/pprint.sh  # MyUnixTools/utils/pprint.sh
 
 if [[ $USER == "root" ]]; then
-    AutoSetupZshPy_Path = "../Zsh/AutoSetupZsh.py"
+    autosetupzshpy_path="../Zsh/AutoSetupZsh.py"
     echo -n "[?] Please enter your username: "  # do not add \n
     read -r username  # get user raw input
     pprint --info "Installing necessary apps ..."
@@ -31,7 +31,7 @@ if [[ $USER == "root" ]]; then
     chsh -s /bin/zsh "$username"  # set zsh as user's shell
     pprint --panel "You can now relogin using $username"
 else
-    nginx_v2ray_path = "../Nginx/nginx_v2ray"
+    nginx_v2ray_path="../Nginx/nginx_v2ray"
     echo -n "[?] Please enter your domain for v2ray: "  # do not add \n
     read -r domain  # get user raw input
     pprint --info "Install Python3 Packages ..."
@@ -39,7 +39,7 @@ else
         pip3 install --user consolecmdtools --break-system-packages
     fi
     pprint --title "Setting up zsh ..."
-    python3 $AutoSetupZshPy_Path
+    python3 $autosetupzshpy_path
     pprint --title "Updating user configs ..."
     cmgr  # pip3 install cmgr
     echo "[?] Using Nginx for V2ray? [Y/n]"
