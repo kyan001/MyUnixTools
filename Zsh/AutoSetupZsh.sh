@@ -1,4 +1,8 @@
 #!/usr/bin/env zsh
+if [ "$(uname -s)" == "Linux" ]; then
+    sudo apt install zsh  # install zsh first
+fi
+
 if [ ! -d "$HOME/.oh-my-zsh/" ]; then  # dir not exist
     echo "oh-my-zsh is not exist. Installing ..."
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
