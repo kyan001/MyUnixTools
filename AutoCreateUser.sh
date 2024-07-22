@@ -120,7 +120,7 @@ else  # User not exists
 	CheckResult
 
 	# Set Default user shell = tcsh
-	pprint --info "If you need change the default shell, use \`chsh -s /bin/tcsh ${v_username}\`"
+	pprint --info "If you need change the default shell, use \`chsh -s /usr/bin/zsh ${v_username}\`"
 
 	# Set up config files
 	pprint --panel "Please run 'cmgr' manually after login."
