@@ -32,7 +32,7 @@ if [[ $USER == "root" ]]; then
 else
     autosetupzshpy_path="../Zsh/AutoSetupZsh.py"
     nginx_v2ray_path="../Nginx/nginx_v2ray"
-    local_v2raysh_path="~/v2ray-233boy.sh"
+    local_v2raysh_path="$HOME/v2ray-233boy.sh"
     echo -n "[?] Please enter your domain for v2ray: "  # do not add \n
     read -r domain  # get user raw input
     pprint --info "Install Python3 Packages ..."
