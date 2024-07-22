@@ -66,7 +66,8 @@ else
     curl -s -L $v2raysh_url > $local_v2raysh_path  # download shell
     pprint --warn "Please make sure your domain pointed to this IP."
     pprint --title "Installing v2ray ..."
-    sudo -E bash $local_v2raysh_path  # WebSocket + TLS
+    sudo -E bash $local_v2raysh_path online old  # args=online, branch=old
+        # WebSocket + TLS, 40000.
     pprint --info "Getting HTTPS ceritification ..."
     sudo certbot --nginx  # Choose Your Domain
     pprint --warn "To setup BBR, use the following command:"
