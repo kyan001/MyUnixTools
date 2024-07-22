@@ -36,7 +36,7 @@ else
     echo -n "[?] Please enter your domain for v2ray: "  # do not add \n
     read -r domain  # get user raw input
     pprint --info "Install Python3 Packages ..."
-    if ! pip3 list | grep -q "consolecmdtools"; then
+    if ! pip3 show "consolecmdtools" &> /dev/null; then
         pip3 install --user consolecmdtools --break-system-packages
     fi
     pprint --title "Setting up zsh ..."
