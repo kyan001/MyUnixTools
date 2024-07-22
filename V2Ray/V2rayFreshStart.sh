@@ -61,9 +61,9 @@ else
         pprint --warn "Nginx configuration ignored."
     fi
     pprint --info "Downloading v2ray script"
-    v2raysh_url="https://github.com/233boy/v2ray/raw/17786513942be03b562beaadd3f1676cab7b85a3/v2ray.sh"  # use old version v3.05
-    # v2raysh_url="https://git.io/v2ray.sh"  # latest v2ray 233boy script
-    curl -s -L $v2raysh_url > $local_v2raysh_path  # v2ray setup script
+    v2raysh_url="https://raw.githubusercontent.com/233boy/v2ray/old/install.sh?v"  # use old version 233boy's v2ray script
+    # v2raysh_url="https://git.io/v2ray.sh"  # latest 233boy's v2ray script
+    curl -s -L $v2raysh_url > $local_v2raysh_path  # download shell
     pprint --warn "Please make sure your domain pointed to this IP."
     pprint --title "Installing v2ray ..."
     sudo -E bash $local_v2raysh_path  # WebSocket + TLS
