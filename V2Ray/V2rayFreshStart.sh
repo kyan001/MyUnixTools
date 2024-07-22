@@ -60,16 +60,17 @@ else
         pprint --warn "Nginx configuration ignored."
     fi
     pprint --info "Downloading v2ray script"
-    curl -s -L https://git.io/v2ray.sh > ~/v2ray-233boy.sh  # v2ray setup script
+    # curl -s -L https://git.io/v2ray.sh > ~/v2ray-233boy.sh  # v2ray setup script
+    curl -s -L https://github.com/233boy/v2ray/blob/17786513942be03b562beaadd3f1676cab7b85a3/v2ray.sh > ~/v2ray-233boy.sh  # v2ray setup script
     pprint --warn "Please make sure your domain pointed to this IP."
     pprint --title "Installing v2ray ..."
     sudo -E bash ~/v2ray-233boy.sh  # WebSocket + TLS
     pprint --info "Getting HTTPS ceritification ..."
     sudo certbot --nginx  # Choose Your Domain
-    pprint --title "Setting up BBR ..."
-    bash ./V2raySetupBBR.sh
-    # pprint --title "Setting up WARP ..."
-    # bash ./V2raySetupWARP.sh
+    pprint --warn "To setup BBR, use the following command:"
+    pprint --info "bash ./V2raySetupBBR.sh"
+    pprint --warn "To setup WARP, use the following command:"
+    pprint --info "bash ./V2raySetupWARP.sh"
     pprint --title "Setting V2Ray AlterId=32"
     sudo sed -i 's/"alterId": 0/"alterId": 32/' /etc/v2ray/config.json
     sudo v2ray restart
