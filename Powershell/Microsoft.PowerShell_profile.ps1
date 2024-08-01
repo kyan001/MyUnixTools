@@ -32,7 +32,7 @@ function Echo-Message {
 }
 
 function Run-Verbose([string]$Command) {
-    Echo-Message --Command "$Command"
+    Echo-Message -Command "$Command"
     Invoke-Expression $Command
 }
 
@@ -83,13 +83,13 @@ function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
     if ($args.Count -eq 0) {  # Run 'up' to run all upgrades.
         foreach ($pm in $available_pms) {
             $pmCapitalized = $pm.Substring(0, 1).ToUpper() + $pm.Substring(1)
-            Invoke-Expression "Upgrade_$pmCapitalized"
+            Invoke-Expression "Upgrade-$pmCapitalized"
         }
     } else {  # Run 'up pip scoop' for scoop and pip upgrades only.
         foreach ($arg in $args) {
             if ($available_pms -contains $arg) {  # $arg is in available_pms
                 $argCapitalized = $arg.Substring(0, 1).ToUpper() + $arg.Substring(1)
-                Invoke-Expression "Upgrade_$arg"
+                Invoke-Expression "Upgrade-$argCapitalized"
             } else {
                 Echo-Message -Err "Unknown package manager: $arg"
                 Echo-Message -Info "Supported package managers: $($available_pms -join ', ')"
