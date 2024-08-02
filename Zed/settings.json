@@ -7,13 +7,18 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-  "ui_font_size": 16,  // The font size of the user interface
-  "buffer_font_size": 16,  // The font size of the editor
-  "use_autoclose": false,  // Do not automatically close brackets and quotes
+  // "buffer_font_family": "Fira Code",
+  "ui_font_size": 16, // The font size of the user interface
+  "buffer_font_size": 16, // The font size of the editor
+  "use_autoclose": false, // Do not automatically close brackets and quotes
   "telemetry": {  // Disable telemetry
-    "diagnostics": false,  // Disable diagnostics
-    "metrics": false  // Disable metrics
+    "diagnostics": false, // Disable diagnostics
+    "metrics": false // Disable metrics
   },
-  "soft_warp": "editor_width",  // Soft wrap at the editor width
-  "format_on_save": "off"  // Do not format on save
+  "soft_wrap": "editor_width", // Soft wrap at the editor width
+  "format_on_save": "off", // Do not format on save
+  "restore_on_startup": "none",  // Do not restore the last session on startup
+  "prettier": {
+    "allowed": false  // Do not use Prettier
+  },
 }
