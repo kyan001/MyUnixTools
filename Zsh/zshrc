@@ -75,7 +75,6 @@ plugins=(
     # _Completions___________
     git  # git suggestion
     httpie  # HTTPie completion
-    docker  # docker completion
     npm  # npm completion
     pip  # pip completion
     python  # python completion
@@ -123,9 +122,10 @@ _echo() {
             ;;
         --title)
             echo ""
-            echo -e "${DIM}============${RESET}"
-            echo -e "${DIM}|${RESET} $message"
-            echo -e "${DIM}============${RESET}"
+            local equals=$(printf '=%.0s' $(seq 1 ${#message}))
+            echo -e "${DIM}+=${equals}=+${RESET}"
+            echo -e "${DIM}|${RESET} $message ${DIM}|${RESET}"
+            echo -e "${DIM}+=${equals}=+${RESET}"
             ;;
         --command)
             echo -e "${DIM}\$${RESET} ${UNDERLINE}$message${RESET}"
