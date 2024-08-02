@@ -21,9 +21,10 @@ function Echo-Message {
         Write-Host "${Dim}[Info]${Reset} ${Message}"
     } elseif ($Title) {
         Write-Host ""
-        Write-Host "${Dim}============${Reset}"
-        Write-Host "${Dim}|${Reset} ${Message}"
-        Write-Host "${Dim}============${Reset}"
+        $Equals = "=" * $Message.Length
+        Write-Host "${Dim}+=${Equals}=+${Reset}"
+        Write-Host "${Dim}|${Reset} ${Message} ${Dim}|${Reset}"
+        Write-Host "${Dim}+=${Equals}=+${Reset}"
     } elseif ($Command) {
         Write-Host "${Dim}>_${Reset} ${Underline}${Message}${Reset}"
     } else {
