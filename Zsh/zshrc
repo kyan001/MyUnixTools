@@ -150,8 +150,8 @@ up() {  # upgrade all packages
         _echo --title 'Upgrade Pipx Packages'
         _verbose_run "pipx upgrade-all"  # 20s
     }
-    upgrade_pip() {
-        _echo --title 'Upgrade pip'
+    update_pip() {
+        _echo --title 'Update pip'
         _verbose_run "python3 -m pip install --upgrade pip"
     }
     upgrade_brew() {
@@ -177,22 +177,28 @@ up() {  # upgrade all packages
             _verbose_run 'sudo snap refresh'
         fi
     }
-    upgrade_omz() {
-        _echo --title 'Upgrade Oh-My-Zsh'
+    update_omz() {
+        _echo --title 'Update Oh-My-Zsh'
         _verbose_run 'omz update'
     }
-    local available_pms=('pip' 'pipx' 'brew' 'apt' 'snap')  # Available package managers
+    local upgrades=('pipx' 'brew' 'apt' 'snap')  # Available package managers for upgrades
+    local updates=('pip' 'omz')  # Available package managers to updates
     if [[ $# -eq 0 ]]; then  # Run 'up' to run all upgrades.
-        for pm in "${available_pms[@]}"; do
+        for pm in "${upgrades[@]}"; do
             eval "upgrade_$pm"
+        done
+        for pm in "${updates[@]}"; do
+            eval "update_$pm"
         done
     else  # Run 'up pip brew' for brew and pip upgrades only.
         for arg in "$@"; do
-            if [[ " ${available_pms[*]} " =~ " $arg " ]]; then  # $arg is in available_pms
+            if [[ " ${upgrades[*]} " =~ " $arg " ]]; then  # $arg is in upgrades
                 eval "upgrade_$arg"
+            elif [[ " ${updates[*]} " =~ " $arg " ]]; then  # $arg is in updates
+                eval "update_$arg"
             else
                 echo "[Error] Unknown package manager: $arg"
-                echo "[Info] Supported package managers: ${available_pms[*]}"
+                echo "[Info] Supported package managers: ${upgrades[*]}"
             fi
         done
     fi

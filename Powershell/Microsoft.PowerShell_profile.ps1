@@ -65,35 +65,43 @@ function fzfcd {
 }
 
 function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
-    function Upgrade-Pipx {
+    function Upgrade-Pipx {  # Upgrade pipx's packages
         Echo-Message -Title 'Upgrade Pipx Packages'
         Run-Verbose "pipx upgrade-all"  # 20s
     }
-    function Upgrade-Pip {
-        Echo-Message -Title 'Upgrade pip'
+    function Update-Pip {  # Update pip itself
+        Echo-Message -Title 'Update pip'
         Run-Verbose "python3 -m pip install --upgrade pip"  # 3s
     }
-    function Upgrade-Scoop {
+    function Upgrade-Scoop {  # Upgrade scoop's packages
         Echo-Message -Title 'Upgrade Scoop Packages'
         Run-Verbose "scoop update *"  # 10+ s
         Run-Verbose "scoop cleanup *"  # 300+ ms
         Run-Verbose "scoop cache rm *"  # ~100 ms
     }
 
-    $available_pms = @('pip', 'pipx', 'scoop')  # Available package managers
+    $upgrades = @('pipx', 'scoop')  # Available package managers for upgrades
+    $updates = @('pip')  # Available package managers to updates
     if ($args.Count -eq 0) {  # Run 'up' to run all upgrades.
-        foreach ($pm in $available_pms) {
+        foreach ($pm in $upgrades) {
             $pmCapitalized = $pm.Substring(0, 1).ToUpper() + $pm.Substring(1)
             Invoke-Expression "Upgrade-$pmCapitalized"
         }
+        foreach ($pm in $updates) {
+            $pmCapitalized = $pm.Substring(0, 1).ToUpper() + $pm.Substring(1)
+            Invoke-Expression "Update-$pmCapitalized"
+        }
     } else {  # Run 'up pip scoop' for scoop and pip upgrades only.
         foreach ($arg in $args) {
-            if ($available_pms -contains $arg) {  # $arg is in available_pms
+            if ($upgrades -contains $arg) {  # $arg is in $upgrades
                 $argCapitalized = $arg.Substring(0, 1).ToUpper() + $arg.Substring(1)
                 Invoke-Expression "Upgrade-$argCapitalized"
+            } elseif ($updates -contains $arg) {  # $arg is in $updates
+                $argCapitalized = $arg.Substring(0, 1).ToUpper() + $arg.Substring(1)
+                Invoke-Expression "Update-$argCapitalized"
             } else {
                 Echo-Message -Err "Unknown package manager: $arg"
-                Echo-Message -Info "Supported package managers: $($available_pms -join ', ')"
+                Echo-Message -Info "Supported package managers: $($upgrades -join ', ')"
             }
         }
     }
