@@ -177,6 +177,10 @@ up() {  # upgrade all packages
             _verbose_run 'sudo snap refresh'
         fi
     }
+    upgrade_omz() {
+        _echo --title 'Upgrade Oh-My-Zsh'
+        _verbose_run 'omz update'
+    }
     local available_pms=('pip' 'pipx' 'brew' 'apt' 'snap')  # Available package managers
     if [[ $# -eq 0 ]]; then  # Run 'up' to run all upgrades.
         for pm in "${available_pms[@]}"; do
