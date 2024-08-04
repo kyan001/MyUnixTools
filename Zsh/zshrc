@@ -215,7 +215,7 @@ up() {  # upgrade all packages
                 eval "update_$arg"
             else
                 echo "[Error] Unknown package manager: $arg"
-                echo "[Info] Supported package managers: ${upgrades[*]}"
+                echo "[Info] Supported package managers: ${upgrades[*]} ${updates[*]}"
             fi
         done
     fi

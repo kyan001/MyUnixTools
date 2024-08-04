@@ -120,7 +120,7 @@ function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
                 Invoke-Expression "Update-$argCapitalized"
             } else {
                 Echo-Message -Err "Unknown package manager: $arg"
-                Echo-Message -Info "Supported package managers: $($upgrades -join ', ')"
+                Echo-Message -Info "Supported package managers: $(($upgrades + $updates) -join ' ')"
             }
         }
     }
