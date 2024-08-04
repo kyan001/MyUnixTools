@@ -120,12 +120,29 @@ _echo() {
         --info)
             echo -e "${DIM}[Info]${RESET} $message"
             ;;
+        --debug)
+            echo -e "[Debug] $message"
+            ;;
         --title)
             echo ""
-            local equals=$(printf '=%.0s' $(seq 1 ${#message}))
-            echo -e "${DIM}+=${equals}=+${RESET}"
-            echo -e "${DIM}|${RESET} $message ${DIM}|${RESET}"
-            echo -e "${DIM}+=${equals}=+${RESET}"
+            if [[ $(echo "═║╔╗╚╝") == "═║╔╗╚╝" ]]; then
+                local horizontal_bar=$(printf '═%.0s' $(seq 1 ${#message}))
+                local vertical_bar="║"
+                local top_left="╔═"
+                local top_right="═╗"
+                local bottom_left="╚═"
+                local bottom_right="═╝"
+            else
+                local horizontal_bar=$(printf '=%.0s' $(seq 1 ${#message}))
+                local vertical_bar="|"
+                local top_left="+="
+                local top_right="=+"
+                local bottom_left="+="
+                local bottom_right="=+"
+            fi
+            echo -e "${DIM}${top_left}${horizontal_bar}${top_right}${RESET}"
+            echo -e "${DIM}${vertical_bar}${RESET} $message ${DIM}${vertical_bar}${RESET}"
+            echo -e "${DIM}${bottom_left}${horizontal_bar}${bottom_right}${RESET}"
             ;;
         --command)
             echo -e "${DIM}\$${RESET} ${UNDERLINE}$message${RESET}"
