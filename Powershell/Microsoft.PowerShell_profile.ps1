@@ -9,7 +9,6 @@ function Echo-Message {
         [switch]$Debug,
         [switch]$Title,
         [switch]$Command,
-        [switch]$Ascii,
         [string]$Message
     )
     $Underline = "`e[4m"
@@ -25,7 +24,7 @@ function Echo-Message {
         Write-Output "[🐞Debug] ${Message}"
     } elseif ($Title) {
         Write-Output ""
-        if ($Ascii) {
+        if ((& {Write-Output "═║╔╗╚╝"}) -eq "═║╔╗╚╝") {
             $HorizontalBar = "=" * $Message.Length
             $VerticalBar = "|"
             $TopLeft = "+="
