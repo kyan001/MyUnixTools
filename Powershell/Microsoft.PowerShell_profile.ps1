@@ -6,27 +6,46 @@ function Echo-Message {
         [switch]$Err,
         [switch]$Warn,
         [switch]$Info,
+        [switch]$Debug,
         [switch]$Title,
         [switch]$Command,
+        [switch]$Ascii,
         [string]$Message
     )
     $Underline = "`e[4m"
     $Dim = "`e[2m"
     $Reset = "`e[0m"
     if ($Err) {
-        Write-Host "${Dim}[${Reset}${Underline}Error${Reset}${Dim}]${Reset} ${Message}"
+        Write-Output "${Dim}[${Reset}${Underline}❌Error${Reset}${Dim}]${Reset} ${Message}"
     } elseif ($Warn) {
-        Write-Warning "${Dim}[${Reset}Warning${Dim}]${Reset} ${Message}"
+        Write-Output "${Dim}[${Reset}⚠️Warning${Dim}]${Reset} ${Message}"
     } elseif ($Info) {
-        Write-Host "${Dim}[Info]${Reset} ${Message}"
+        Write-Output "${Dim}[ℹ️Info]${Reset} ${Message}"
+    } elseif ($Debug) {
+        Write-Output "[🐞Debug] ${Message}"
     } elseif ($Title) {
-        Write-Host ""
-        $Equals = "=" * $Message.Length
-        Write-Host "${Dim}+=${Equals}=+${Reset}"
-        Write-Host "${Dim}|${Reset} ${Message} ${Dim}|${Reset}"
-        Write-Host "${Dim}+=${Equals}=+${Reset}"
+        Write-Output ""
+        if ($Ascii) {
+            $HorizontalBar = "=" * $Message.Length
+            $VerticalBar = "|"
+            $TopLeft = "+="
+            $TopRight = "=+"
+            $ButtomLeft = "+="
+            $ButtomRight = "=+"
+        } else {
+            $HorizontalBar = "=" * $Message.Length
+            $VerticalBar = "║"
+            $TopLeft = "╔═"
+            $TopRight = "═╗"
+            $ButtomLeft = "╚═"
+            $ButtomRight = "═╝"
+        }
+        Write-Output "${Dim}${TopLeft}${HorizontalBar}${TopRight}${Reset}"
+        Write-Output "${Dim}${VerticalBar}${Reset} ${Message} ${Dim}${VerticalBar}${Reset}"
+        Write-Output "${Dim}${ButtomLeft}${HorizontalBar}${ButtomRight}${Reset}"
+
     } elseif ($Command) {
-        Write-Host "${Dim}>_${Reset} ${Underline}${Message}${Reset}"
+        Write-Output "${Dim}>_${Reset} ${Underline}${Message}${Reset}"
     } else {
         Write-Output "${Message}"
     }
@@ -119,6 +138,7 @@ function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate
                 Run-Verbose "uv pip install -r .\$file"
             }
         }
+        Run-Verbose "cmd /c mklink /D .venv\bin .venv\Scripts"  # create a symlink for 'bin' to 'Scripts' in .venv\
         venv  # activate the venv
     }
 }
