@@ -25,19 +25,19 @@ function Echo-Message {
     } elseif ($Title) {
         Write-Output ""
         if ((& {Write-Output "═║╔╗╚╝"}) -eq "═║╔╗╚╝") {
+            $HorizontalBar = "═" * $Message.Length
+            $VerticalBar = "║"
+            $TopLeft = "╔═"
+            $TopRight = "═╗"
+            $ButtomLeft = "╚═"
+            $ButtomRight = "═╝"
+        } else {
             $HorizontalBar = "=" * $Message.Length
             $VerticalBar = "|"
             $TopLeft = "+="
             $TopRight = "=+"
             $ButtomLeft = "+="
             $ButtomRight = "=+"
-        } else {
-            $HorizontalBar = "=" * $Message.Length
-            $VerticalBar = "║"
-            $TopLeft = "╔═"
-            $TopRight = "═╗"
-            $ButtomLeft = "╚═"
-            $ButtomRight = "═╝"
         }
         Write-Output "${Dim}${TopLeft}${HorizontalBar}${TopRight}${Reset}"
         Write-Output "${Dim}${VerticalBar}${Reset} ${Message} ${Dim}${VerticalBar}${Reset}"
