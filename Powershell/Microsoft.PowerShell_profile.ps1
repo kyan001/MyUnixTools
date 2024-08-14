@@ -129,6 +129,11 @@ function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate
     if ($env:VIRTUAL_ENV) {
         Run-Verbose "deactivate"
     } elseif (Test-Path ".\.venv") {
+        foreach ($file in @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")) {
+            if (Test-Path ".\$file") {
+                Run-Verbose "uv pip install -U -r .\$file"
+            }
+        }
         Run-Verbose ".\.venv\Scripts\activate"
     } else {
         Run-Verbose "uv venv"
