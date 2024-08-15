@@ -70,7 +70,6 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     colored-man-pages  # man page colorized
-    #colorize  # ccat = colorized cat, using pygmentize
     z  # auto jump to history changed dir
     # _Completions___________
     git  # git suggestion
@@ -78,9 +77,8 @@ plugins=(
     npm  # npm completion
     pip  # pip completion
     python  # python completion
-    redis-cli  # redis-cli completion
-    #coffee  # CoffeeScript completion
-    #supervisor  # Supervisor completion
+    rust  # rustc/rustup/cargo completion
+    fzf  # fzf completion
     # _3rd party's___________
     zsh-nvm  # 3rd party plugins. add wraps of nvm command.
     zsh-autosuggestions  # 3rd party plugins. gray suggestions in tail
@@ -177,7 +175,8 @@ up() {  # upgrade all packages
             _verbose_run 'brew update'
             _verbose_run 'brew upgrade'
             _verbose_run 'brew list --cask | xargs brew upgrade --cask'
-            _verbose_run 'brew cleanup'
+            _verbose_run 'brew autoremove'
+            _verbose_run 'brew cleanup --prune=all'
         fi
     }
     upgrade_apt() {
