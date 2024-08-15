@@ -79,16 +79,7 @@ require("lazy").setup({
         {
             "rcarriga/nvim-notify",  -- https://github.com/rcarriga/nvim-notify
             config = function()
-                vim.notify = require("notify").setup({  -- Replace the default `vim.notify` with the one from `nvim-notify`
-                    icons = {
-                        DEBUG = "⛏",
-                        ERROR = "✗",
-                        INFO = "➤",
-                        TRACE = "✎",
-                        WARN = "⚠",
-                    },
-                    -- render = "minimal",  -- Minimal notifications. default|simple|minimal|compact|wrapped-compact
-                })
+                vim.notify = require("notify")  -- Replace the default `vim.notify` with the one from `nvim-notify`
             end,
         },
 
