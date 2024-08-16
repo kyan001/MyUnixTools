@@ -2,7 +2,7 @@ name = "Nvim"
 
 [[config]]
 src = "init.lua"
-dst = "~/.config/nvim/init.lua"
+dst = {"Windows" = "%LocalAppData%\\nvim\\init.lua", "Darwin"= "~/.config/nvim/init.lua", "*" = "~/.config/nvim/init.lua"}
 
 [[install]]
 name = {"Windows" = "neovim", "Darwin"= "neovim", "*" = "nvim --classic"}

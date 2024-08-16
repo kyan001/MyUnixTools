@@ -79,7 +79,15 @@ require("lazy").setup({
         {
             "rcarriga/nvim-notify",  -- https://github.com/rcarriga/nvim-notify
             config = function()
-                vim.notify = require("notify")  -- Replace the default `vim.notify` with the one from `nvim-notify`
+                vim.notify = require("notify").setup({  -- Replace the default `vim.notify` with the one from `nvim-notify`
+                    icons = {  -- Replace the default nerd-font icons with unicode ones
+                        ERROR = "Ⓧ",
+                        WARN = "⚠",
+                        INFO = "ⓘ",
+                        DEBUG = "␦",
+                        TRACE = "✎",
+                    },
+                })
             end,
         },
 
