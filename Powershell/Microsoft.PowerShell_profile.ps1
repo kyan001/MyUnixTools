@@ -15,13 +15,13 @@ function Echo-Message {
     $Dim = "`e[2m"
     $Reset = "`e[0m"
     if ($Err) {
-        Write-Output "${Dim}[${Reset}${Underline}❌Error${Reset}${Dim}]${Reset} ${Message}"
+        Write-Output "${Dim}[${Reset}${Underline}Error${Reset}${Dim}]${Reset} ${Message}"
     } elseif ($Warn) {
-        Write-Output "${Dim}[${Reset}⚠️Warning${Dim}]${Reset} ${Message}"
+        Write-Output "${Dim}[${Reset}Warning${Dim}]${Reset} ${Message}"
     } elseif ($Info) {
-        Write-Output "${Dim}[ℹ️Info]${Reset} ${Message}"
+        Write-Output "${Dim}[ℹInfo]${Reset} ${Message}"
     } elseif ($Debug) {
-        Write-Output "[🐞Debug] ${Message}"
+        Write-Output "[Debug] ${Message}"
     } elseif ($Title) {
         Write-Output ""
         if ((& {Write-Output "═║╔╗╚╝"}) -eq "═║╔╗╚╝") {
@@ -131,7 +131,7 @@ function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate
     } elseif (Test-Path ".\.venv") {
         foreach ($file in @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")) {
             if (Test-Path ".\$file") {
-                Run-Verbose "uv pip install -U -r .\$file"
+                Run-Verbose "uv pip install --refresh -r .\$file"
             }
         }
         Run-Verbose ".\.venv\Scripts\activate"

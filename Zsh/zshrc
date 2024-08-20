@@ -226,7 +226,7 @@ venv() {  # deactivate if in a venv, or activate .venv/bin/activate
     elif [[ -d "./.venv" ]]; then
         for file in "requirements.txt" "requirements-dev.txt" "requirements-opt.txt"; do
             if [[ -f "./$file" ]]; then
-                _verbose_run "uv pip install -U -r ./$file"
+                _verbose_run "uv pip install --refresh -r ./$file"
             fi
         done
         _verbose_run "source ./.venv/bin/activate"
