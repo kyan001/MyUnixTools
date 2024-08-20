@@ -142,7 +142,7 @@ function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate
                 Run-Verbose "uv pip install -r .\$file"
             }
         }
-        Run-Verbose "cmd /c mklink /D .venv\bin .venv\Scripts"  # create a symlink for 'bin' to 'Scripts' in .venv\
+        Run-Verbose "cmd /c mklink /D `"${PWD}\.venv\bin`" `"${PWD}\.venv\Scripts`""  # create a symlink for 'bin' to 'Scripts' in .venv\
         venv  # activate the venv
     }
 }
