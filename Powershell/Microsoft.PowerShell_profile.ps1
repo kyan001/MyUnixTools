@@ -144,7 +144,7 @@ function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate i
         }
         venv  # activate the venv
     }
-    if (Test-Path "${PWD}\.venv\bin") {
+    if (-not (Test-Path "${PWD}\.venv\bin")) {  # when .venv\bin not exists
         Run-Verbose "cmd /c mklink /D `"${PWD}\.venv\bin`" `"${PWD}\.venv\Scripts`""  # create a symlink for 'bin' to 'Scripts' in .venv\
     }
 }
