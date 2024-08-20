@@ -125,7 +125,7 @@ function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
     }
 }
 
-function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate
+function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate if exists, or create a new venv
     if ($env:VIRTUAL_ENV) {
         Run-Verbose "deactivate"
     } elseif (Test-Path ".\.venv") {
@@ -142,8 +142,10 @@ function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate
                 Run-Verbose "uv pip install -r .\$file"
             }
         }
-        Run-Verbose "cmd /c mklink /D `"${PWD}\.venv\bin`" `"${PWD}\.venv\Scripts`""  # create a symlink for 'bin' to 'Scripts' in .venv\
         venv  # activate the venv
+    }
+    if (Test-Path "${PWD}\.venv\bin") {
+        Run-Verbose "cmd /c mklink /D `"${PWD}\.venv\bin`" `"${PWD}\.venv\Scripts`""  # create a symlink for 'bin' to 'Scripts' in .venv\
     }
 }
 proxy
