@@ -19,7 +19,7 @@ function Echo-Message {
     } elseif ($Warn) {
         Write-Output "${Dim}[${Reset}Warning${Dim}]${Reset} ${Message}"
     } elseif ($Info) {
-        Write-Output "${Dim}[ℹInfo]${Reset} ${Message}"
+        Write-Output "${Dim}[Info]${Reset} ${Message}"
     } elseif ($Debug) {
         Write-Output "[Debug] ${Message}"
     } elseif ($Title) {
