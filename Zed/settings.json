@@ -10,6 +10,8 @@
   // "buffer_font_family": "Fira Code",
   "ui_font_size": 16, // The font size of the user interface
   "buffer_font_size": 16, // The font size of the editor
+  "buffer_font_family": "Zed Plex Mono",  // "JetBrains Mono",
+  "buffer_font_fallbacks": ["JetBrains Mono", "HarmonyOS Sans SC"],
   "use_autoclose": false, // Do not automatically close brackets and quotes
   "telemetry": {  // Disable telemetry
     "diagnostics": false, // Disable diagnostics
