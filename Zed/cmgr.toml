@@ -1,5 +1,0 @@
-name = "Zed"
-
-[[config]]
-src = "settings.json"
-dst = "~/.config/zed/settings.json"
