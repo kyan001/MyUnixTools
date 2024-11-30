@@ -6,7 +6,7 @@ skip = {"Linux" = true, "*" = false}  # Skip Linux
 
 [[config]]
 name = "bat for Linux"
-src = "ln -s /usr/bin/batcat ~/.local/bin/bat; echo 'bat.conf'"
+src = "ln -sf /usr/bin/batcat ~/.local/bin/bat; echo 'bat.conf'"
 dst = "batcat --config-file"
 skip = {"Linux" = false, "*" = true}  # Only Linux
 
