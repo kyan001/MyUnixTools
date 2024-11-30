@@ -1,7 +1,14 @@
 [[config]]
 name = "bat"
 src = "bat.conf"
-dst = "bat --config-file"
+dst = {"Linux" = "batcat --config-file", "*" = "bat --config-file"}
+
+[[config]]
+name = "bat alias"
+src = "ln -s /usr/bin/batcat bat; echo 'bat'"
+dst = "~/.local/bin/bat"
+skip = {"Linux" = false, "*" = true}
 
 [[install]]
 name = "bat"
+command = {"Linux" = "batcat", "*" = "bat"}
