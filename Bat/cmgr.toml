@@ -1,13 +1,14 @@
 [[config]]
 name = "bat"
 src = "bat.conf"
-dst = {"Linux" = "batcat --config-file", "*" = "bat --config-file"}
+dst = "bat --config-file"
+skip = {"Linux" = true, "*" = false}  # Skip Linux
 
 [[config]]
-name = "bat alias"
-src = "ln -s /usr/bin/batcat bat; echo 'bat'"
-dst = "~/.local/bin/bat"
-skip = {"Linux" = false, "*" = true}
+name = "bat for Linux"
+src = "ln -s /usr/bin/batcat ~/.local/bin/bat; echo 'bat.conf'"
+dst = "batcat --config-file"
+skip = {"Linux" = false, "*" = true}  # Only Linux
 
 [[install]]
 name = "bat"
