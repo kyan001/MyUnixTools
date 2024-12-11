@@ -97,8 +97,12 @@ function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
         Run-Verbose "scoop cleanup *"  # 300+ ms
         Run-Verbose "scoop cache rm *"  # ~100 ms
     }
+    function Upgrade-Winget {
+        Echo-Message -Title 'Upgrade Winget Packages'
+        Run-Verbose "winget upgrade --id Zen-Team.Zen-Browser.Optimized"
+    }
 
-    $upgrades = @('pipx', 'scoop')  # Available package managers for upgrades
+    $upgrades = @('pipx', 'scoop', 'winget')  # Available package managers for upgrades
     $updates = @('pip')  # Available package managers to updates
     if ($args.Count -eq 0) {  # Run 'up' to run all upgrades.
         foreach ($pm in $upgrades) {
