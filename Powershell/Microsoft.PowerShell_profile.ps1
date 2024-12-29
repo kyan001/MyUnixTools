@@ -99,7 +99,7 @@ function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
     }
     function Upgrade-Winget {
         Echo-Message -Title 'Upgrade Winget Packages'
-        Run-Verbose "winget upgrade --id Zen-Team.Zen-Browser.Optimized"
+        Run-Verbose "winget upgrade --id Zen-Team.Zen-Browser"
     }
 
     $upgrades = @('pipx', 'scoop', 'winget')  # Available package managers for upgrades
