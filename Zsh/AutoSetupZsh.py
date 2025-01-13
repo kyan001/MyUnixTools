@@ -62,6 +62,7 @@ def install_if_needed(path: str, cmds: list, name: str):
 def main():
     for name, values in COMPONENTS.items():
         install_if_needed(values["path"], values["cmds"], name)
+    cct.copy_file(os.path.join(cct.get_path(__file__).parent, "zshrc"), "~/.zshrc")
 
 
 if __name__ == '__main__':

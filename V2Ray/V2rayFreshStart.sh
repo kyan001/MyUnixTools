@@ -3,6 +3,7 @@
 source $(dirname "$0")/../utils/pprint.sh  # MyUnixTools/utils/pprint.sh
 
 if [[ $USER == "root" ]]; then
+    autocreateuser_path = "../AutoCreateUser.sh"
     echo -n "[?] Please enter your username: "  # do not add \n
     read -r username  # get user raw input
     pprint --info "Installing necessary apps ..."
@@ -15,7 +16,7 @@ if [[ $USER == "root" ]]; then
         pprint --warn "User already exist."
     else
         pprint --title "Creating unix user ..."
-        bash AutoCreateUser.sh -user "$username"  # Enter password manually
+        bash $autocreateuser_path -user "$username"  # Enter password manually
     fi
     # User Env Setup
     if [[ ! -f /bin/zsh ]]; then
