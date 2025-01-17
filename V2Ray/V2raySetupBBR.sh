@@ -25,7 +25,10 @@ function full_bbr_setup {
 # Detect if script is running as root
 function check_root {
     if [[ $EUID -ne 0 ]]; then
-        echo "| [!] This script must be run as root."
+        echo '| [!] This script must be run as root.'
+        echo '|'
+        echo '|     sudo -E bash script.sh'
+        echo '|'
         exit 1
     fi
 }
