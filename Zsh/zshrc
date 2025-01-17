@@ -221,6 +221,15 @@ up() {  # upgrade all packages
 }
 
 venv() {  # deactivate if in a venv, or activate .venv/bin/activate
+    # check if venv python is executable
+    if [[ ! -f "./.venv/bin/python" ]]; then
+        _verbose_run "rm -r ./.venv"
+    fi
+    ./.venv/bin/python --version > /dev/null 2>&1
+    if [[ $? -ne 0 ]]; then
+        _verbose_run "rm -r ./.venv"
+    fi
+    # activate or deactivate venv
     if [[ -n "$VIRTUAL_ENV" ]]; then
         _verbose_run "deactivate"
     elif [[ -d "./.venv" ]]; then
