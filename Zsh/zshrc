@@ -221,33 +221,37 @@ up() {  # upgrade all packages
 }
 
 venv() {  # deactivate if in a venv, or activate .venv/bin/activate
-    # check if venv python is executable
-    if [[ ! -f "./.venv/bin/python" ]]; then
-        _verbose_run "rm -r ./.venv"
-    fi
-    ./.venv/bin/python --version > /dev/null 2>&1
-    if [[ $? -ne 0 ]]; then
-        _verbose_run "rm -r ./.venv"
-    fi
-    # activate or deactivate venv
+    local requirements=('requirements.txt' 'requirements-dev.txt' 'requirements-opt.txt')
+    # if venv is activated, deactivate it.
     if [[ -n "$VIRTUAL_ENV" ]]; then
         _verbose_run "deactivate"
-    elif [[ -d "./.venv" ]]; then
-        for file in "requirements.txt" "requirements-dev.txt" "requirements-opt.txt"; do
-            if [[ -f "./$file" ]]; then
-                _verbose_run "uv pip install --refresh -r ./$file"
-            fi
-        done
-        _verbose_run "source ./.venv/bin/activate"
-    else
-        _verbose_run "uv venv"
-        for file in "requirements.txt" "requirements-dev.txt" "requirements-opt.txt"; do
-            if [[ -f "./$file" ]]; then
-                _verbose_run "uv pip install -r ./$file"
-            fi
-        done
-        venv  # activate the venv
+        return
     fi
+    # if .venv/ not exists, create venv and relaunch the function.
+    if [[ ! -d "./.venv" ]]; then
+        _verbose_run "uv venv"  # create venv
+        venv
+        return
+    fi
+    # if .venv/ exists, but not executable, recreate venv and relaunch the function.
+    if [[ ! -x "./.venv/bin/python" ]]; then
+        _verbose_run "rm -r ./.venv"  # remove venv
+        venv
+        return
+    fi
+    # if .venv/ exists, but version is old, recreate the.venv/
+    if ! ./.venv/bin/python --version &> /dev/null; then
+        _verbose_run "rm -r ./.venv"  # remove venv
+        venv
+        return
+    fi
+    # if .venv/exists, and python is executable, update it and activate
+    for file in ${requirements[@]}; do
+        if [[ -f "./$file" ]]; then
+            _verbose_run "uv pip install --refresh -r ./$file"
+        fi
+    done
+    _verbose_run "source ./.venv/bin/activate"
 }
 
 # if p10k config is already done, uncomment the following line.
