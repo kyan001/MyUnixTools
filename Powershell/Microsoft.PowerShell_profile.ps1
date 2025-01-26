@@ -1,7 +1,10 @@
+# Activate Starship prompt
 Invoke-Expression (&starship init powershell)
+
+# Add Python3 Scripts to PATH
 $env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
 
-function Echo-Message {
+function Echo-Message {  # Print message with different styles
     param (
         [switch]$Err,
         [switch]$Warn,
@@ -42,7 +45,6 @@ function Echo-Message {
         Write-Output "${Dim}${TopLeft}${HorizontalBar}${TopRight}${Reset}"
         Write-Output "${Dim}${VerticalBar}${Reset} ${Message} ${Dim}${VerticalBar}${Reset}"
         Write-Output "${Dim}${ButtomLeft}${HorizontalBar}${ButtomRight}${Reset}"
-
     } elseif ($Command) {
         Write-Output "${Dim}>_${Reset} ${Underline}${Message}${Reset}"
     } else {
@@ -50,12 +52,12 @@ function Echo-Message {
     }
 }
 
-function Run-Verbose([string]$Command) {
+function Run-Verbose([string]$Command) {  # Print command before running it
     Echo-Message -Command "$Command"
     Invoke-Expression $Command
 }
 
-function proxy {  # toggle using proxy
+function proxy {  # Toggle using proxy
     $proxy_addr = "http://127.0.0.1:1088"
     if (!$env:ALL_PROXY -and !$env:HTTPS_PROXY -and !$env:HTTP_PROXY) {
         $env:ALL_PROXY = $proxy_addr
@@ -78,11 +80,11 @@ function proxy {  # toggle using proxy
     }
 }
 
-function fzfcd {
+function fzfcd {  # Use fzf to select a file, and cd to its directory
     Set-Location (fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up | Split-Path -Parent)
 }
 
-function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
+function up {  # Upgrade pip/pipx/scoop, and pipx/scoop packages.
     function Upgrade-Pipx {  # Upgrade pipx's packages
         Echo-Message -Title 'Upgrade Pipx Packages'
         Run-Verbose "pipx upgrade-all"  # 20s
@@ -100,6 +102,7 @@ function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
     function Upgrade-Winget {
         Echo-Message -Title 'Upgrade Winget Packages'
         Run-Verbose "winget upgrade --id Zen-Team.Zen-Browser"
+        Run-Verbose "winget install --id Microsoft.Powershell --source winget"
     }
 
     $upgrades = @('pipx', 'scoop', 'winget')  # Available package managers for upgrades
@@ -129,27 +132,46 @@ function up {  # upgrade pip/pipx/scoop, and pipx/scoop packages.
     }
 }
 
-function venv {  # deactivate if in a venv, or activate .venv/Scripts/activate if exists, or create a new venv
+function venv {  # Deactivate if in a venv, or activate .venv\Scripts\activate
+    $requirements = @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")
+    # If venv is activated, deactivate it.
     if ($env:VIRTUAL_ENV) {
         Run-Verbose "deactivate"
-    } elseif (Test-Path ".\.venv") {
-        foreach ($file in @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")) {
-            if (Test-Path ".\$file") {
-                Run-Verbose "uv pip install --refresh -r .\$file"
-            }
-        }
-        Run-Verbose ".\.venv\Scripts\activate"
-    } else {
+        return
+    }
+    # If .venv\ not exists, create venv and relaunch the function.
+    if (-not (Test-Path ".\.venv")) {
         Run-Verbose "uv venv"
-        foreach ($file in @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")) {
-            if (Test-Path ".\$file") {
-                Run-Verbose "uv pip install -r .\$file"
-            }
+        venv
+        return
+    }
+    # If .venv\ exists, but not executable, recreate venv and relaunch the function.
+    if (-not (Test-Path ".\.venv\Scripts\python.exe")) {
+        Run-Verbose "Remove-Item -Recurse .\.venv"
+        venv
+        return
+    }
+    # If .venv\ exists, but version is old, recreate the.venv\
+    try {
+        & .\.venv\Scripts\python.exe --version > $null 2>&1
+    } catch {
+        Run-Verbose "Remove-Item -Recurse .\.venv"
+        venv
+        return
+    }
+    # If .venv\ exists, and python is executable, update it and activate
+    foreach ($file in $requirements) {
+        if (Test-Path ".\$file") {
+            Run-Verbose "uv pip install --refresh -r .\$file"
         }
-        venv  # activate the venv
     }
-    if (-not (Test-Path "${PWD}\.venv\bin")) {  # when .venv\bin not exists
-        Run-Verbose "cmd /c mklink /D `"${PWD}\.venv\bin`" `"${PWD}\.venv\Scripts`""  # create a symlink for 'bin' to 'Scripts' in .venv\
+    # If .venv\bin\ not exists, create a symlink for it to .venv\Scripts\
+    if (-not (Test-Path "${PWD}\.venv\bin")) {
+        Run-Verbose "cmd /c mklink /D `"${PWD}\.venv\bin`" `"${PWD}\.venv\Scripts`""  # Create a symlink for 'bin' to 'Scripts' in .venv\
     }
+    # Activate the venv
+    Run-Verbose ".\.venv\Scripts\activate"
 }
+
+# Main
 proxy
