@@ -95,7 +95,17 @@ case $(uname -a) in  # this problem only on Windows Subsystem Linux
 esac
 
 export NVM_LAZY_LOAD=true  # Lazy load for zsh-nvm
-export PATH="$(python3 -m site --user-base)/bin:$PATH"  # Python User Site-Package Binaries
+
+# Python User Site-Package Binaries
+if command -v python3 > /dev/null 2>&1; then
+    export PATH="$(python3 -m site --user-base)/bin:$PATH"
+fi
+
+# Init Zoxide (z and zi)
+if command -v zoxide > /dev/null 2>&1; then
+    #export _ZO_FZF_OPTS="--preview 'bat --color=always --line-range=:100 {}' --preview-window up"  # Set fzf options for Zoxide
+    eval "$(zoxide init zsh)"
+fi
 
 source $ZSH/oh-my-zsh.sh
 

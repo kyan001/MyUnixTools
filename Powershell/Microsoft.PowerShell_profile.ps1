@@ -1,8 +1,19 @@
 # Activate Starship prompt
-Invoke-Expression (&starship init powershell)
+if (Get-Command starship -ErrorAction SilentlyContinue) {
+    Invoke-Expression (&starship init powershell)
+}
+
+# Init Zoxide (z and zi)
+if (Get-Command zoxide -ErrorAction SilentlyContinue) {
+    #$env:_ZO_FZF_OPTS = "--preview 'bat --color=always --line-range=:100 {}' --preview-window up"  # Set fzf options for Zoxide
+    Invoke-Expression (& { (zoxide init powershell | Out-String) })  # Init Zoxide
+}
 
 # Add Python3 Scripts to PATH
-$env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
+if (Get-Command python3 -ErrorAction SilentlyContinue) {
+    $env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
+}
+
 
 function Echo-Message {  # Print message with different styles
     param (
