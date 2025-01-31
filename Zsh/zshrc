@@ -70,7 +70,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     colored-man-pages  # man page colorized
-    z  # auto jump to history changed dir
+    #z  # auto jump to history changed dir
     # _Completions___________
     #git  # git suggestion
     #httpie  # HTTPie completion
