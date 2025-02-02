@@ -1,16 +1,16 @@
 # Activate Starship prompt
-if (Get-Command starship -ErrorAction SilentlyContinue) {
+if (Has-Command starship) {
     Invoke-Expression (&starship init powershell)
 }
 
 # Init Zoxide (z and zi)
-if (Get-Command zoxide -ErrorAction SilentlyContinue) {
+if (Has-Command zoxide) {
     #$env:_ZO_FZF_OPTS = "--preview 'bat --color=always --line-range=:100 {}' --preview-window up"  # Set fzf options for Zoxide
     Invoke-Expression (& { (zoxide init powershell | Out-String) })  # Init Zoxide
 }
 
 # Add Python3 Scripts to PATH
-if (Get-Command python3 -ErrorAction SilentlyContinue) {
+if (Has-Command python3) {
     $env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
 }
 
@@ -68,6 +68,19 @@ function Run-Verbose([string]$Command) {  # Print command before running it
     Invoke-Expression $Command
 }
 
+function Has-Command([switch]$Verbose, [string]$Command) {  # Check if a command exists
+    # Usage: if (Has-Command "cmd") { ... }
+    # Usage: if (Has-Command -Verbose "cmd" ) {... }
+    if (Get-Command $Command -ErrorAction SilentlyContinue) {
+        return $true
+    } else {
+        if ($Verbose) {
+            Echo-Message -Err "Command not found: $Command"
+        }
+        return $false
+    }
+}
+
 function proxy {  # Toggle using proxy
     $proxy_addr = "http://127.0.0.1:1088"
     if (!$env:ALL_PROXY -and !$env:HTTPS_PROXY -and !$env:HTTP_PROXY) {
@@ -92,26 +105,32 @@ function proxy {  # Toggle using proxy
 }
 
 function fzfcd {  # Use fzf to select a file, and cd to its directory
-    Set-Location (fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up | Split-Path -Parent)
+    if (Has-Command -Verbose fzf) {
+        Set-Location (fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up | Split-Path -Parent)
+    }
 }
 
 function up {  # Upgrade pip/pipx/scoop, and pipx/scoop packages.
     function Upgrade-Pipx {  # Upgrade pipx's packages
         Echo-Message -Title 'Upgrade Pipx Packages'
+        Has-Command -Verbose pipx || return  # Return if pipx not found
         Run-Verbose "pipx upgrade-all"  # 20s
     }
     function Update-Pip {  # Update pip itself
         Echo-Message -Title 'Update pip'
+        Has-Command -Verbose pip || return  # Return if pip not found
         Run-Verbose "python3 -m pip install --upgrade pip"  # 3s
     }
     function Upgrade-Scoop {  # Upgrade scoop's packages
         Echo-Message -Title 'Upgrade Scoop Packages'
+        Has-Command -Verbose scoop || return $false  # Return if scoop not found
         Run-Verbose "scoop update *"  # 10+ s
         Run-Verbose "scoop cleanup *"  # 300+ ms
         Run-Verbose "scoop cache rm *"  # ~100 ms
     }
     function Upgrade-Winget {
         Echo-Message -Title 'Upgrade Winget Packages'
+        Has-Command -Verbose winget || return $false  # Return if winget not found
         Run-Verbose "winget upgrade --id Zen-Team.Zen-Browser"
         Run-Verbose "winget install --id Microsoft.Powershell --source winget"
     }
@@ -150,6 +169,8 @@ function venv {  # Deactivate if in a venv, or activate .venv\Scripts\activate
         Run-Verbose "deactivate"
         return
     }
+    # If uv is not installed, return
+    Has-Command -Verbose uv || return $false
     # If .venv\ not exists, create venv and relaunch the function.
     if (-not (Test-Path ".\.venv")) {
         Run-Verbose "uv venv"
