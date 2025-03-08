@@ -131,7 +131,6 @@ function up {  # Upgrade pip/pipx/scoop, and pipx/scoop packages.
     function Upgrade-Winget {
         Echo-Message -Title 'Upgrade Winget Packages'
         Has-Command -Verbose winget || return $false  # Return if winget not found
-        Run-Verbose "winget upgrade --id Zen-Team.Zen-Browser"
         Run-Verbose "winget install --id Microsoft.Powershell --source winget"
     }
 
