@@ -133,9 +133,13 @@ function up {  # Upgrade pip/pipx/scoop, and pipx/scoop packages.
         Has-Command -Verbose winget || return $false  # Return if winget not found
         Run-Verbose "winget install --id Microsoft.Powershell --source winget"
     }
-
+    function Upgrade-Rust {
+        Echo-Message -Title 'Update Rust'
+        Has-Command -Verbose winget || return $false  # Return if rust not found
+        Run-Verbose "rustup update"
+    }
     $upgrades = @('pipx', 'scoop', 'winget')  # Available package managers for upgrades
-    $updates = @('pip')  # Available package managers to updates
+    $updates = @('pip' 'rust')  # Available package managers to updates
     if ($args.Count -eq 0) {  # Run 'up' to run all upgrades.
         foreach ($pm in $upgrades) {
             $pmCapitalized = $pm.Substring(0, 1).ToUpper() + $pm.Substring(1)
