@@ -228,8 +228,13 @@ up() {  # Upgrade all packages
         _has_cmd --verbose 'omz' || return 1  # If omz not installed, return False
         _verbose_run 'omz update'
     }
+    update_rust() {
+        _echo --title 'Update Rust'
+        _has_cmd --verbose 'rustup' || return 1  # If rustup not installed, return False
+        _verbose_run 'rustup update'
+    }
     local upgrades=('pipx' 'brew' 'apt' 'snap')  # Available package managers for upgrades
-    local updates=('pip' 'omz')  # Available package managers to updates
+    local updates=('pip' 'omz' 'rust')  # Available package managers to updates
     if [[ $# -eq 0 ]]; then  # Run 'up' to run all upgrades.
         for pm in "${upgrades[@]}"; do
             eval "upgrade_$pm"
