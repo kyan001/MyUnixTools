@@ -288,6 +288,50 @@ venv() {  # Deactivate if in a venv, or activate .venv/bin/activate
     _verbose_run "source ./.venv/bin/activate"
 }
 
+proxy() {  # proxy [on|off|status]
+    local proxy_address="127.0.0.1:1088"
+    local proxy_protocol="socks5"
+    local proxy_envvars=("http_proxy" "https_proxy" "all_proxy" "HTTP_PROXY" "HTTPS_PROXY" "ALL_PROXY")
+
+    if [[ $# -eq 0 ]]; then
+        for envvar in "${proxy_envvars[@]}"; do
+            if [[ -n "${!envvar}" ]]; then  # if $http_proxy is non-empty
+                _verbose_run "proxy off"
+                return
+            fi
+        done
+        _verbose_run "proxy on"
+    fi
+
+    for arg in "$@"; do
+        case "$arg" in
+            on)
+                for envvar in "${proxy_envvars[@]}"; do
+                    if [[ -z "${!envvar}" ]]; then  # if $http_proxy is zero-length
+                        _verbose_run "export $envvar=${proxy_protocol}://$proxy_address"
+                    fi
+                done
+                ;;
+            off)
+                for envvar in "${proxy_envvars[@]}"; do
+                    _verbose_run "unset $envvar"
+                done
+                ;;
+            status)
+                for envvar in "${proxy_envvars[@]}"; do
+                    if [[ -n "${!envvar}" ]]; then
+                        _echo --info "$envvar: ${!envvar}"
+                    fi
+                done
+                ;;
+            *)
+                _echo --err "Unknown argument: $arg"
+                _echo --info "Usage: proxy [on|off|status]"
+                ;;
+        esac
+    done
+}
+
 # if p10k config is already done, uncomment the following line.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
