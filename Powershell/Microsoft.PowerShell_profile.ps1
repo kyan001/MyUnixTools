@@ -113,53 +113,79 @@ function fzfcd {  # Use fzf to select a file, and cd to its directory
 function up {  # Upgrade pip/pipx/scoop, and pipx/scoop packages.
     function Upgrade-Pipx {  # Upgrade pipx's packages
         Echo-Message -Title 'Upgrade Pipx Packages'
-        Has-Command -Verbose pipx || return  # Return if pipx not found
-        Run-Verbose "pipx upgrade-all"  # 20s
-    }
-    function Update-Pip {  # Update pip itself
-        Echo-Message -Title 'Update pip'
-        Has-Command -Verbose pip || return  # Return if pip not found
-        Run-Verbose "python3 -m pip install --upgrade pip"  # 3s
+        if (Has-Command -Verbose pipx) {  # Return if pipx not found
+            Run-Verbose "pipx upgrade-all"  # 20s
+        }
     }
     function Upgrade-Scoop {  # Upgrade scoop's packages
         Echo-Message -Title 'Upgrade Scoop Packages'
-        Has-Command -Verbose scoop || return $false  # Return if scoop not found
-        Run-Verbose "scoop update *"  # 10+ s
-        Run-Verbose "scoop cleanup *"  # 300+ ms
-        Run-Verbose "scoop cache rm *"  # ~100 ms
+        if (Has-Command -Verbose scoop) {  # Return if scoop not found
+            Run-Verbose "scoop update *"  # 10+ s
+            Run-Verbose "scoop cleanup *"  # 300+ ms
+            Run-Verbose "scoop cache rm *"  # ~100 ms
+        }
     }
     function Upgrade-Winget {
         Echo-Message -Title 'Upgrade Winget Packages'
-        Has-Command -Verbose winget || return $false  # Return if winget not found
-        Run-Verbose "winget install --id Microsoft.Powershell --source winget"
+        if (Has-Command -Verbose winget) {  # Return if winget not found
+            Run-Verbose "winget upgrade --all"
+            # Run-Verbose "winget install --id Microsoft.Powershell --source winget"
+        }
     }
-    function Upgrade-Rust {
+    function Update-Rust {
         Echo-Message -Title 'Update Rust'
-        Has-Command -Verbose winget || return $false  # Return if rust not found
-        Run-Verbose "rustup update"
+        if (Has-Command -Verbose rustup) {  # Return if rust not found
+            Run-Verbose "rustup update"
+        }
     }
-    $upgrades = @('pipx', 'scoop', 'winget')  # Available package managers for upgrades
-    $updates = @('pip' 'rust')  # Available package managers to updates
+    function Update-Pip {  # Update pip itself
+        Echo-Message -Title 'Update pip'
+        if (Has-Command -Verbose python3) {  # Return if pip not found
+            Run-Verbose "python3 -m pip install --upgrade pip"  # 3s
+        }
+    }
+    function Update-Dotnet {
+        if (Has-Command -Verbose scoop) {
+            Run-Verbose "sudo scoop update windowsdesktop-runtime"
+        }
+    }
+    function Update-Clash {
+        if (Has-Command -Verbose scoop) {
+            Run-Verbose "scoop download clash-verge-rev"
+            Run-Verbose "sudo scoop update clash-verge-rev"
+        }
+    }
+    $upgrades = @('pipx', 'scoop', 'winget')  # Available package managers to upgrades
+    $updates = @('pip', 'rust', 'dotnet', 'clash')  # Available packages to updates
     if ($args.Count -eq 0) {  # Run 'up' to run all upgrades.
         foreach ($pm in $upgrades) {
             $pmCapitalized = $pm.Substring(0, 1).ToUpper() + $pm.Substring(1)
             Invoke-Expression "Upgrade-$pmCapitalized"
         }
-        foreach ($pm in $updates) {
-            $pmCapitalized = $pm.Substring(0, 1).ToUpper() + $pm.Substring(1)
-            Invoke-Expression "Update-$pmCapitalized"
-        }
     } else {  # Run 'up pip scoop' for scoop and pip upgrades only.
-        foreach ($arg in $args) {
-            if ($upgrades -contains $arg) {  # $arg is in $upgrades
-                $argCapitalized = $arg.Substring(0, 1).ToUpper() + $arg.Substring(1)
-                Invoke-Expression "Upgrade-$argCapitalized"
-            } elseif ($updates -contains $arg) {  # $arg is in $updates
-                $argCapitalized = $arg.Substring(0, 1).ToUpper() + $arg.Substring(1)
-                Invoke-Expression "Update-$argCapitalized"
-            } else {
-                Echo-Message -Err "Unknown package manager: $arg"
-                Echo-Message -Info "Supported package managers: $(($upgrades + $updates) -join ' ')"
+        if ($args -contains 'all') {  # Run 'up all' to run all upgrades and updates
+            foreach ($pm in $upgrades) {
+                $pmCapitalized = $pm.Substring(0, 1).ToUpper() + $pm.Substring(1)
+                Invoke-Expression "Upgrade-$pmCapitalized"
+            }
+            foreach ($pm in $updates) {
+                $pmCapitalized = $pm.Substring(0, 1).ToUpper() + $pm.Substring(1)
+                Invoke-Expression "Update-$pmCapitalized"
+            }
+        } elseif ($args -contains 'list') {
+            Echo-Message -Info "Supported package managers: $(($upgrades + $updates) -join ' ')"
+        } else {
+            foreach ($arg in $args) {
+                if ($upgrades -contains $arg) {  # $arg is in $upgrades
+                    $argCapitalized = $arg.Substring(0, 1).ToUpper() + $arg.Substring(1)
+                    Invoke-Expression "Upgrade-$argCapitalized"
+                } elseif ($updates -contains $arg) {  # $arg is in $updates
+                    $argCapitalized = $arg.Substring(0, 1).ToUpper() + $arg.Substring(1)
+                    Invoke-Expression "Update-$argCapitalized"
+                } else {
+                    Echo-Message -Err "Unknown package manager: $arg"
+                    Echo-Message -Info "Supported package managers: $(($upgrades + $updates) -join ' ')"
+                }
             }
         }
     }
