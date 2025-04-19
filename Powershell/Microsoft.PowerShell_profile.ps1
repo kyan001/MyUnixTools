@@ -225,7 +225,9 @@ function venv {  # Deactivate if in a venv, or activate .venv\Scripts\activate
         return
     }
     # If uv is not installed, return
-    Has-Command -Verbose uv || return $false
+    if (-not (Has-Command -Verbose uv)) {
+        return $false
+    }
     # If .venv\ not exists, create venv and relaunch the function.
     if (-not (Test-Path ".\.venv")) {
         Run-Verbose "uv venv"
