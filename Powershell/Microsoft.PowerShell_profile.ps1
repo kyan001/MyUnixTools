@@ -110,7 +110,13 @@ function fzfcd {  # Use fzf to select a file, and cd to its directory
     }
 }
 
-function up {  # Upgrade pip/pipx/scoop, and pipx/scoop packages.
+function up {  # Upgrade packages in package managers, or update packages.
+    param (
+        [switch]$All,  # `up -All` to run all upgrades and updates
+        [switch]$Help,  # `up -Help` to show help message
+        [switch]$List,  # `up -List` to list all supported packages and package managers
+        [string[]]$Targets = @()  # `up pipx scoop` to run pipx and scoop upgrades only
+    )
     function Upgrade-Pipx {  # Upgrade pipx's packages
         Echo-Message -Title 'Upgrade Pipx Packages'
         if (Has-Command -Verbose pipx) {  # Return if pipx not found
@@ -144,7 +150,7 @@ function up {  # Upgrade pip/pipx/scoop, and pipx/scoop packages.
             Run-Verbose "python3 -m pip install --upgrade pip"  # 3s
         }
     }
-    function Update-Dotnet {
+    function Update-DotNet {
         if (Has-Command -Verbose scoop) {
             Run-Verbose "sudo scoop update windowsdesktop-runtime"
         }
@@ -155,37 +161,57 @@ function up {  # Upgrade pip/pipx/scoop, and pipx/scoop packages.
             Run-Verbose "sudo scoop update clash-verge-rev"
         }
     }
-    $upgrades = @('pipx', 'scoop', 'winget')  # Available package managers to upgrades
-    $updates = @('pip', 'rust', 'dotnet', 'clash')  # Available packages to updates
-    if ($args.Count -eq 0) {  # Run 'up' to run all upgrades.
-        foreach ($pm in $upgrades) {
-            $pmCapitalized = $pm.Substring(0, 1).ToUpper() + $pm.Substring(1)
-            Invoke-Expression "Upgrade-$pmCapitalized"
+    $Upgrades = @{
+        'pipx' = { Upgrade-Pipx }
+        'scoop' = { Upgrade-Scoop }
+        'winget' = { Upgrade-Winget }
+    }
+    $Updates = @{
+        'pip' = { Update-Pip }
+        'rust' = { Update-Rust }
+        'dotnet' = { Update-DotNet }
+        'clash' = { Update-Clash }
+    }
+    $PrintList = {
+        Echo-Message -Info "Supported Packages and Managers:`n`t$(@($Upgrades.Keys + $Updates.Keys) -join ', ')"
+    }
+    if ($All) {  # Run 'up -All' to run all upgrades and updates
+        foreach ($Func in $Upgrades.Values) {
+            $Func.Invoke()
         }
-    } else {  # Run 'up pip scoop' for scoop and pip upgrades only.
-        if ($args -contains 'all') {  # Run 'up all' to run all upgrades and updates
-            foreach ($pm in $upgrades) {
-                $pmCapitalized = $pm.Substring(0, 1).ToUpper() + $pm.Substring(1)
-                Invoke-Expression "Upgrade-$pmCapitalized"
-            }
-            foreach ($pm in $updates) {
-                $pmCapitalized = $pm.Substring(0, 1).ToUpper() + $pm.Substring(1)
-                Invoke-Expression "Update-$pmCapitalized"
-            }
-        } elseif ($args -contains 'list') {
-            Echo-Message -Info "Supported package managers: $(($upgrades + $updates) -join ' ')"
-        } else {
-            foreach ($arg in $args) {
-                if ($upgrades -contains $arg) {  # $arg is in $upgrades
-                    $argCapitalized = $arg.Substring(0, 1).ToUpper() + $arg.Substring(1)
-                    Invoke-Expression "Upgrade-$argCapitalized"
-                } elseif ($updates -contains $arg) {  # $arg is in $updates
-                    $argCapitalized = $arg.Substring(0, 1).ToUpper() + $arg.Substring(1)
-                    Invoke-Expression "Update-$argCapitalized"
-                } else {
-                    Echo-Message -Err "Unknown package manager: $arg"
-                    Echo-Message -Info "Supported package managers: $(($upgrades + $updates) -join ' ')"
-                }
+        foreach ($Func in $Updates.Values) {
+            $Func.Invoke()
+        }
+    }
+    if ($List) {  # Run 'up -List' or 'up -Help' to list all supported packages and package managers
+        $PrintList.Invoke()
+        return
+    }
+    if ($Help) {  # Run 'up -Help' to show detailed help message
+        Echo-Message -Title "Help for 'up' Command"
+        Echo-Message -Info "Usage: up [-All] [-List] [-Help] [Targets...]"
+        Echo-Message -Info "Options:"
+        Echo-Message -Info "    -All     Run all upgrades and updates."
+        Echo-Message -Info "    -List    List all supported package managers and update targets."
+        Echo-Message -Info "    -Help    Show this help message."
+        Echo-Message -Info "Targets:"
+        Echo-Message -Info "    Specify one or more targets to upgrade or update (e.g., 'pipx', 'rust')."
+        $PrintList.Invoke()
+        return
+    }
+    if ($Targets.Count -eq 0) {  # Run 'up' to run all upgrades, but not updates.
+        foreach ($Func in $Upgrades.Values) {
+            $Func.Invoke()
+        }
+    } else {
+        foreach ($target in $Targets) {
+            if ($Upgrades.ContainsKey($target)) {  # $target is in $Upgrades
+                $Upgrades[$target].Invoke()
+            } elseif ($Updates.ContainsKey($target)) {  # $target is in $Updates
+                $Updates[$target].Invoke()
+            } else {
+                Echo-Message -Err "Unknown package manager: $target"
+                $PrintList.Invoke()
             }
         }
     }
