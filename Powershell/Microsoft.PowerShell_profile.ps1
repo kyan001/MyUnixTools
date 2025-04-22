@@ -151,11 +151,13 @@ function up {  # Upgrade packages in package managers, or update packages.
         }
     }
     function Update-DotNet {
+        Echo-Message -Title 'Update Windows Desktop Runtime (.NET)'
         if (Has-Command -Verbose scoop) {
             Run-Verbose "sudo scoop update windowsdesktop-runtime"
         }
     }
     function Update-Clash {
+        Echo-Message -Title 'Update Clash Verge Rev'
         if (Has-Command -Verbose scoop) {
             Run-Verbose "scoop download clash-verge-rev"
             Run-Verbose "sudo scoop update clash-verge-rev"
