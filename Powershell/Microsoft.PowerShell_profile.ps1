@@ -13,16 +13,16 @@ function Echo-Message {  # Print message with different styles
     $Dim = "`e[2m"
     $Reset = "`e[0m"
     if ($Err) {
-        Write-Output "${Dim}[${Reset}${Underline}Error${Reset}${Dim}]${Reset} ${Message}"
+        Write-Host "${Dim}[${Reset}${Underline}Error${Reset}${Dim}]${Reset} ${Message}"
     } elseif ($Warn) {
-        Write-Output "${Dim}[${Reset}Warning${Dim}]${Reset} ${Message}"
+        Write-Host "${Dim}[${Reset}Warning${Dim}]${Reset} ${Message}"
     } elseif ($Info) {
-        Write-Output "${Dim}[Info]${Reset} ${Message}"
+        Write-Host "${Dim}[Info]${Reset} ${Message}"
     } elseif ($Debug) {
-        Write-Output "[Debug] ${Message}"
+        Write-Host "[Debug] ${Message}"
     } elseif ($Title) {
-        Write-Output ""
-        if ((& {Write-Output "═║╔╗╚╝"}) -eq "═║╔╗╚╝") {
+        Write-Host ""
+        if ((& {Write-Host "═║╔╗╚╝"}) -eq "═║╔╗╚╝") {
             $HorizontalBar = "═" * $Message.Length
             $VerticalBar = "║"
             $TopLeft = "╔═"
@@ -37,13 +37,13 @@ function Echo-Message {  # Print message with different styles
             $ButtomLeft = "+="
             $ButtomRight = "=+"
         }
-        Write-Output "${Dim}${TopLeft}${HorizontalBar}${TopRight}${Reset}"
-        Write-Output "${Dim}${VerticalBar}${Reset} ${Message} ${Dim}${VerticalBar}${Reset}"
-        Write-Output "${Dim}${ButtomLeft}${HorizontalBar}${ButtomRight}${Reset}"
+        Write-Host "${Dim}${TopLeft}${HorizontalBar}${TopRight}${Reset}"
+        Write-Host "${Dim}${VerticalBar}${Reset} ${Message} ${Dim}${VerticalBar}${Reset}"
+        Write-Host "${Dim}${ButtomLeft}${HorizontalBar}${ButtomRight}${Reset}"
     } elseif ($Command) {
-        Write-Output "${Dim}>_${Reset} ${Underline}${Message}${Reset}"
+        Write-Host "${Dim}>_${Reset} ${Underline}${Message}${Reset}"
     } else {
-        Write-Output "${Message}"
+        Write-Host "${Message}"
     }
 }
 
