@@ -22,7 +22,7 @@ function Echo-Message {  # Print message with different styles
         Write-Host "[Debug] ${Message}"
     } elseif ($Title) {
         Write-Host ""
-        if ((& {Write-Host "═║╔╗╚╝"}) -eq "═║╔╗╚╝") {
+        if ((& {Write-Output "═║╔╗╚╝"}) -eq "═║╔╗╚╝") {
             $HorizontalBar = "═" * $Message.Length
             $VerticalBar = "║"
             $TopLeft = "╔═"
