@@ -134,8 +134,7 @@ function up {  # Upgrade packages in package managers, or update packages.
     function Upgrade-Winget {
         Echo-Message -Title 'Upgrade Winget Packages'
         if (Has-Command -Verbose winget) {  # Return if winget not found
-            Run-Verbose "winget upgrade --all"
-            # Run-Verbose "winget install --id Microsoft.Powershell --source winget"
+            Run-Verbose "winget upgrade --all --accept-package-agreements --accept-source-agreements"
         }
     }
     function Update-Rust {
