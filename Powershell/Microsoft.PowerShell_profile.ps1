@@ -9,9 +9,9 @@ function Echo-Message {  # Print message with different styles
         [switch]$Command,
         [string]$Message
     )
-    $Underline = "`e[4m"
-    $Dim = "`e[2m"
-    $Reset = "`e[0m"
+    $Underline = [char]27 + "[4m"  # "`e[4m"
+    $Dim = [char]27 + "[2m"  # "`e[2m"
+    $Reset = [char]27 + "[0m"  # "`e[0m"
     if ($Err) {
         Write-Host "${Dim}[${Reset}${Underline}Error${Reset}${Dim}]${Reset} ${Message}"
     } elseif ($Warn) {
@@ -22,13 +22,13 @@ function Echo-Message {  # Print message with different styles
         Write-Host "[Debug] ${Message}"
     } elseif ($Title) {
         Write-Host ""
-        if ((& {Write-Output "═║╔╗╚╝"}) -eq "═║╔╗╚╝") {
-            $HorizontalBar = "═" * $Message.Length
-            $VerticalBar = "║"
-            $TopLeft = "╔═"
-            $TopRight = "═╗"
-            $ButtomLeft = "╚═"
-            $ButtomRight = "═╝"
+        if ($Host.UI.SupportsVirtualTerminal) {  # Check if the host supports virtual terminal (ANSI and Unicode)
+            $HorizontalBar = (New-Object string ([char]0x2550), $Message.Length)  # "═" * $Message.Length
+            $VerticalBar = [char]0x2551  # "║"
+            $TopLeft = [char]0x2554 + [char]0x2550  # "╔═"
+            $TopRight = [char]0x2550 + [char]0x2557  # "═╗"
+            $ButtomLeft = [char]0x255A + [char]0x2550  # "╚═"
+            $ButtomRight = [char]0x2550 + [char]0x255D  # "═╝"
         } else {
             $HorizontalBar = "=" * $Message.Length
             $VerticalBar = "|"
@@ -87,20 +87,22 @@ function proxy {  # Toggle using proxy
         $env:ALL_PROXY = $proxy_addr
         $env:HTTPS_PROXY = $proxy_addr
         $env:HTTP_PROXY = $proxy_addr
-        Echo-Message -Info "[Proxy ON] ALL_PROXY, HTTPS_PROXY and HTTP_PROXY set to $proxy_addr. Use 'Proxy' to turn off."
+        Echo-Message -Info "[Proxy ON] ALL_PROXY, HTTPS_PROXY, HTTP_PROXY = $proxy_addr"
     } else {
+        $UnsetList = @()
         if ($env:ALL_PROXY) {
             Remove-Item Env:\ALL_PROXY
-            Echo-Message -Info "[Proxy OFF] ALL_PROXY unset from $env:ALL_PROXY."
+            $UnsetList += "ALL_PROXY"
         }
         if ($env:HTTP_PROXY) {
             Remove-Item Env:\HTTP_PROXY
-            Echo-Message -Info "[Proxy OFF] HTTP_PROXY unset."
+            $UnsetList += "HTTP_PROXY"
         }
         if ($env:HTTPS_PROXY) {
             Remove-Item Env:\HTTPS_PROXY
-            Echo-Message -Info "[Proxy OFF] HTTPS_PROXY unset."
+            $UnsetList += "HTTPS_PROXY"
         }
+        Echo-Message -Info "[Proxy OFF] " + ($UnsetList -join ", ") + " = unset"
     }
 }
 
