@@ -35,6 +35,16 @@ function detect_ipv6_disabling_status {
     echo '`'
 }
 
+function check_root {
+    if [[ $EUID -ne 0 ]]; then
+        echo '| [!] This script must be run as root.'
+        echo '|'
+        echo "|     sudo -E bash $(basename "$0")"
+        echo '|'
+        exit 1
+    fi
+}
+
 function main {
     echo "*"
     echo "| Disable IPv6 Script"
@@ -47,8 +57,10 @@ function main {
     echo "| 2. Enable IPv6"
     read -p "| > " answer
     if [[ "$answer" == "1" ]]; then  # answer not empty not "Y" or "y"
+        check_root
         apply_ipv6_disabling
     elif [[ "$answer" == "2" ]]; then
+        check_root
         remove_ipv6_disabling
     else
         echo "| [!] Invalid Option."
