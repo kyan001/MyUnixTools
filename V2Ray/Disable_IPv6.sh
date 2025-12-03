@@ -13,7 +13,7 @@ function apply_ipv6_disabling {
     echo "*"
     echo "| Apply IPv6 Disabling."
     if grep -q "net.ipv6.conf.all.disable_ipv6 = 1" "/etc/sysctl.conf"; then
-        echo "| IPv6 already disabled"
+        echo "| IPv6 is already disabled"
     else
         remove_ipv6_disabling
         echo "| Disabling IPv6 ..."
@@ -23,12 +23,13 @@ function apply_ipv6_disabling {
         echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf
         # apply
         sysctl -p
+        echo "| [OK] IPv6 is disabled!"
     fi
     echo '`'
 }
 function detect_ipv6_disabling_status {
     if grep -q "net.ipv6.conf.all.disable_ipv6 = 1" "/etc/sysctl.conf"; then
-        echo "| IPv6 is disabled."
+        echo "| IPv6 is already DISABLED!"
     else
         echo "| IPv6 is enabled."
     fi
@@ -47,8 +48,6 @@ function check_root {
 
 function main {
     echo "*"
-    echo "| Disable IPv6 Script"
-    echo "|"
     detect_ipv6_disabling_status
     echo "|"
     local answer
