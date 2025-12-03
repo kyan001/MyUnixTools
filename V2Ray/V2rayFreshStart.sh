@@ -3,7 +3,7 @@
 source $(dirname "$0")/../utils/pprint.sh  # MyUnixTools/utils/pprint.sh
 
 if [[ $USER == "root" ]]; then
-    autocreateuser_path="../AutoCreateUser.sh"
+    autocreateuser_path="$(dirname "$0")/../AutoCreateUser.sh"
     echo -n "[?] Please enter your username: "  # do not add \n
     read -r username  # get user raw input
     pprint --info "Installing necessary apps ..."
@@ -31,8 +31,8 @@ if [[ $USER == "root" ]]; then
     chsh -s /bin/zsh "$username"  # set zsh as user's shell
     pprint --panel "You can now relogin using $username"
 else
-    autosetupzshpy_path="../Zsh/AutoSetupZsh.py"
-    nginx_v2ray_path="../Nginx/nginx_v2ray"
+    autosetupzshpy_path="$(dirname "$0")/../Zsh/AutoSetupZsh.py"
+    nginx_v2ray_path="$(dirname "$0")/../Nginx/nginx_v2ray"
     local_v2raysh_path="$HOME/v2ray-233boy.sh"
     echo -n "[?] Please enter your domain for v2ray: "  # do not add \n
     read -r domain  # get user raw input
