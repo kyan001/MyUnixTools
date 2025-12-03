@@ -3,7 +3,7 @@
 source $(dirname "$0")/../utils/pprint.sh  # MyUnixTools/utils/pprint.sh
 
 if [[ $USER == "root" ]]; then
-    autocreateuser_path = "../AutoCreateUser.sh"
+    autocreateuser_path="../AutoCreateUser.sh"
     echo -n "[?] Please enter your username: "  # do not add \n
     read -r username  # get user raw input
     pprint --info "Installing necessary apps ..."
