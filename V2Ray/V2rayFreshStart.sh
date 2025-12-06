@@ -6,17 +6,21 @@ if [[ $USER == "root" ]]; then
     autocreateuser_path="$(dirname "$0")/../AutoCreateUser.sh"
     echo -n "[?] Please enter your username: "  # do not add \n
     read -r username  # get user raw input
-    pprint --info "Installing necessary apps ..."
-    apt update  # update index
-    apt install -y zsh python3-pip nginx certbot python3-certbot-nginx pipx  # install apps, automatically yes.
-    pipx ensurepath
-    pipx install rich-cli
+    if [[ ! "$username" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+        echo "Error: Invalid username. Only letters, numbers, underscores, and hyphens allowed."
+        exit 1
+    fi
+
+    # Install Packages
+    pprint --title "Installing required packages ..."
+    bash $(dirname "$0")/InstallPackagesForV2ray.sh
+
     # User Creation
     if id "$username" >& /dev/null; then
         pprint --warn "User already exist."
     else
         pprint --title "Creating unix user ..."
-        bash $autocreateuser_path -user "$username"  # Enter password manually
+        bash "$autocreateuser_path" -user "$username"  # Enter password manually
     fi
     # User Env Setup
     if [[ ! -f /bin/zsh ]]; then
@@ -25,58 +29,61 @@ if [[ $USER == "root" ]]; then
     fi
     if [[ ! -f /home/$username/.zshrc ]]; then
         pprint --warn "Zsh not initialized, initializing ..."
-        touch /home/"$username"/.zshrc  # init zsh
+        touch "/home/$username/.zshrc"  # init zsh
     fi
     pprint --info "Setting zsh as user default shell"
     chsh -s /bin/zsh "$username"  # set zsh as user's shell
     pprint --panel "You can now relogin using $username"
 else
-    autosetupzshpy_path="$(dirname "$0")/../Zsh/AutoSetupZsh.py"
-    nginx_v2ray_path="$(dirname "$0")/../Nginx/nginx_v2ray"
-    local_v2raysh_path="$HOME/v2ray-233boy.sh"
-    echo -n "[?] Please enter your domain for v2ray: "  # do not add \n
-    read -r domain  # get user raw input
-    pprint --info "Install Python3 Packages ..."
-    if ! pip3 show "consolecmdtools" &> /dev/null; then
-        pip3 install --user consolecmdtools --break-system-packages
-    fi
-    pprint --title "Setting up zsh ..."
-    python3 $autosetupzshpy_path
-    pprint --title "Updating user configs ..."
-    cmgr  # pip3 install cmgr
-    echo "[?] Using Nginx for V2ray? [Y/n]"
+    # Setup Zsh
+    pprint --title "Setting up Zsh for V2ray ..."
+    bash $(dirname "$0")/SetupZshForV2ray.sh
+
+    # Setup Nginx for V2ray
+    pprint --title "Setting up Nginx for V2ray ..."
+    bash $(dirname "$0")/SetupNginxForV2ray.sh
+
+    # Setup V2ray and HTTPS
+    pprint --title "Setting up V2ray and HTTPS..."
+    bash $(dirname "$0")/SetupHttpsAndV2ray.sh
+
+    # Setup BBR
+    echo "[?] Setup BBR for V2ray? [Y/n]"
     echo -n "> "
-    read -r nginx_enabled
-    if [[ $nginx_enabled == [Yy] ]]; then
-        pprint --info "Copying nginx v2ray config file ..."
-        sudo cp $nginx_v2ray_path /etc/nginx/sites-available/v2ray  # copy nginx config for v2ray
-        pprint --info "Putting your domain '$domain' in nginx config ..."
-        sudo sed -i "s/__your_domain__/$domain/" /etc/nginx/sites-available/v2ray  # update nginx config file
-        pprint --info "Linking Nginx configs ..."
-        sudo ln -s /etc/nginx/sites-available/v2ray /etc/nginx/sites-enabled/
-        pprint --info "Testing Nginx configs ..."
-        if sudo nginx -t; then
-            sudo service nginx restart
-        fi
+    read -r BBR_enable
+    if [[ $BBR_enable == [Yy] ]]; then
+        pprint --title "Setting up BBR ..."
+        bash $(dirname "$0")/SetupBbrForV2ray.sh
     else
-        pprint --warn "Nginx configuration ignored."
+        pprint --warn "BBR setup skipped."
     fi
-    pprint --info "Downloading v2ray script"
-    v2raysh_url="https://raw.githubusercontent.com/233boy/v2ray/old/install.sh?v"  # use old version 233boy's v2ray script
-    # v2raysh_url="https://git.io/v2ray.sh"  # latest 233boy's v2ray script
-    curl -s -L $v2raysh_url > $local_v2raysh_path  # download shell
-    pprint --warn "Please make sure your domain pointed to this IP."
-    pprint --title "Installing v2ray ..."
-    sudo -E bash $local_v2raysh_path online old  # args=online, branch=old
-        # WebSocket + TLS, 40000.
-    pprint --info "Getting HTTPS ceritification ..."
-    sudo certbot --nginx  # Choose Your Domain
-    pprint --warn "To setup BBR, use the following command:"
-    pprint --info "bash ./V2raySetupBBR.sh"
-    pprint --warn "To setup WARP, use the following command:"
-    pprint --info "bash ./V2raySetupWARP.sh"
-    pprint --title "Setting V2Ray AlterId=32"
-    sudo sed -i 's/"alterId": 0/"alterId": 32/' /etc/v2ray/config.json
-    sudo v2ray restart
+
+    # Setup WARP
+    echo "[?] Setup WARP for V2ray? [Y/n]"
+    echo -n "> "
+    read -r WARP_enable
+    if [[ $WARP_enable == [Yy] ]]; then
+        pprint --title "Setting up WARP ..."
+        bash $(dirname "$0")/SetupWarpForV2ray.sh
+    else
+        pprint --warn "WARP setup skipped."
+    fi
+
+    # Disable IPv6
+    echo "[?] Disable IPv6? [Y/n]"
+    echo -n "> "
+    read -r IPv6_disable
+    if [[ $IPv6_disable == [Yy] ]]; then
+        pprint --title "Disabling IPv6 ..."
+        bash $(dirname "$0")/DisableIPv6.sh
+    else
+        pprint --warn "IPv6 disable skipped."
+    fi
+
+    # Set V2ray Alter ID to 32
+    pprint --title "Setting V2ray Alter ID to 32 ..."
+    bash $(dirname "$0")/SetAlterIdForV2ray.sh
+
+    # Done
     pprint --warn "Done!"
 fi
