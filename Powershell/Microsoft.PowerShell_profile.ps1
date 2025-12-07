@@ -165,7 +165,7 @@ function up {  # Upgrade packages in package managers, or update packages.
             Run-Verbose "sudo scoop update clash-verge-rev"
         }
     }
-    function Upgrade-Zed {
+    function Update-Zed {
         Echo-Message -Title 'Upgrade Zed'
         if (Has-Command -Verbose winget) {
             $ZedPath = Split-Path (Split-Path (Get-Command zed).Source)
@@ -177,13 +177,13 @@ function up {  # Upgrade packages in package managers, or update packages.
         'pipx' = { Upgrade-Pipx }
         'scoop' = { Upgrade-Scoop }
         'winget' = { Upgrade-Winget }
-        'zed' = { Upgrade-Zed }
     }
     $Updates = @{
         'pip' = { Update-Pip }
         'rust' = { Update-Rust }
         'dotnet' = { Update-DotNet }
         'clash' = { Update-Clash }
+        'zed' = { Update-Zed }
     }
     $PrintList = {
         Echo-Message -Info "Supported Packages and Managers:`n`t$(@($Upgrades.Keys + $Updates.Keys) -join ', ')"
