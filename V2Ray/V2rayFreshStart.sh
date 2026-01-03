@@ -12,39 +12,41 @@ if [[ $USER == "root" ]]; then
     fi
 
     # Install Packages
-    pprint --title "Installing required packages ..."
+    echo "============ Installing required packages ... ============"
     bash $(dirname "$0")/InstallPackagesForV2ray.sh
 
     # User Creation
     if id "$username" >& /dev/null; then
-        pprint --warn "User already exist."
+        echo "(Warning) User already exist."
     else
-        pprint --title "Creating unix user ..."
+        echo "============ Creating unix user ... ============"
         bash "$autocreateuser_path" -user "$username"  # Enter password manually
     fi
     # User Env Setup
     if [[ ! -f /bin/zsh ]]; then
-        pprint --warn "Zsh not found, installing ..."
+        echo "(Warning) Zsh not found, installing ..."
         apt install -y zsh  # install zsh
     fi
     if [[ ! -f /home/$username/.zshrc ]]; then
-        pprint --warn "Zsh not initialized, initializing ..."
+        echo "(Warning) Zsh not initialized, initializing ..."
         touch "/home/$username/.zshrc"  # init zsh
     fi
-    pprint --info "Setting zsh as user default shell"
+    echo "(Info) Setting zsh as user default shell"
     chsh -s /bin/zsh "$username"  # set zsh as user's shell
-    pprint --panel "You can now relogin using $username"
+    echo "+-------------------------------------+"
+    echo "| You can now relogin using $username |"
+    echo "+-------------------------------------+"
 else
     # Setup Zsh
-    pprint --title "Setting up Zsh for V2ray ..."
+    echo "============ Setting up Zsh for V2ray ... ============"
     bash $(dirname "$0")/SetupZshForV2ray.sh
 
     # Setup Nginx for V2ray
-    pprint --title "Setting up Nginx for V2ray ..."
+    echo "============ Setting up Nginx for V2ray ... ============"
     bash $(dirname "$0")/SetupNginxForV2ray.sh
 
     # Setup V2ray and HTTPS
-    pprint --title "Setting up V2ray and HTTPS..."
+    echo "============ Setting up V2ray and HTTPS... ============"
     bash $(dirname "$0")/SetupHttpsAndV2ray.sh
 
     # Setup BBR
@@ -52,10 +54,10 @@ else
     echo -n "> "
     read -r BBR_enable
     if [[ $BBR_enable == [Yy] ]]; then
-        pprint --title "Setting up BBR ..."
+        echo "============ Setting up BBR ... ============"
         sudo -E bash $(dirname "$0")/SetupBbrForV2ray.sh
     else
-        pprint --warn "BBR setup skipped."
+        echo "(Warning) BBR setup skipped."
     fi
 
     # Setup WARP
@@ -63,10 +65,10 @@ else
     echo -n "> "
     read -r WARP_enable
     if [[ $WARP_enable == [Yy] ]]; then
-        pprint --title "Setting up WARP ..."
+        echo "============ Setting up WARP ... ============"
         bash $(dirname "$0")/SetupWarpForV2ray.sh
     else
-        pprint --warn "WARP setup skipped."
+        echo "(Warning) WARP setup skipped."
     fi
 
     # Disable IPv6
@@ -74,16 +76,16 @@ else
     echo -n "> "
     read -r IPv6_disable
     if [[ $IPv6_disable == [Yy] ]]; then
-        pprint --title "Disabling IPv6 ..."
+        echo "============ Disabling IPv6 ... ============"
         bash $(dirname "$0")/DisableIPv6.sh
     else
-        pprint --warn "IPv6 disable skipped."
+        echo "(Warning) IPv6 disable skipped."
     fi
 
     # Set V2ray Alter ID to 32
-    pprint --title "Setting V2ray Alter ID to 32 ..."
+    echo "============ Setting V2ray Alter ID to 32 ... ============"
     bash $(dirname "$0")/SetAlterIdForV2ray.sh
 
     # Done
-    pprint --warn "Done!"
+    echo "(Warning) Done!"
 fi
