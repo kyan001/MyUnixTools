@@ -152,7 +152,7 @@ plugins=(
     #rust  # rustc/rustup/cargo completion
     #fzf  # fzf completion
     # _3rd party's___________
-    zsh-nvm  # 3rd party plugins. add wraps of nvm command.
+    #zsh-nvm  # 3rd party plugins. add wraps of nvm command.
     zsh-autosuggestions  # 3rd party plugins. gray suggestions in tail
     zsh-syntax-highlighting  # 3rd party plugins. highlights shell commands
 )
@@ -166,7 +166,7 @@ case $(uname -a) in  # this problem only on Windows Subsystem Linux
         ;;
 esac
 
-export NVM_LAZY_LOAD=true  # Lazy load for zsh-nvm
+#export NVM_LAZY_LOAD=true  # Lazy load for zsh-nvm
 
 # Python User Site-Package Binaries
 if _has_cmd python3; then
@@ -233,8 +233,14 @@ up() {  # Upgrade all packages
         _has_cmd --verbose 'rustup' || return 1  # If rustup not installed, return False
         _verbose_run 'rustup update'
     }
+    update_python() {
+        _echo --title 'Update Python'
+        _has_cmd --verbose 'brew' || return 1  # If brew not installed, return False
+        _verbose_run 'brew upgrade python3'
+        _verbose_run 'cd $(brew --prefix python3) && open "Python Launcher 3.app"'
+    }
     local upgrades=('pipx' 'brew' 'apt' 'snap')  # Available package managers for upgrades
-    local updates=('pip' 'omz' 'rust')  # Available package managers to updates
+    local updates=('pip' 'omz' 'rust' 'python')  # Available package managers to updates
     if [[ $# -eq 0 ]]; then  # Run 'up' to run all upgrades.
         for pm in "${upgrades[@]}"; do
             eval "upgrade_$pm"
@@ -295,7 +301,7 @@ venv() {  # Deactivate if in a venv, or activate .venv/bin/activate
 
 proxy() {  # proxy [on|off|status]
     local proxy_address="127.0.0.1:1088"
-    local proxy_protocol="socks5"
+    local proxy_protocol="http"  # "socks5"
     local proxy_envvars=("http_proxy" "https_proxy" "all_proxy" "HTTP_PROXY" "HTTPS_PROXY" "ALL_PROXY")
 
     if [[ $# -eq 0 ]]; then
