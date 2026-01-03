@@ -137,7 +137,7 @@ function remove_bbr {
 # Remove Network Optimizing settings in multiple files
 function remove_net_optimizing {
     echo "*"
-    echo "| Remove Network Optimizing"
+    echo "| Removing Network Optimizing ..."
     sed -i '/fs.file-max/d' /etc/sysctl.conf
 	sed -i '/fs.inotify.max_user_instances/d' /etc/sysctl.conf
 	sed -i '/net.ipv4.tcp_syncookies/d' /etc/sysctl.conf
@@ -185,6 +185,7 @@ function apply_net_optimizing {
         echo "| Network already optimized"
     else
         remove_net_optimizing
+        echo "| Optimizing network settings ..."
         # /etc/sysctl.conf
         echo "fs.file-max = 1000000" >> /etc/sysctl.conf
         echo "fs.inotify.max_user_instances = 8192" >> /etc/sysctl.conf
@@ -211,6 +212,7 @@ function apply_net_optimizing {
         source /etc/profile
         # apply
         sysctl -p
+        echo "| [OK] Network Optimizing applied!"
         reboot_system  # Ask and reboot
     fi
     echo '`'
