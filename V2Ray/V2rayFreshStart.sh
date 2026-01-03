@@ -53,7 +53,7 @@ else
     read -r BBR_enable
     if [[ $BBR_enable == [Yy] ]]; then
         pprint --title "Setting up BBR ..."
-        bash $(dirname "$0")/SetupBbrForV2ray.sh
+        sudo -E bash $(dirname "$0")/SetupBbrForV2ray.sh
     else
         pprint --warn "BBR setup skipped."
     fi
