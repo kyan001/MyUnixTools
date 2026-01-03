@@ -1,3 +1,5 @@
+source $(dirname "$0")/../utils/pprint.sh  # MyUnixTools/utils/pprint.sh
+
 # Setup Nginx for V2ray
 echo -n "[?] Please enter your domain for v2ray: "  # do not add \n
 read -r domain  # get user raw input

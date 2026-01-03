@@ -43,8 +43,8 @@ function press_to_continue {
 # Install packages needed for setup.
 # (Default Settings Only)
 function install_pkg {
-    local pkg_list=("wget" "curl" "git" "unzip" "apt-transport-https" "cpu-checker" "bc" "cron" "ca-certificates" "dmidecode")
-    for pkg in "${pkg_list[@]}"; do
+    local pkg_list="wget curl git unzip apt-transport-https cpu-checker bc cron ca-certificates dmidecode"
+    for pkg in $pkg_list; do
         if ! dpkg -l | grep -qw "$pkg"; then
             # dpkg -l: list installed packages.
             # grep -q: quiet, no text printed.

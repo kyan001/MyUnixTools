@@ -1,3 +1,5 @@
+source $(dirname "$0")/../utils/pprint.sh  # MyUnixTools/utils/pprint.sh
+
 local_v2raysh_path="$HOME/v2ray-233boy.sh"
 pprint --info "Downloading v2ray script"
 v2raysh_url="https://raw.githubusercontent.com/233boy/v2ray/old/install.sh?v"  # use old version 233boy's v2ray script
