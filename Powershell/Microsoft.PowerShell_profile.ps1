@@ -47,8 +47,10 @@ function Echo-Message {  # Print message with different styles
     }
 }
 
-function Run-Verbose([string]$Command) {  # Print command before running it
-    Echo-Message -Command "$Command"
+function Run-Command([switch]$Verbose, [string]$Command) {  # Print command before running it
+    if ($Verbose) {
+        Echo-Message -Command "$Command"
+    }
     Invoke-Expression $Command
 }
 
@@ -122,15 +124,15 @@ function up {  # Upgrade packages in package managers, or update packages.
     function Upgrade-Pipx {  # Upgrade pipx's packages
         Echo-Message -Title 'Upgrade Pipx Packages'
         if (Has-Command -Verbose pipx) {  # Return if pipx not found
-            Run-Verbose "pipx upgrade-all"  # 20s
+            Run-Command -Verbose "pipx upgrade-all"  # 20s
         }
     }
     function Upgrade-Scoop {  # Upgrade scoop's packages
         Echo-Message -Title 'Upgrade Scoop Packages'
         if (Has-Command -Verbose scoop) {  # Return if scoop not found
-            Run-Verbose "scoop update *"  # 10+ s
-            Run-Verbose "scoop cleanup *"  # 300+ ms
-            Run-Verbose "scoop cache rm *"  # ~100 ms
+            Run-Command -Verbose "scoop update *"  # 10+ s
+            Run-Command -Verbose "scoop cleanup *"  # 300+ ms
+            Run-Command -Verbose "scoop cache rm *"  # ~100 ms
         }
     }
     function Upgrade-Winget {
@@ -143,26 +145,26 @@ function up {  # Upgrade packages in package managers, or update packages.
     function Update-Rust {
         Echo-Message -Title 'Update Rust'
         if (Has-Command -Verbose rustup) {  # Return if rust not found
-            Run-Verbose "rustup update"
+            Run-Command -Verbose "rustup update"
         }
     }
     function Update-Pip {  # Update pip itself
         Echo-Message -Title 'Update pip'
         if (Has-Command -Verbose python3) {  # Return if pip not found
-            Run-Verbose "python3 -m pip install --upgrade pip"  # 3s
+            Run-Command -Verbose "python3 -m pip install --upgrade pip"  # 3s
         }
     }
     function Update-DotNet {
         Echo-Message -Title 'Update Windows Desktop Runtime (.NET)'
         if (Has-Command -Verbose scoop) {
-            Run-Verbose "sudo scoop update windowsdesktop-runtime"
+            Run-Command -Verbose "sudo scoop update windowsdesktop-runtime"
         }
     }
     function Update-Clash {
         Echo-Message -Title 'Update Clash Verge Rev'
         if (Has-Command -Verbose scoop) {
-            Run-Verbose "scoop download clash-verge-rev"
-            Run-Verbose "sudo scoop update clash-verge-rev"
+            Run-Command -Verbose "scoop download clash-verge-rev"
+            Run-Command -Verbose "sudo scoop update clash-verge-rev"
         }
     }
     function Update-Zed {
@@ -234,7 +236,7 @@ function venv {  # Deactivate if in a venv, or activate .venv\Scripts\activate
     $requirements = @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")
     # If venv is activated, deactivate it.
     if ($env:VIRTUAL_ENV) {
-        Run-Verbose "deactivate"
+        Run-Command -Verbose "deactivate"
         return
     }
     # If uv is not installed, return
@@ -243,13 +245,13 @@ function venv {  # Deactivate if in a venv, or activate .venv\Scripts\activate
     }
     # If .venv\ not exists, create venv and relaunch the function.
     if (-not (Test-Path ".\.venv")) {
-        Run-Verbose "uv venv"
+        Run-Command -Verbose "uv venv"
         venv
         return
     }
     # If .venv\ exists, but not executable, recreate venv and relaunch the function.
     if (-not (Test-Path ".\.venv\Scripts\python.exe")) {
-        Run-Verbose "Remove-Item -Recurse .\.venv"
+        Run-Command -Verbose "Remove-Item -Recurse .\.venv"
         venv
         return
     }
@@ -257,22 +259,22 @@ function venv {  # Deactivate if in a venv, or activate .venv\Scripts\activate
     try {
         & .\.venv\Scripts\python.exe --version > $null 2>&1
     } catch {
-        Run-Verbose "Remove-Item -Recurse .\.venv"
+        Run-Command -Verbose "Remove-Item -Recurse .\.venv"
         venv
         return
     }
     # If .venv\ exists, and python is executable, update it and activate
     foreach ($file in $requirements) {
         if (Test-Path ".\$file") {
-            Run-Verbose "uv pip install --refresh -r .\$file"
+            Run-Command -Verbose "uv pip install --refresh -r .\$file"
         }
     }
     # If .venv\bin\ not exists, create a symlink for it to .venv\Scripts\
     if (-not (Test-Path "${PWD}\.venv\bin")) {
-        Run-Verbose "cmd /c mklink /D `"${PWD}\.venv\bin`" `"${PWD}\.venv\Scripts`""  # Create a symlink for 'bin' to 'Scripts' in .venv\
+        Run-Command -Verbose "cmd /c mklink /D `"${PWD}\.venv\bin`" `"${PWD}\.venv\Scripts`""  # Create a symlink for 'bin' to 'Scripts' in .venv\
     }
     # Activate the venv
-    Run-Verbose ".\.venv\Scripts\activate"
+    Run-Command -Verbose ".\.venv\Scripts\activate"
 }
 
 # Main
