@@ -27,8 +27,8 @@ function Echo-Message {  # Print message with different styles
             $VerticalBar = [char]0x2551  # "║"
             $TopLeft = [char]0x2554 + [char]0x2550  # "╔═"
             $TopRight = [char]0x2550 + [char]0x2557  # "═╗"
-            $ButtomLeft = [char]0x255A + [char]0x2550  # "╚═"
-            $ButtomRight = [char]0x2550 + [char]0x255D  # "═╝"
+            $BottomLeft = [char]0x255A + [char]0x2550  # "╚═"
+            $BottomRight = [char]0x2550 + [char]0x255D  # "═╝"
         } else {
             $HorizontalBar = "=" * $Message.Length
             $VerticalBar = "|"
