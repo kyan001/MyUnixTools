@@ -83,28 +83,54 @@ if (Has-Command python3) {
     $env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
 }
 
-function proxy {  # Toggle using proxy
-    $proxy_addr = "http://127.0.0.1:1088"
-    if (!$env:ALL_PROXY -and !$env:HTTPS_PROXY -and !$env:HTTP_PROXY) {
-        $env:ALL_PROXY = $proxy_addr
-        $env:HTTPS_PROXY = $proxy_addr
-        $env:HTTP_PROXY = $proxy_addr
-        Echo-Message -Info "[Proxy ON] ALL_PROXY, HTTPS_PROXY, HTTP_PROXY = $proxy_addr"
-    } else {
-        $UnsetList = @()
-        if ($env:ALL_PROXY) {
-            Remove-Item Env:\ALL_PROXY
-            $UnsetList += "ALL_PROXY"
+function proxy ([string]$Action, [switch]$Quiet) {  # Toggle using proxy
+    $proxy_address = "127.0.0.1:1088"
+    $proxy_protocol = "http"  # http | socks5
+    $proxy_envvars = @("http_proxy", "https_proxy", "all_proxy", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY")
+
+    switch ($Action) {
+        "" {  # Toggle proxy
+            foreach ($envvar in $proxy_envvars) {
+                if ([Environment]::GetEnvironmentVariable($envvar)) {  # If any proxy envvar is set, turn off all proxy envvars
+                    Run-Command -Verbose:(-not $Quiet) "proxy off"
+                    return
+                }
+            }
+            Run-Command -Verbose:(-not $Quiet) "proxy on"  # If no proxy envvar is set, turn on all proxy envvars
         }
-        if ($env:HTTP_PROXY) {
-            Remove-Item Env:\HTTP_PROXY
-            $UnsetList += "HTTP_PROXY"
+        "on" {
+            foreach ($envvar in $proxy_envvars) {
+                if (-not [Environment]::GetEnvironmentVariable($envvar)) {
+                    [Environment]::SetEnvironmentVariable($envvar, "${proxy_protocol}://${proxy_address}", "Process")
+                    if (-not $Quiet) {
+                        Echo-Message -Command "`$env:$envvar = ${proxy_protocol}://${proxy_address}"
+                    }
+                }
+            }
         }
-        if ($env:HTTPS_PROXY) {
-            Remove-Item Env:\HTTPS_PROXY
-            $UnsetList += "HTTPS_PROXY"
+        "off" {
+            foreach ($envvar in $proxy_envvars) {
+                if ([Environment]::GetEnvironmentVariable($envvar)) {
+                    Remove-Item "Env:\$envvar"
+                    if (-not $Quiet) {
+                        Echo-Message -Command "Remove-Item Env:\$envvar"
+                    }
+                }
+            }
         }
-        Echo-Message -Info "[Proxy OFF] " + ($UnsetList -join ", ") + " = unset"
+        "status" {
+            foreach ($envvar in $proxy_envvars) {
+                if ([Environment]::GetEnvironmentVariable($envvar)) {
+                    Echo-Message -Info "`$env:$envvar = $([Environment]::GetEnvironmentVariable($envvar))"
+                } else {
+                    Echo-Message -Info "`$env:$envvar = <unset>"
+                }
+            }
+        }
+        default {
+            Echo-Message -Err "Unknown action: $Action"
+            Echo-Message -Info "Usage [on|off|status]"
+        }
     }
 }
 
@@ -289,4 +315,4 @@ function venv {  # Deactivate if in a venv, or activate .venv\Scripts\activate
 }
 
 # Main
-proxy
+proxy -Quiet on
