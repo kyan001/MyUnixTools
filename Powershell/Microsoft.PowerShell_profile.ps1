@@ -110,7 +110,18 @@ function proxy {  # Toggle using proxy
 
 function fzfcd {  # Use fzf to select a file, and cd to its directory
     if (Has-Command -Verbose fzf) {
-        Set-Location (fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up | Split-Path -Parent)
+        if (Has-Command bat) {
+            $Selection = fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up
+        } else {
+            $Selection = fzf
+        }
+        if ($Selection) {
+            if (Test-Path $Selection -PathType Container) {
+                Set-Location $Selection
+            } else {
+                Set-Location (Split-Path -Parent $Selection)
+            }
+        }
     }
 }
 
@@ -169,7 +180,7 @@ function up {  # Upgrade packages in package managers, or update packages.
     }
     function Update-Zed {
         Echo-Message -Title 'Upgrade Zed'
-        if (Has-Command -Verbose winget) {
+        if ((Has-Command -Verbose winget) -and (Has-Command -Verbose zed)) {
             $ZedPath = Split-Path (Split-Path (Get-Command zed).Source)
             Echo-Message -Command "winget install ZedIndustries.Zed --force --source winget --location `"$ZedPath`""
             Start-Process winget -ArgumentList @('install', 'ZedIndustries.Zed', '--force', '--source', 'winget', "--location", "$ZedPath") -NoNewWindow -Wait
