@@ -1,5 +1,17 @@
-# Utility functions for Powershell
-function Echo-Message {  # Print message with different styles
+<# Utility Functions for Powershell #>
+function Echo-Message {
+    <#
+    .DESCRIPTION
+        Print message with different styles
+    .EXAMPLE
+        Echo-Message -Err "This is an error message"
+        Echo-Message -Warn "This is a warning message"
+        Echo-Message -Info "This is an info message"
+        Echo-Message -Debug "This is a debug message"
+        Echo-Message -Title "This is a title message"
+        Echo-Message -Command "This is a command message"
+        Echo-Message "This is a normal message"
+    #>
     param (
         [switch]$Err,
         [switch]$Warn,
@@ -19,7 +31,7 @@ function Echo-Message {  # Print message with different styles
     } elseif ($Info) {
         Write-Host "${Dim}[Info]${Reset} ${Message}"
     } elseif ($Debug) {
-        Write-Host "[Debug] ${Message}"
+        Write-Host "[Debug] ${Message}" -ForegroundColor Gray
     } elseif ($Title) {
         Write-Host ""
         if ($Host.UI.SupportsVirtualTerminal) {  # Check if the host supports virtual terminal (ANSI and Unicode)
@@ -47,16 +59,30 @@ function Echo-Message {  # Print message with different styles
     }
 }
 
-function Run-Command([switch]$Verbose, [string]$Command) {  # Print command before running it
+function Run-Command([switch]$Verbose, [string]$Command) {
+    <#
+    .DESCRIPTION
+        Run a command, optionally printing it before running.
+    .EXAMPLE
+        Run-Command "Get-Process"  # Just run the command
+        Run-Command -Verbose "Get-Process"  # Print the command before running it.
+    #>
     if ($Verbose) {
         Echo-Message -Command "$Command"
     }
     Invoke-Expression $Command
 }
 
-function Has-Command([switch]$Verbose, [string]$Command) {  # Check if a command exists
-    # Usage: if (Has-Command "cmd") { ... }
-    # Usage: if (Has-Command -Verbose "cmd" ) {... }
+function Has-Command([switch]$Verbose, [string]$Command) {
+    <#
+    .DESCRIPTION
+        Check if a command exists
+    .EXAMPLE
+        if (Has-Command "cmd") { ... }
+        if (Has-Command -Verbose "cmd" ) {... }
+    .OUTPUTS
+        [bool] True if the command exists, False otherwise.
+    #>
     if (Get-Command $Command -ErrorAction SilentlyContinue) {
         return $true
     } else {
@@ -67,23 +93,48 @@ function Has-Command([switch]$Verbose, [string]$Command) {  # Check if a command
     }
 }
 
-# Activate Starship prompt
+function Press-To-Continue {
+    <#
+    .DESCRIPTION
+        Prompt the user to press any key to continue.
+    .EXAMPLE
+        PS> Press-To-Continue
+    #>
+    Write-Host "Press Any Key To Continue ..."
+    $null = $Host.UI.RawUI.ReadKey()
+}
+
+
+<# Script Initialization #>
 if (Has-Command starship) {
+    # .DESCRIPTION
+    # Activate Starship prompt
     Invoke-Expression (&starship init powershell)
 }
 
-# Init Zoxide (z and zi)
 if (Has-Command zoxide) {
+    # .DESCRIPTION
+    # Init Zoxide (z and zi)
     #$env:_ZO_FZF_OPTS = "--preview 'bat --color=always --line-range=:100 {}' --preview-window up"  # Set fzf options for Zoxide
     Invoke-Expression (& { (zoxide init powershell | Out-String) })  # Init Zoxide
 }
 
-# Add Python3 Scripts to PATH
 if (Has-Command python3) {
+    # .DESCRIPTION
+    # Add Python3 Scripts to PATH
     $env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
 }
 
-function proxy ([string]$Action, [switch]$Quiet) {  # Toggle using proxy
+function proxy ([string]$Action, [switch]$Quiet) {
+    <#
+    .DESCRIPTION
+        Manage proxy environment variables for the current PowerShell session.
+    .EXAMPLE
+        proxy  # Toggle proxy on/off
+        proxy on  # Enable proxy
+        proxy off  # Disable proxy
+        proxy status  # Show current proxy settings
+    #>
     $proxy_address = "127.0.0.1:1088"
     $proxy_protocol = "http"  # http | socks5
     $proxy_envvars = @("http_proxy", "https_proxy", "all_proxy", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY")
@@ -134,7 +185,13 @@ function proxy ([string]$Action, [switch]$Quiet) {  # Toggle using proxy
     }
 }
 
-function fzfcd {  # Use fzf to select a file, and cd to its directory
+function fzfcd {
+    <#
+    .DESCRIPTION
+        # Use fzf to select a file, and cd to its directory
+    .EXAMPLE
+        PS> fzfcd
+    #>
     if (Has-Command -Verbose fzf) {
         if (Has-Command bat) {
             $Selection = fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up
@@ -152,6 +209,17 @@ function fzfcd {  # Use fzf to select a file, and cd to its directory
 }
 
 function up {  # Upgrade packages in package managers, or update packages.
+    <#
+    .DESCRIPTION
+        Upgrade packages in package managers, or update packages.
+    .EXAMPLE
+        up  # Upgrade all supported package managers
+        up -All  # Upgrade all supported package managers and update packages
+        up -List  # List all supported package managers and update targets
+        up -Help  # Show help message
+        up pipx scoop  # Upgrade only pipx and scoop packages
+        up clash  # Update only clash package
+    #>
     param (
         [switch]$All,  # `up -All` to run all upgrades and updates
         [switch]$Help,  # `up -Help` to show help message
@@ -269,7 +337,13 @@ function up {  # Upgrade packages in package managers, or update packages.
     }
 }
 
-function venv {  # Deactivate if in a venv, or activate .venv\Scripts\activate
+function venv {
+    <#
+    .DESCRIPTION
+        Deactivate if in a venv, or activate .venv\Scripts\activate
+    .EXAMPLE
+        venv  # Activate or deactivate venv
+    #>
     $requirements = @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")
     # If venv is activated, deactivate it.
     if ($env:VIRTUAL_ENV) {
