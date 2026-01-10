@@ -34,12 +34,12 @@ function Echo-Message {  # Print message with different styles
             $VerticalBar = "|"
             $TopLeft = "+="
             $TopRight = "=+"
-            $ButtomLeft = "+="
-            $ButtomRight = "=+"
+            $BottomLeft = "+="
+            $BottomRight = "=+"
         }
         Write-Host "${Dim}${TopLeft}${HorizontalBar}${TopRight}${Reset}"
         Write-Host "${Dim}${VerticalBar}${Reset} ${Message} ${Dim}${VerticalBar}${Reset}"
-        Write-Host "${Dim}${ButtomLeft}${HorizontalBar}${ButtomRight}${Reset}"
+        Write-Host "${Dim}${BottomLeft}${HorizontalBar}${BottomRight}${Reset}"
     } elseif ($Command) {
         Write-Host "${Dim}>_${Reset} ${Underline}${Message}${Reset}"
     } else {
