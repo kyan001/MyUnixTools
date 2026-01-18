@@ -248,7 +248,7 @@ up() {  # Update package managers information and upgrade packages.
         for pm in "${package_managers[@]}"; do  # All package managers will be updated and upgraded
             eval "up_$pm"
         done
-        for pm in "${all_packages[@]}"; do  # Daily packages will be upgraded
+        for pm in "${daily_packages[@]}"; do  # Daily packages will be upgraded
             eval "up_$pm"
         done
     else  # Run 'up pip brew' for brew and pip upgrades only.
