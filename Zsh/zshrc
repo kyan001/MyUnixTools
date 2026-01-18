@@ -242,24 +242,24 @@ up() {  # Update package managers information and upgrade packages.
         _verbose_run 'cd $(brew --prefix python3) && open "Python Launcher 3.app"'
     }
     local package_managers=('pipx' 'brew' 'apt' 'snap')  # Available package managers to update and upgrade
-    local daily_packages=('pip' 'omz' 'rust')  # Available packages for daily updates
-    local all_packages=("${daily_packages[@]}" 'python')  # All available packages for updates
+    local daily_upgrades=('pip' 'omz' 'rust')  # Available packages for daily upgrade
+    local packages=("${daily_upgrades[@]}" 'python')  # All available packages for upgrade
     if [[ $# -eq 0 ]]; then  # Run 'up' to run daily updates and upgrades
         for pm in "${package_managers[@]}"; do  # All package managers will be updated and upgraded
             eval "up_$pm"
         done
-        for pm in "${daily_packages[@]}"; do  # Daily packages will be upgraded
+        for pm in "${daily_upgrades[@]}"; do  # Partial packages will be upgraded daily
             eval "up_$pm"
         done
     else  # Run 'up pip brew' for brew and pip upgrades only.
         for arg in "$@"; do
             if [[ " ${package_managers[*]} " =~ " $arg " ]]; then  # $arg is a package manager
                 eval "up_$arg"
-            elif [[ " ${all_packages[*]} " =~ " $arg " ]]; then  # $arg is a package
+            elif [[ " ${packages[*]} " =~ " $arg " ]]; then  # $arg is a package
                 eval "up_$arg"
             else
                 echo "[Error] Unknown package or package manager: $arg"
-                echo "[Info] Supported : ${package_managers[*]} ${all_packages[*]}"
+                echo "[Info] Supported : ${package_managers[*]} ${packages[*]}"
             fi
         done
     fi
