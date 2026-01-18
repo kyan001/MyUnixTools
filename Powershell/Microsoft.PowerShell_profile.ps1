@@ -230,13 +230,13 @@ function up {  # Update and upgrade packages in package managers, or upgrade pac
         [string[]]$Targets = @()  # `up pipx scoop` to run pipx and scoop upgrades only
     )
     function Up-Pipx {  # Update Pipx and upgrade Pipx's packages
-        Echo-Message -Title 'Pipx update and upgrades'
+        Echo-Message -Title 'Pipx Update & Upgrades'
         if (Has-Command -Verbose pipx) {  # Skip if pipx not found
             Run-Command -Verbose "pipx upgrade-all"  # 20s
         }
     }
     function Up-Scoop {  # Update Scoop and upgrade Scoop's packages
-        Echo-Message -Title 'Scoop update and upgrades'
+        Echo-Message -Title 'Scoop Update & Upgrades'
         if (Has-Command -Verbose scoop) {  # Skip if scoop not found
             Run-Command -Verbose "scoop update *"  # 10+ s
             Run-Command -Verbose "scoop cleanup *"  # 300+ ms
@@ -244,7 +244,7 @@ function up {  # Update and upgrade packages in package managers, or upgrade pac
         }
     }
     function Up-Winget {  # Update Winget and upgrade Winget's packages
-        Echo-Message -Title 'Winget update and upgrades'
+        Echo-Message -Title 'Winget Update & Upgrades'
         if (Has-Command -Verbose winget) {  # Skip if winget not found
             Echo-Message -Command "winget upgrade --all --accept-package-agreements --accept-source-agreements"
             Start-Process winget -ArgumentList @('upgrade', '--all', '--accept-package-agreements', '--accept-source-agreements') -NoNewWindow -Wait  # Avoid output clutter

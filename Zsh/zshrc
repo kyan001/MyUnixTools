@@ -189,7 +189,7 @@ up() {  # Update package managers information and upgrade packages.
     # The term `update` means to get the latest package information from remote servers.
     # The term `upgrade` means to actually install the latest versions of the packages.
     up_pipx() {
-        _echo --title 'Update and Upgrade Pipx Packages'
+        _echo --title 'Pipx Update & Upgrades'
         _has_cmd --verbose 'pipx' || return 1  # If pipx not installed, return False
         _verbose_run "pipx upgrade-all"  # 20s
     }
@@ -200,7 +200,7 @@ up() {  # Update package managers information and upgrade packages.
     }
     up_brew() {
         if [[ "$(uname -s)" == "Darwin" ]]; then  # Only work on macOS
-            _echo --title 'Update and Upgrade Brew Packages'
+            _echo --title 'Brew Update & Upgrades'
             _has_cmd --verbose 'brew' || return 1  # If brew not installed, return False
             _verbose_run 'brew update'
             _verbose_run 'brew upgrade'
@@ -211,7 +211,7 @@ up() {  # Update package managers information and upgrade packages.
     }
     up_apt() {
         if [[ "$(uname -s)" == "Linux" ]]; then  # Only work on Linux
-            _echo --title 'Update and Upgrade Apt Packages'
+            _echo --title 'Apt Update & Upgrades'
             _has_cmd --verbose 'apt' || return 1  # If apt not installed, return False
             _verbose_run 'sudo apt update'
             _verbose_run 'sudo apt dist-upgrade -y'
@@ -220,7 +220,7 @@ up() {  # Update package managers information and upgrade packages.
     }
     up_snap() {
         if [[ "$(uname -s)" == "Linux" ]]; then  # Only work on Linux
-            _echo --title 'Update and Upgrade Snap Packages'
+            _echo --title 'Snap Update & Upgrades'
             _has_cmd --verbose 'snap' || return 1  # If snap not installed, return False
             _verbose_run 'sudo snap refresh'
         fi
