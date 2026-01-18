@@ -185,20 +185,22 @@ fzfcd() {  # Use fzf to select a file, and cd to its directory
     cd "$(dirname "$(fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)")"
 }
 
-up() {  # Upgrade all packages
-    upgrade_pipx() {
-        _echo --title 'Upgrade Pipx Packages'
+up() {  # Update package managers information and upgrade packages.
+    # The term `update` means to get the latest package information from remote servers.
+    # The term `upgrade` means to actually install the latest versions of the packages.
+    up_pipx() {
+        _echo --title 'Update and Upgrade Pipx Packages'
         _has_cmd --verbose 'pipx' || return 1  # If pipx not installed, return False
         _verbose_run "pipx upgrade-all"  # 20s
     }
-    update_pip() {
-        _echo --title 'Update pip'
+    up_pip() {
+        _echo --title 'Upgrade pip'
         _has_cmd --verbose 'python3' || return 1  # If python3 not installed, return False
         _verbose_run "python3 -m pip install --upgrade pip"
     }
-    upgrade_brew() {
+    up_brew() {
         if [[ "$(uname -s)" == "Darwin" ]]; then  # Only work on macOS
-            _echo --title 'Upgrade Brew Packages'
+            _echo --title 'Update and Upgrade Brew Packages'
             _has_cmd --verbose 'brew' || return 1  # If brew not installed, return False
             _verbose_run 'brew update'
             _verbose_run 'brew upgrade'
@@ -207,56 +209,57 @@ up() {  # Upgrade all packages
             _verbose_run 'brew cleanup --prune=all'
         fi
     }
-    upgrade_apt() {
+    up_apt() {
         if [[ "$(uname -s)" == "Linux" ]]; then  # Only work on Linux
-            _echo --title 'Upgrade Apt Packages'
+            _echo --title 'Update and Upgrade Apt Packages'
             _has_cmd --verbose 'apt' || return 1  # If apt not installed, return False
             _verbose_run 'sudo apt update'
             _verbose_run 'sudo apt dist-upgrade -y'
-            _verbose_run 'sudo apt auto-remove -y'
+            _verbose_run 'sudo apt autoremove -y'
         fi
     }
-    upgrade_snap() {
+    up_snap() {
         if [[ "$(uname -s)" == "Linux" ]]; then  # Only work on Linux
-            _echo --title 'Upgrade Snap Packages'
+            _echo --title 'Update and Upgrade Snap Packages'
             _has_cmd --verbose 'snap' || return 1  # If snap not installed, return False
             _verbose_run 'sudo snap refresh'
         fi
     }
-    update_omz() {
-        _echo --title 'Update Oh-My-Zsh'
+    up_omz() {
+        _echo --title 'Upgrade Oh-My-Zsh'
         _has_cmd --verbose 'omz' || return 1  # If omz not installed, return False
         _verbose_run 'omz update'
     }
-    update_rust() {
-        _echo --title 'Update Rust'
+    up_rust() {
+        _echo --title 'Upgrade Rust'
         _has_cmd --verbose 'rustup' || return 1  # If rustup not installed, return False
         _verbose_run 'rustup update'
     }
-    update_python() {
-        _echo --title 'Update Python'
+    up_python() {
+        _echo --title 'Upgrade Python'
         _has_cmd --verbose 'brew' || return 1  # If brew not installed, return False
         _verbose_run 'brew upgrade python3'
         _verbose_run 'cd $(brew --prefix python3) && open "Python Launcher 3.app"'
     }
-    local upgrades=('pipx' 'brew' 'apt' 'snap')  # Available package managers for upgrades
-    local updates=('pip' 'omz' 'rust' 'python')  # Available package managers to updates
-    if [[ $# -eq 0 ]]; then  # Run 'up' to run all upgrades.
-        for pm in "${upgrades[@]}"; do
-            eval "upgrade_$pm"
+    local package_managers=('pipx' 'brew' 'apt' 'snap')  # Available package managers to update and upgrade
+    local daily_packages=('pip' 'omz' 'rust')  # Available packages for daily updates
+    local all_packages=("${daily_packages[@]}" 'python')  # All available packages for updates
+    if [[ $# -eq 0 ]]; then  # Run 'up' to run daily updates and upgrades
+        for pm in "${package_managers[@]}"; do  # All package managers will be updated and upgraded
+            eval "up_$pm"
         done
-        for pm in "${updates[@]}"; do
-            eval "update_$pm"
+        for pm in "${all_packages[@]}"; do  # Daily packages will be upgraded
+            eval "up_$pm"
         done
     else  # Run 'up pip brew' for brew and pip upgrades only.
         for arg in "$@"; do
-            if [[ " ${upgrades[*]} " =~ " $arg " ]]; then  # $arg is in upgrades
-                eval "upgrade_$arg"
-            elif [[ " ${updates[*]} " =~ " $arg " ]]; then  # $arg is in updates
-                eval "update_$arg"
+            if [[ " ${package_managers[*]} " =~ " $arg " ]]; then  # $arg is a package manager
+                eval "up_$arg"
+            elif [[ " ${all_packages[*]} " =~ " $arg " ]]; then  # $arg is a package
+                eval "up_$arg"
             else
-                echo "[Error] Unknown package manager: $arg"
-                echo "[Info] Supported package managers: ${upgrades[*]} ${updates[*]}"
+                echo "[Error] Unknown package or package manager: $arg"
+                echo "[Info] Supported : ${package_managers[*]} ${all_packages[*]}"
             fi
         done
     fi
