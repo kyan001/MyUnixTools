@@ -208,71 +208,74 @@ function fzfcd {
     }
 }
 
-function up {  # Upgrade packages in package managers, or update packages.
+function up {  # Update and upgrade packages in package managers, or upgrade packages.
     <#
     .DESCRIPTION
-        Upgrade packages in package managers, or update packages.
+        Update and upgrade packages in package managers, or upgrade packages.
     .EXAMPLE
-        up  # Upgrade all supported package managers
-        up -All  # Upgrade all supported package managers and update packages
-        up -List  # List all supported package managers and update targets
+        up  # Update/Upgrade all supported package managers and daily upgrade packages.
+        up -All  # Update/Upgrade all supported package managers and packages.
+        up -List  # List all supported package managers and packages
         up -Help  # Show help message
-        up pipx scoop  # Upgrade only pipx and scoop packages
-        up clash  # Update only clash package
+        up pipx scoop  # Update/Upgrade only pipx and scoop packages
+        up clash  # Upgrade only clash package
+    .NOTES
+        The term "update" refers to updating the package manager's database.
+        The term "upgrade" refers to upgrading package itself.
     #>
     param (
-        [switch]$All,  # `up -All` to run all upgrades and updates
+        [switch]$All,  # `up -All` to run all updates and upgrades
         [switch]$Help,  # `up -Help` to show help message
         [switch]$List,  # `up -List` to list all supported packages and package managers
         [string[]]$Targets = @()  # `up pipx scoop` to run pipx and scoop upgrades only
     )
-    function Upgrade-Pipx {  # Upgrade pipx's packages
-        Echo-Message -Title 'Upgrade Pipx Packages'
-        if (Has-Command -Verbose pipx) {  # Return if pipx not found
+    function Up-Pipx {  # Update Pipx and upgrade Pipx's packages
+        Echo-Message -Title 'Pipx update and upgrades'
+        if (Has-Command -Verbose pipx) {  # Skip if pipx not found
             Run-Command -Verbose "pipx upgrade-all"  # 20s
         }
     }
-    function Upgrade-Scoop {  # Upgrade scoop's packages
-        Echo-Message -Title 'Upgrade Scoop Packages'
-        if (Has-Command -Verbose scoop) {  # Return if scoop not found
+    function Up-Scoop {  # Update Scoop and upgrade Scoop's packages
+        Echo-Message -Title 'Scoop update and upgrades'
+        if (Has-Command -Verbose scoop) {  # Skip if scoop not found
             Run-Command -Verbose "scoop update *"  # 10+ s
             Run-Command -Verbose "scoop cleanup *"  # 300+ ms
             Run-Command -Verbose "scoop cache rm *"  # ~100 ms
         }
     }
-    function Upgrade-Winget {
-        Echo-Message -Title 'Upgrade Winget Packages'
-        if (Has-Command -Verbose winget) {  # Return if winget not found
+    function Up-Winget {  # Update Winget and upgrade Winget's packages
+        Echo-Message -Title 'Winget update and upgrades'
+        if (Has-Command -Verbose winget) {  # Skip if winget not found
             Echo-Message -Command "winget upgrade --all --accept-package-agreements --accept-source-agreements"
             Start-Process winget -ArgumentList @('upgrade', '--all', '--accept-package-agreements', '--accept-source-agreements') -NoNewWindow -Wait  # Avoid output clutter
         }
     }
-    function Update-Rust {
-        Echo-Message -Title 'Update Rust'
-        if (Has-Command -Verbose rustup) {  # Return if rust not found
+    function Up-Rust {  # Upgrade Rust Toolchain
+        Echo-Message -Title 'Upgrade Rust'
+        if (Has-Command -Verbose rustup) {  # Skip if rust not found
             Run-Command -Verbose "rustup update"
         }
     }
-    function Update-Pip {  # Update pip itself
-        Echo-Message -Title 'Update pip'
-        if (Has-Command -Verbose python3) {  # Return if pip not found
+    function Up-Pip {  # Upgrade pip itself
+        Echo-Message -Title 'Upgrade pip'
+        if (Has-Command -Verbose python3) {  # Skip if pip not found
             Run-Command -Verbose "python3 -m pip install --upgrade pip"  # 3s
         }
     }
-    function Update-DotNet {
-        Echo-Message -Title 'Update Windows Desktop Runtime (.NET)'
+    function Up-DotNet {  # Upgrade .NET SDKs and Runtimes, need sudo
+        Echo-Message -Title 'Upgrade Windows Desktop Runtime (.NET)'
         if (Has-Command -Verbose scoop) {
             Run-Command -Verbose "sudo scoop update windowsdesktop-runtime"
         }
     }
-    function Update-Clash {
-        Echo-Message -Title 'Update Clash Verge Rev'
+    function Up-Clash {  # Upgrade Clash Verge Rev, need clash to run during the download, and clash not to run during the installation.
+        Echo-Message -Title 'Upgrade Clash Verge Rev'
         if (Has-Command -Verbose scoop) {
             Run-Command -Verbose "scoop download clash-verge-rev"
             Run-Command -Verbose "sudo scoop update clash-verge-rev"
         }
     }
-    function Update-Zed {
+    function Up-Zed {  # Upgrade Zed Editor. Zed directory is required if Zed is not installed to the default location.
         Echo-Message -Title 'Upgrade Zed'
         if ((Has-Command -Verbose winget) -and (Has-Command -Verbose zed)) {
             $ZedPath = Split-Path (Split-Path (Get-Command zed).Source)
@@ -280,26 +283,28 @@ function up {  # Upgrade packages in package managers, or update packages.
             Start-Process winget -ArgumentList @('install', 'ZedIndustries.Zed', '--force', '--source', 'winget', "--location", "$ZedPath") -NoNewWindow -Wait
         }
     }
-    $Upgrades = @{
-        'pipx' = { Upgrade-Pipx }
-        'scoop' = { Upgrade-Scoop }
-        'winget' = { Upgrade-Winget }
+    $PackageManagers = @{
+        'pipx' = { Up-Pipx }
+        'scoop' = { Up-Scoop }
+        'winget' = { Up-Winget }
     }
-    $Updates = @{
-        'pip' = { Update-Pip }
-        'rust' = { Update-Rust }
-        'dotnet' = { Update-DotNet }
-        'clash' = { Update-Clash }
-        'zed' = { Update-Zed }
+    $DailyUpgrades = @{
+        'pip' = { Up-Pip }
+        'rust' = { Up-Rust }
+    }
+    $Packages = $DailyUpgrades + @{
+        'dotnet' = { Up-DotNet }
+        'clash' = { Up-Clash }
+        'zed' = { Up-Zed }
     }
     $PrintList = {
-        Echo-Message -Info "Supported Packages and Managers:`n`t$(@($Upgrades.Keys + $Updates.Keys) -join ', ')"
+        Echo-Message -Info "Supported Packages and Managers:`n`t$(@($PackageManagers.Keys + $Packages.Keys) -join ', ')"
     }
     if ($All) {  # Run 'up -All' to run all upgrades and updates
-        foreach ($Func in $Upgrades.Values) {
+        foreach ($Func in $PackageManagers.Values) {
             $Func.Invoke()
         }
-        foreach ($Func in $Updates.Values) {
+        foreach ($Func in $Packages.Values) {
             $Func.Invoke()
         }
     }
@@ -311,26 +316,29 @@ function up {  # Upgrade packages in package managers, or update packages.
         Echo-Message -Title "Help for 'up' Command"
         Echo-Message -Info "Usage: up [-All] [-List] [-Help] [Targets...]"
         Echo-Message -Info "Options:"
-        Echo-Message -Info "    -All     Run all upgrades and updates."
-        Echo-Message -Info "    -List    List all supported package managers and update targets."
+        Echo-Message -Info "    -All     Run all updates and upgrades."
+        Echo-Message -Info "    -List    List all supported package managers and packages."
         Echo-Message -Info "    -Help    Show this help message."
         Echo-Message -Info "Targets:"
         Echo-Message -Info "    Specify one or more targets to upgrade or update (e.g., 'pipx', 'rust')."
         $PrintList.Invoke()
         return
     }
-    if ($Targets.Count -eq 0) {  # Run 'up' to run all upgrades, but not updates.
-        foreach ($Func in $Upgrades.Values) {
+    if ($Targets.Count -eq 0) {  # Run 'up' to run all package manager updates and daily upgrades
+        foreach ($Func in $PackageManagers.Values) {
+            $Func.Invoke()
+        }
+        foreach ($Func in $DailyUpgrades.Values) {
             $Func.Invoke()
         }
     } else {
         foreach ($target in $Targets) {
-            if ($Upgrades.ContainsKey($target)) {  # $target is in $Upgrades
-                $Upgrades[$target].Invoke()
-            } elseif ($Updates.ContainsKey($target)) {  # $target is in $Updates
-                $Updates[$target].Invoke()
+            if ($PackageManagers.ContainsKey($target)) {  # $target is in $PackageManagers
+                $PackageManagers[$target].Invoke()
+            } elseif ($Packages.ContainsKey($target)) {  # $target is in $Packages
+                $Packages[$target].Invoke()
             } else {
-                Echo-Message -Err "Unknown package manager: $target"
+                Echo-Message -Err "Unknown package manager or package: $target"
                 $PrintList.Invoke()
             }
         }
