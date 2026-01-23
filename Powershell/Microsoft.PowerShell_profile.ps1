@@ -1,8 +1,49 @@
 <# Utility Functions for Powershell #>
+class Ansi {
+    <#
+    .SYNOPSIS
+        Class for ANSI text styles
+
+    .EXAMPLE
+        $BoldText = [Ansi]::Bold("bold")
+        $ItalicText = ([Ansi]::I "italic")
+        $UnderlineText = "$([Ansi]::U("underline"))"
+        $DimText = "${[Ansi]::D "dim"}"
+        "..." | { [Ansi]::U($_) } | Write-Host
+
+    #>
+    static [string] Bold ([string]$Text) {
+        return "`e[1m$Text`e[0m"
+    }
+    static [string] B ([string]$Text) {
+        return [Ansi]::Bold($Text)
+    }
+    static [string] Dim ([string]$Text) {
+        return "`e[2m$Text`e[0m"
+    }
+    static [string] D ([string]$Text) {
+        return [Ansi]::Dim($Text)
+    }
+    static [string] Italic ([string]$Text) {
+        return "`e[3m$Text`e[0m"
+    }
+    static [string] I ([string]$Text) {
+        return [Ansi]::Italic($Text)
+    }
+    static [string] Underline ([string]$Text) {
+        return "`e[4m$Text`e[0m"
+    }
+    static [string] U ([string]$Text) {
+        return [Ansi]::Underline($Text)
+    }
+}
+
+
 function Echo-Message {
     <#
-    .DESCRIPTION
+    .SYNOPSIS
         Print message with different styles
+
     .EXAMPLE
         Echo-Message -Err "This is an error message"
         Echo-Message -Warn "This is a warning message"
@@ -11,6 +52,7 @@ function Echo-Message {
         Echo-Message -Title "This is a title message"
         Echo-Message -Command "This is a command message"
         Echo-Message "This is a normal message"
+
     #>
     param (
         [switch]$Err,
@@ -21,15 +63,12 @@ function Echo-Message {
         [switch]$Command,
         [string]$Message
     )
-    $Underline = [char]27 + "[4m"  # "`e[4m"
-    $Dim = [char]27 + "[2m"  # "`e[2m"
-    $Reset = [char]27 + "[0m"  # "`e[0m"
     if ($Err) {
-        Write-Host "${Dim}[${Reset}${Underline}Error${Reset}${Dim}]${Reset} ${Message}"
+        Write-Host "$([Ansi]::D("["))$([Ansi]::U("Error"))$([Ansi]::D("]")) $Message"
     } elseif ($Warn) {
-        Write-Host "${Dim}[${Reset}Warning${Dim}]${Reset} ${Message}"
+        Write-Host "$([Ansi]::D("["))$([Ansi]::U("Warning"))$([Ansi]::D("]")) $Message"
     } elseif ($Info) {
-        Write-Host "${Dim}[Info]${Reset} ${Message}"
+        Write-Host "$([Ansi]::D("[Info]")) $Message"
     } elseif ($Debug) {
         Write-Host "[Debug] ${Message}" -ForegroundColor Gray
     } elseif ($Title) {
@@ -49,23 +88,25 @@ function Echo-Message {
             $BottomLeft = "+="
             $BottomRight = "=+"
         }
-        Write-Host "${Dim}${TopLeft}${HorizontalBar}${TopRight}${Reset}"
-        Write-Host "${Dim}${VerticalBar}${Reset} ${Message} ${Dim}${VerticalBar}${Reset}"
-        Write-Host "${Dim}${BottomLeft}${HorizontalBar}${BottomRight}${Reset}"
+        Write-Host ([Ansi]::D("${TopLeft}${HorizontalBar}${TopRight}"))
+        Write-Host ([Ansi]::D("${VerticalBar}") + " ${Message} " + [Ansi]::D("${VerticalBar}"))
+        Write-Host ([Ansi]::D("${BottomLeft}${HorizontalBar}${BottomRight}"))
     } elseif ($Command) {
-        Write-Host "${Dim}>_${Reset} ${Underline}${Message}${Reset}"
+        Write-Host ([Ansi]::D(">_") + " " + [Ansi]::U("${Message}"))
     } else {
         Write-Host "${Message}"
     }
 }
 
-function Run-Command([switch]$Verbose, [string]$Command) {
+function Run-Command ([switch]$Verbose, [string]$Command) {
     <#
-    .DESCRIPTION
+    .SYNOPSIS
         Run a command, optionally printing it before running.
+
     .EXAMPLE
         Run-Command "Get-Process"  # Just run the command
         Run-Command -Verbose "Get-Process"  # Print the command before running it.
+
     #>
     if ($Verbose) {
         Echo-Message -Command "$Command"
@@ -73,15 +114,18 @@ function Run-Command([switch]$Verbose, [string]$Command) {
     Invoke-Expression $Command
 }
 
-function Has-Command([switch]$Verbose, [string]$Command) {
+function Has-Command ([switch]$Verbose, [string]$Command) {
     <#
-    .DESCRIPTION
+    .SYNOPSIS
         Check if a command exists
+
     .EXAMPLE
         if (Has-Command "cmd") { ... }
         if (Has-Command -Verbose "cmd" ) {... }
+
     .OUTPUTS
         [bool] True if the command exists, False otherwise.
+
     #>
     if (Get-Command $Command -ErrorAction SilentlyContinue) {
         return $true
@@ -93,53 +137,58 @@ function Has-Command([switch]$Verbose, [string]$Command) {
     }
 }
 
-function Press-To-Continue {
+function Press-To-Continue ([switch]$Enter) {
     <#
-    .DESCRIPTION
-        Prompt the user to press any key to continue.
+    .SYNOPSIS
+        Prompt the user to press any key or Enter to continue.
+
     .EXAMPLE
         PS> Press-To-Continue
+        PS> Press-To-Continue -Enter  # Wait for Enter key instead of any key.
+
     #>
-    Write-Host "Press Any Key To Continue ..."
-    $null = $Host.UI.RawUI.ReadKey()
+    if ($Enter) {
+        Read-Host "Press Enter To Continue ..."
+    } else {
+        Write-Host "Press Any Key To Continue ..."
+        $null = $Host.UI.RawUI.ReadKey()
+    }
 }
 
 
 <# Script Initialization #>
-if (Has-Command starship) {
-    # .DESCRIPTION
-    # Activate Starship prompt
+if (Has-Command starship) {  # Activate Starship prompt
     Invoke-Expression (&starship init powershell)
 }
 
-if (Has-Command zoxide) {
-    # .DESCRIPTION
-    # Init Zoxide (z and zi)
+if (Has-Command zoxide) {  # Init Zoxide (z and zi)
     #$env:_ZO_FZF_OPTS = "--preview 'bat --color=always --line-range=:100 {}' --preview-window up"  # Set fzf options for Zoxide
     Invoke-Expression (& { (zoxide init powershell | Out-String) })  # Init Zoxide
 }
 
-if (Has-Command python3) {
-    # .DESCRIPTION
-    # Add Python3 Scripts to PATH
+if (Has-Command python3) {  # Add Python3 Scripts to PATH
     $env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
 }
 
 function proxy ([string]$Action, [switch]$Quiet) {
     <#
-    .DESCRIPTION
+    .SYNOPSIS
         Manage proxy environment variables for the current PowerShell session.
+
     .EXAMPLE
         proxy  # Toggle proxy on/off
         proxy on  # Enable proxy
         proxy off  # Disable proxy
         proxy status  # Show current proxy settings
+        proxy -Quiet on  # Enable proxy without output
+        proxy -Quiet off  # Disable proxy without output
+
     #>
     $proxy_address = "127.0.0.1:1088"
     $proxy_protocol = "http"  # http | socks5
     $proxy_envvars = @("http_proxy", "https_proxy", "all_proxy", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY")
 
-    switch ($Action) {
+    switch ($Action.ToLowerInvariant()) {
         "" {  # Toggle proxy
             foreach ($envvar in $proxy_envvars) {
                 if ([Environment]::GetEnvironmentVariable($envvar)) {  # If any proxy envvar is set, turn off all proxy envvars
@@ -180,14 +229,14 @@ function proxy ([string]$Action, [switch]$Quiet) {
         }
         default {
             Echo-Message -Err "Unknown action: $Action"
-            Echo-Message -Info "Usage [on|off|status]"
+            Echo-Message -Info "Usage [on|off|status] [-Quiet]"
         }
     }
 }
 
 function fzfcd {
     <#
-    .DESCRIPTION
+    .SYNOPSIS
         # Use fzf to select a file, and cd to its directory
     .EXAMPLE
         PS> fzfcd
@@ -208,74 +257,75 @@ function fzfcd {
     }
 }
 
-function up {  # Update and upgrade packages in package managers, or upgrade packages.
+function up {
     <#
-    .DESCRIPTION
-        Update and upgrade packages in package managers, or upgrade packages.
+    .SYNOPSIS
+        Update package managers information and upgrade packages
+
     .EXAMPLE
-        up  # Update/Upgrade all supported package managers and daily upgrade packages.
-        up -All  # Update/Upgrade all supported package managers and packages.
+        up  # Run daily Updates & Upgrades
+        up -All  # Upgrade all supported package managers and update packages
         up -List  # List all supported package managers and packages
         up -Help  # Show help message
-        up pipx scoop  # Update/Upgrade only pipx and scoop packages
-        up clash  # Upgrade only clash package
+        up pipx scoop  # Update & Upgrade only pipx and scoop packages
+        up clash  # Upgrade only clash
     .NOTES
-        The term "update" refers to updating the package manager's database.
-        The term "upgrade" refers to upgrading package itself.
+        The term `update` means to get the latest package information from remote servers.
+        The term `upgrade` means to actually install the latest versions of the packages.
     #>
     param (
-        [switch]$All,  # `up -All` to run all updates and upgrades
+        [switch]$All,  # `up -All` to run all upgrades and updates
         [switch]$Help,  # `up -Help` to show help message
         [switch]$List,  # `up -List` to list all supported packages and package managers
         [string[]]$Targets = @()  # `up pipx scoop` to run pipx and scoop upgrades only
     )
-    function Up-Pipx {  # Update Pipx and upgrade Pipx's packages
+    function Up-Pipx {
         Echo-Message -Title 'Pipx Update & Upgrades'
-        if (Has-Command -Verbose pipx) {  # Skip if pipx not found
+        if (Has-Command -Verbose pipx) {  # Return if pipx not found
             Run-Command -Verbose "pipx upgrade-all"  # 20s
         }
     }
-    function Up-Scoop {  # Update Scoop and upgrade Scoop's packages
+    function Up-Scoop {
         Echo-Message -Title 'Scoop Update & Upgrades'
-        if (Has-Command -Verbose scoop) {  # Skip if scoop not found
+        if (Has-Command -Verbose scoop) {  # Return if scoop not found
             Run-Command -Verbose "scoop update *"  # 10+ s
             Run-Command -Verbose "scoop cleanup *"  # 300+ ms
             Run-Command -Verbose "scoop cache rm *"  # ~100 ms
         }
     }
-    function Up-Winget {  # Update Winget and upgrade Winget's packages
+    function Up-Winget {
         Echo-Message -Title 'Winget Update & Upgrades'
-        if (Has-Command -Verbose winget) {  # Skip if winget not found
+        if (Has-Command -Verbose winget) {  # Return if winget not found
             Echo-Message -Command "winget upgrade --all --accept-package-agreements --accept-source-agreements"
             Start-Process winget -ArgumentList @('upgrade', '--all', '--accept-package-agreements', '--accept-source-agreements') -NoNewWindow -Wait  # Avoid output clutter
         }
     }
-    function Up-Rust {  # Upgrade Rust Toolchain
-        Echo-Message -Title 'Upgrade Rust'
-        if (Has-Command -Verbose rustup) {  # Skip if rust not found
+    function Up-Rust {
+        Echo-Message -Title 'Upgrade Rust Toolchain'
+        if (Has-Command -Verbose rustup) {  # Return if rust not found
             Run-Command -Verbose "rustup update"
         }
     }
-    function Up-Pip {  # Upgrade pip itself
-        Echo-Message -Title 'Upgrade pip'
-        if (Has-Command -Verbose python3) {  # Skip if pip not found
+    function Up-Pip {
+        Echo-Message -Title 'Upgrade pip itself'
+        if (Has-Command -Verbose python3) {  # Return if pip not found
             Run-Command -Verbose "python3 -m pip install --upgrade pip"  # 3s
         }
     }
-    function Up-DotNet {  # Upgrade .NET SDKs and Runtimes, need sudo
+    function Up-DotNet {
         Echo-Message -Title 'Upgrade Windows Desktop Runtime (.NET)'
         if (Has-Command -Verbose scoop) {
             Run-Command -Verbose "sudo scoop update windowsdesktop-runtime"
         }
     }
-    function Up-Clash {  # Upgrade Clash Verge Rev, need clash to run during the download, and clash not to run during the installation.
+    function Up-Clash {
         Echo-Message -Title 'Upgrade Clash Verge Rev'
         if (Has-Command -Verbose scoop) {
             Run-Command -Verbose "scoop download clash-verge-rev"
             Run-Command -Verbose "sudo scoop update clash-verge-rev"
         }
     }
-    function Up-Zed {  # Upgrade Zed Editor. Zed directory is required if Zed is not installed to the default location.
+    function Up-Zed {
         Echo-Message -Title 'Upgrade Zed'
         if ((Has-Command -Verbose winget) -and (Has-Command -Verbose zed)) {
             $ZedPath = Split-Path (Split-Path (Get-Command zed).Source)
@@ -316,19 +366,19 @@ function up {  # Update and upgrade packages in package managers, or upgrade pac
         Echo-Message -Title "Help for 'up' Command"
         Echo-Message -Info "Usage: up [-All] [-List] [-Help] [Targets...]"
         Echo-Message -Info "Options:"
-        Echo-Message -Info "    -All     Run all updates and upgrades."
-        Echo-Message -Info "    -List    List all supported package managers and packages."
+        Echo-Message -Info "    -All     Run all upgrades and updates."
+        Echo-Message -Info "    -List    List all supported package managers and update targets."
         Echo-Message -Info "    -Help    Show this help message."
         Echo-Message -Info "Targets:"
         Echo-Message -Info "    Specify one or more targets to upgrade or update (e.g., 'pipx', 'rust')."
         $PrintList.Invoke()
         return
     }
-    if ($Targets.Count -eq 0) {  # Run 'up' to run all package manager updates and daily upgrades
-        foreach ($Func in $PackageManagers.Values) {
+    if ($Targets.Count -eq 0) {  # Run daily Updates & Upgrades
+        foreach ($Func in $PackageManagers.Values) {  # All package managers will be Updates & Upgrades
             $Func.Invoke()
         }
-        foreach ($Func in $DailyUpgrades.Values) {
+        foreach ($Func in $DailyUpgrades.Values) {  # Partial packages will be upgraded daily
             $Func.Invoke()
         }
     } else {
@@ -338,7 +388,7 @@ function up {  # Update and upgrade packages in package managers, or upgrade pac
             } elseif ($Packages.ContainsKey($target)) {  # $target is in $Packages
                 $Packages[$target].Invoke()
             } else {
-                Echo-Message -Err "Unknown package manager or package: $target"
+                Echo-Message -Err "Unknown package manager: $target"
                 $PrintList.Invoke()
             }
         }
@@ -347,10 +397,12 @@ function up {  # Update and upgrade packages in package managers, or upgrade pac
 
 function venv {
     <#
-    .DESCRIPTION
+    .SYNOPSIS
         Deactivate if in a venv, or activate .venv\Scripts\activate
+
     .EXAMPLE
         venv  # Activate or deactivate venv
+
     #>
     $requirements = @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")
     # If venv is activated, deactivate it.
