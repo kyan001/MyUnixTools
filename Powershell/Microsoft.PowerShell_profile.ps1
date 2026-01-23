@@ -5,39 +5,59 @@ class Ansi {
         Class for ANSI text styles
 
     .EXAMPLE
-        $BoldText = [Ansi]::Bold("bold")
-        $ItalicText = ([Ansi]::I "italic")
-        $UnderlineText = "$([Ansi]::U("underline"))"
-        $DimText = "${[Ansi]::D "dim"}"
-        "..." | { [Ansi]::U($_) } | Write-Host
-
+        PS> [Ansi]::Bold("text")
+        PS> ([Ansi]::Italic("text"))
+        PS> "$([Ansi]::Underline("text"))"
+        PS> "${[Ansi]::Dim("text")}"
+        PS> "..." | { [Ansi]::Underline($_) } | Write-Host  # Pipe input
+        PS> "$([Ansi]::Char.Bold)...$([Ansi]::Char.Reset)"  # Using ANSI Chars
     #>
+    static [hashtable] $Char = @{
+        Reset      = "`e[0m"
+        Bold       = "`e[1m"
+        Dim        = "`e[2m"
+        Italic     = "`e[3m"
+        Underline  = "`e[4m"
+        EraseRight = "`e[0K"
+        EraseLeft  = "`e[1K"
+        EraseLine  = "`e[2K"
+        CursorUp   = "`e[1A"
+        CursorDown = "`e[1B"
+    }
+
     static [string] Bold ([string]$Text) {
         return "`e[1m$Text`e[0m"
     }
-    static [string] B ([string]$Text) {
-        return [Ansi]::Bold($Text)
-    }
+
     static [string] Dim ([string]$Text) {
         return "`e[2m$Text`e[0m"
     }
-    static [string] D ([string]$Text) {
-        return [Ansi]::Dim($Text)
-    }
+
     static [string] Italic ([string]$Text) {
         return "`e[3m$Text`e[0m"
     }
-    static [string] I ([string]$Text) {
-        return [Ansi]::Italic($Text)
-    }
+
     static [string] Underline ([string]$Text) {
         return "`e[4m$Text`e[0m"
     }
-    static [string] U ([string]$Text) {
-        return [Ansi]::Underline($Text)
-    }
 }
 
+<#
+    .SYNOPSIS
+        Shortcuts for ANSI styles
+    .EXAMPLE
+        PS> _B("text")
+        PS> _D("text")
+        PS> _I("text")
+        PS> _U("text")
+        PS> _U(_I(_B(_D("text"))))  # Nested
+        PS> (_B "text")  # Without parentheses
+        PS> "$(_B("text"))"  # In string interpolation
+#>
+function _B ($Text) { return [Ansi]::Bold($Text) }  # Bold Shortcut
+function _D ($Text) { return [Ansi]::Dim($Text) }  # Dim Shortcut
+function _I ($Text) { return [Ansi]::Italic($Text) }  # Italic Shortcut
+function _U ($Text) { return [Ansi]::Underline($Text) }  # Underline Shortcut
 
 function Echo-Message {
     <#
@@ -52,7 +72,6 @@ function Echo-Message {
         Echo-Message -Title "This is a title message"
         Echo-Message -Command "This is a command message"
         Echo-Message "This is a normal message"
-
     #>
     param (
         [switch]$Err,
@@ -64,11 +83,11 @@ function Echo-Message {
         [string]$Message
     )
     if ($Err) {
-        Write-Host "$([Ansi]::D("["))$([Ansi]::U("Error"))$([Ansi]::D("]")) $Message"
+        Write-Host "$(_D("["))$(_U("Error"))$(_D("]")) $Message"
     } elseif ($Warn) {
-        Write-Host "$([Ansi]::D("["))$([Ansi]::U("Warning"))$([Ansi]::D("]")) $Message"
+        Write-Host "$(_D("["))$(_U("Warning"))$(_D("]")) $Message"
     } elseif ($Info) {
-        Write-Host "$([Ansi]::D("[Info]")) $Message"
+        Write-Host "$(_D("[Info]")) $Message"
     } elseif ($Debug) {
         Write-Host "[Debug] ${Message}" -ForegroundColor Gray
     } elseif ($Title) {
@@ -88,15 +107,16 @@ function Echo-Message {
             $BottomLeft = "+="
             $BottomRight = "=+"
         }
-        Write-Host ([Ansi]::D("${TopLeft}${HorizontalBar}${TopRight}"))
-        Write-Host ([Ansi]::D("${VerticalBar}") + " ${Message} " + [Ansi]::D("${VerticalBar}"))
-        Write-Host ([Ansi]::D("${BottomLeft}${HorizontalBar}${BottomRight}"))
+        Write-Host (_D("${TopLeft}${HorizontalBar}${TopRight}"))
+        Write-Host (_D("${VerticalBar}") + " ${Message} " + _D("${VerticalBar}"))
+        Write-Host (_D("${BottomLeft}${HorizontalBar}${BottomRight}"))
     } elseif ($Command) {
-        Write-Host ([Ansi]::D(">_") + " " + [Ansi]::U("${Message}"))
+        Write-Host (_D(">_") + " " + _U("${Message}"))
     } else {
         Write-Host "${Message}"
     }
 }
+
 
 function Run-Command ([switch]$Verbose, [string]$Command) {
     <#
@@ -106,13 +126,13 @@ function Run-Command ([switch]$Verbose, [string]$Command) {
     .EXAMPLE
         Run-Command "Get-Process"  # Just run the command
         Run-Command -Verbose "Get-Process"  # Print the command before running it.
-
     #>
     if ($Verbose) {
         Echo-Message -Command "$Command"
     }
     Invoke-Expression $Command
 }
+
 
 function Has-Command ([switch]$Verbose, [string]$Command) {
     <#
@@ -125,7 +145,6 @@ function Has-Command ([switch]$Verbose, [string]$Command) {
 
     .OUTPUTS
         [bool] True if the command exists, False otherwise.
-
     #>
     if (Get-Command $Command -ErrorAction SilentlyContinue) {
         return $true
@@ -137,6 +156,7 @@ function Has-Command ([switch]$Verbose, [string]$Command) {
     }
 }
 
+
 function Press-To-Continue ([switch]$Enter) {
     <#
     .SYNOPSIS
@@ -145,7 +165,6 @@ function Press-To-Continue ([switch]$Enter) {
     .EXAMPLE
         PS> Press-To-Continue
         PS> Press-To-Continue -Enter  # Wait for Enter key instead of any key.
-
     #>
     if ($Enter) {
         Read-Host "Press Enter To Continue ..."
@@ -170,6 +189,7 @@ if (Has-Command python3) {  # Add Python3 Scripts to PATH
     $env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
 }
 
+
 function proxy ([string]$Action, [switch]$Quiet) {
     <#
     .SYNOPSIS
@@ -182,13 +202,12 @@ function proxy ([string]$Action, [switch]$Quiet) {
         proxy status  # Show current proxy settings
         proxy -Quiet on  # Enable proxy without output
         proxy -Quiet off  # Disable proxy without output
-
     #>
     $proxy_address = "127.0.0.1:1088"
     $proxy_protocol = "http"  # http | socks5
     $proxy_envvars = @("http_proxy", "https_proxy", "all_proxy", "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY")
 
-    switch ($Action.ToLowerInvariant()) {
+    switch ("$Action".ToLowerInvariant()) {
         "" {  # Toggle proxy
             foreach ($envvar in $proxy_envvars) {
                 if ([Environment]::GetEnvironmentVariable($envvar)) {  # If any proxy envvar is set, turn off all proxy envvars
@@ -234,6 +253,7 @@ function proxy ([string]$Action, [switch]$Quiet) {
     }
 }
 
+
 function fzfcd {
     <#
     .SYNOPSIS
@@ -257,6 +277,7 @@ function fzfcd {
     }
 }
 
+
 function up {
     <#
     .SYNOPSIS
@@ -279,12 +300,14 @@ function up {
         [switch]$List,  # `up -List` to list all supported packages and package managers
         [string[]]$Targets = @()  # `up pipx scoop` to run pipx and scoop upgrades only
     )
+
     function Up-Pipx {
         Echo-Message -Title 'Pipx Update & Upgrades'
         if (Has-Command -Verbose pipx) {  # Return if pipx not found
             Run-Command -Verbose "pipx upgrade-all"  # 20s
         }
     }
+
     function Up-Scoop {
         Echo-Message -Title 'Scoop Update & Upgrades'
         if (Has-Command -Verbose scoop) {  # Return if scoop not found
@@ -293,6 +316,7 @@ function up {
             Run-Command -Verbose "scoop cache rm *"  # ~100 ms
         }
     }
+
     function Up-Winget {
         Echo-Message -Title 'Winget Update & Upgrades'
         if (Has-Command -Verbose winget) {  # Return if winget not found
@@ -300,24 +324,28 @@ function up {
             Start-Process winget -ArgumentList @('upgrade', '--all', '--accept-package-agreements', '--accept-source-agreements') -NoNewWindow -Wait  # Avoid output clutter
         }
     }
+
     function Up-Rust {
         Echo-Message -Title 'Upgrade Rust Toolchain'
         if (Has-Command -Verbose rustup) {  # Return if rust not found
             Run-Command -Verbose "rustup update"
         }
     }
+
     function Up-Pip {
         Echo-Message -Title 'Upgrade pip itself'
         if (Has-Command -Verbose python3) {  # Return if pip not found
             Run-Command -Verbose "python3 -m pip install --upgrade pip"  # 3s
         }
     }
+
     function Up-DotNet {
         Echo-Message -Title 'Upgrade Windows Desktop Runtime (.NET)'
         if (Has-Command -Verbose scoop) {
             Run-Command -Verbose "sudo scoop update windowsdesktop-runtime"
         }
     }
+
     function Up-Clash {
         Echo-Message -Title 'Upgrade Clash Verge Rev'
         if (Has-Command -Verbose scoop) {
@@ -325,6 +353,7 @@ function up {
             Run-Command -Verbose "sudo scoop update clash-verge-rev"
         }
     }
+
     function Up-Zed {
         Echo-Message -Title 'Upgrade Zed'
         if ((Has-Command -Verbose winget) -and (Has-Command -Verbose zed)) {
@@ -402,7 +431,6 @@ function venv {
 
     .EXAMPLE
         venv  # Activate or deactivate venv
-
     #>
     $requirements = @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")
     # If venv is activated, deactivate it.
