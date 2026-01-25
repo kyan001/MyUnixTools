@@ -40,6 +40,16 @@ class Ansi {
     static [string] Underline ([string]$Text) {
         return "`e[4m$Text`e[0m"
     }
+
+    static [string] Strip ([string]$Text) {
+        <#
+        .SYNOPSIS
+            Strip ANSI codes from text
+        .EXAMPLE
+            PS> [Ansi]::Strip("`e[1mtext`e[0m")
+        #>
+        return $Text -replace "`e\[[0-9:;<=>?]*[ -/]*[@-~]", ""
+    }
 }
 
 <#
