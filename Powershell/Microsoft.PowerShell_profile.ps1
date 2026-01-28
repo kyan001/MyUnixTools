@@ -408,6 +408,7 @@ function up {
         foreach ($Func in $Packages.Values) {
             $Func.Invoke()
         }
+        return
     }
     if ($List) {  # Run 'up -List' or 'up -Help' to list all supported packages and package managers
         $PrintList.Invoke()
@@ -441,6 +442,7 @@ function up {
             } else {
                 Echo-Message -Err "Unknown package manager: $target"
                 $PrintList.Invoke()
+                return
             }
         }
     }
