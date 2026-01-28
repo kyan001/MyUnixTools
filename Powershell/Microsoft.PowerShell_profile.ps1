@@ -1,3 +1,15 @@
+function Loading-Time ($StartTime = $null) {
+    if (-not $StartTime) {
+        Write-Host "🛫 PowerShell Profile: Loading" -ForegroundColor Yellow
+        return Get-Date
+    } else {
+        $Duration = (Get-Date) - $StartTime
+        Write-Host "🛬 PowerShell Profile: Loaded ($([int]($Duration.TotalSeconds * 1000))ms)" -ForegroundColor Green
+    }
+}
+$StartTime = Loading-Time
+
+
 <# Utility Functions for Powershell #>
 class Ansi {
     <#
@@ -488,3 +500,6 @@ function venv {
 
 # Main
 proxy -Quiet on
+
+# Final
+Loading-Time $StartTime
