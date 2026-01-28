@@ -105,35 +105,36 @@ function Echo-Message {
         [string]$Message
     )
     if ($Err) {
-        Write-Host "$(_D("["))$(_U("Error"))$(_D("]")) $Message"
+        Write-Host ((_D "[") + (_U "Error") + (_D "]") + " " + $Message)
     } elseif ($Warn) {
-        Write-Host "$(_D("["))$(_U("Warning"))$(_D("]")) $Message"
+        Write-Host ((_D "[") + (_U "Warning") + (_D "]") + " " + $Message)
     } elseif ($Info) {
-        Write-Host "$(_D("[Info]")) $Message"
+        Write-Host ((_D "[Info]") + " " + $Message)
     } elseif ($Debug) {
         Write-Host "[Debug] ${Message}" -ForegroundColor Gray
     } elseif ($Title) {
         Write-Host ""
+        $MessageLength = ([Ansi]::Strip($Message) ?? '').Length
         if ($Host.UI.SupportsVirtualTerminal) {  # Check if the host supports virtual terminal (ANSI and Unicode)
-            $HorizontalBar = (New-Object string ([char]0x2550), $Message.Length)  # "═" * $Message.Length
+            $HorizontalBar = (New-Object string ([char]0x2550), $MessageLength)  # "═" * $Message.Length
             $VerticalBar = [char]0x2551  # "║"
             $TopLeft = [char]0x2554 + [char]0x2550  # "╔═"
             $TopRight = [char]0x2550 + [char]0x2557  # "═╗"
             $BottomLeft = [char]0x255A + [char]0x2550  # "╚═"
             $BottomRight = [char]0x2550 + [char]0x255D  # "═╝"
         } else {
-            $HorizontalBar = "=" * $Message.Length
+            $HorizontalBar = "=" * $MessageLength
             $VerticalBar = "|"
             $TopLeft = "+="
             $TopRight = "=+"
             $BottomLeft = "+="
             $BottomRight = "=+"
         }
-        Write-Host (_D("${TopLeft}${HorizontalBar}${TopRight}"))
-        Write-Host (_D("${VerticalBar}") + " ${Message} " + _D("${VerticalBar}"))
-        Write-Host (_D("${BottomLeft}${HorizontalBar}${BottomRight}"))
+        Write-Host (_D "${TopLeft}${HorizontalBar}${TopRight}")
+        Write-Host ((_D $VerticalBar) + " $Message " + (_D $VerticalBar))
+        Write-Host (_D "${BottomLeft}${HorizontalBar}${BottomRight}")
     } elseif ($Command) {
-        Write-Host (_D(">_") + " " + _U("${Message}"))
+        Write-Host ((_D ">_") + " " + (_U $Message))
     } else {
         Write-Host "${Message}"
     }
