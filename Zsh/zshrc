@@ -238,8 +238,8 @@ up() {  # Update package managers information and upgrade packages.
     up_python() {
         _echo --title 'Upgrade Python'
         _has_cmd --verbose 'brew' || return 1  # If brew not installed, return False
-        _verbose_run 'brew upgrade python3'
-        _verbose_run 'cd $(brew --prefix python3) && open "Python Launcher 3.app"'
+        # _verbose_run 'brew upgrade python3'
+        _verbose_run 'open "$(brew --prefix python3)/Python Launcher 3.app"'
     }
     local package_managers=('pipx' 'brew' 'apt' 'snap')  # Available package managers to update and upgrade
     local daily_upgrades=('pip' 'omz' 'rust')  # Available packages for daily upgrade
