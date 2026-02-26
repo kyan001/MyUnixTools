@@ -242,7 +242,7 @@ up() {  # Update package managers information and upgrade packages.
         _verbose_run 'open "$(brew --prefix python3)/Python Launcher 3.app"'
     }
     local package_managers=('pipx' 'brew' 'apt' 'snap')  # Available package managers to update and upgrade
-    local daily_upgrades=('pip' 'omz' 'rust')  # Available packages for daily upgrade
+    local daily_upgrades=('omz' 'rust')  # Available packages for daily upgrade
     local packages=("${daily_upgrades[@]}" 'python')  # All available packages for upgrade
     if [[ $# -eq 0 ]]; then  # Run 'up' to run daily updates and upgrades
         for pm in "${package_managers[@]}"; do  # All package managers will be updated and upgraded
