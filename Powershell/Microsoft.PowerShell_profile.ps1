@@ -198,6 +198,33 @@ function Press-To-Continue ([switch]$Enter) {
 }
 
 
+function Count-Down ([float]$Seconds=2, [float]$Interval=0.1, [switch]$Bar=$true) {
+    <#
+    .SYNOPSIS
+        Exit Countdown Timer.
+    #>
+    $Milliseconds = $Seconds * 1000
+    $Interval = $Interval * 1000
+    $Icons = @("⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏")
+    for ($TimeLeft = $Milliseconds; $TimeLeft -ge 0; $TimeLeft-=$Interval) {
+        Start-Sleep -Milliseconds $Interval
+        if ($TimeLeft -gt 0) {
+            $Icon = $Icons[([int]($TimeLeft * (1 / $Interval))) % $Icons.Count]
+            $Color = "Yellow"
+        } else {
+            $Icon = "✔️"
+            $Color = "DarkGray"
+        }
+        $OutputText = "$Icon 剩余 $([math]::Ceiling($TimeLeft / 1000)) 秒"
+        $BarLength = $Host.UI.RawUI.BufferSize.Width - ($OutputText.Length * 2)
+        $ProgressDone = [math]::Round((($Milliseconds - $TimeLeft) / $Milliseconds) * $BarLength)
+        $ProgressToDo = $BarLength - $ProgressDone
+        $ProgressBar = "█" * $ProgressDone + "░" * $ProgressToDo + [Ansi]::Char.EraseRight
+        Write-Host -NoNewline "`r $OutputText $ProgressBar" -ForegroundColor $Color
+    }
+}
+
+
 <# Script Initialization #>
 if (Has-Command starship) {  # Activate Starship prompt
     Invoke-Expression (&starship init powershell)
@@ -448,6 +475,7 @@ function up {
         }
     }
 }
+
 
 function venv {
     <#
