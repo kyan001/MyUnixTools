@@ -412,6 +412,14 @@ function up {
             Start-Process winget -ArgumentList @('install', 'ZedIndustries.Zed', '--force', '--source', 'winget', "--location", "$ZedPath") -NoNewWindow -Wait
         }
     }
+
+    function Up-Python {
+        Echo-Message -Title 'Upgrade Python'
+        if (Has-Command -Verbose py) {
+            Run-Command -Verbose "reg import "$(Split-Path (Get-Command py).Source)\install-pep-514.reg"  # Point Python Launcher (py) to the latest Python folder.
+        }
+    }
+
     $PackageManagers = @{
         'pipx' = { Up-Pipx }
         'scoop' = { Up-Scoop }
@@ -425,6 +433,7 @@ function up {
         'dotnet' = { Up-DotNet }
         'clash' = { Up-Clash }
         'zed' = { Up-Zed }
+        'python' = { Up-Python }
     }
     $PrintList = {
         Echo-Message -Info "Supported Packages and Managers:`n`t$(@($PackageManagers.Keys + $Packages.Keys) -join ', ')"
