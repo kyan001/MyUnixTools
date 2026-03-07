@@ -416,7 +416,9 @@ function up {
     function Up-Python {
         Echo-Message -Title 'Upgrade Python'
         if (Has-Command -Verbose py) {
-            Run-Command -Verbose "reg import "$(Split-Path (Get-Command py).Source)\install-pep-514.reg"  # Point Python Launcher (py) to the latest Python folder.
+            $PythonPath = Split-Path (Get-Command py).Source
+            $Command = "reg import `"$PythonPath\install-pep-514.reg`""  # Point Python Launcher (py) to the latest Python folder.
+            Run-Command -Verbose "$Command 2>&1"  # Redirect stderr to stdout. Old Windows CLI tools often write output to stderr.
         }
     }
 
