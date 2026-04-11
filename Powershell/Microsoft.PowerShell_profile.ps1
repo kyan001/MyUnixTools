@@ -375,6 +375,13 @@ function up {
         }
     }
 
+    function Up-Npm {
+        Echo-Message -Title 'Npm Update & Upgrades'
+        if (Has-Command -Verbose npm) {  # Return if npm not found
+            Run-Command -Verbose "npm update -g"
+        }
+    }
+
     function Up-Rust {
         Echo-Message -Title 'Upgrade Rust Toolchain'
         if (Has-Command -Verbose rustup) {  # Return if rust not found
@@ -426,6 +433,7 @@ function up {
         'pipx' = { Up-Pipx }
         'scoop' = { Up-Scoop }
         'winget' = { Up-Winget }
+        'npm' = { Up-Npm }
     }
     $DailyUpgrades = @{
         'pip' = { Up-Pip }
@@ -540,8 +548,14 @@ function venv {
     Run-Command -Verbose ".\.venv\Scripts\activate"
 }
 
-# Main
+
+<# Aliases #>
+Set-Alias "trash" "recycle-bin"
+
+
+<# Main #>
 proxy -Quiet on
 
-# Final
+
+<# Final #>
 Loading-Time $StartTime
