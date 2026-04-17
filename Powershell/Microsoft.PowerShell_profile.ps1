@@ -550,7 +550,15 @@ function venv {
 
 
 <# Aliases #>
-Set-Alias "trash" "recycle-bin"
+if (Has-Command -Verbose recycle-bin) {
+    Set-Alias "trash" "recycle-bin"
+}
+if (Has-Command -Verbose eza) {
+    function eza-ls { eza --icons=auto --group-directories-first -h @args }
+    Set-Alias "ls" "eza-ls"
+    function eza-tree { eza --icons=auto --group-directories-first -h -T @args }
+    Set-Alias "tree" "eza-tree"
+}
 
 
 <# Main #>
