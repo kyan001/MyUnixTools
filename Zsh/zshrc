@@ -186,13 +186,6 @@ if _has_cmd eza; then
     alias tree='eza --icons=auto --group-directories-first -h -T'
 fi
 
-# Init Fzf (fzfcd)
-if _has_cmd fzf; then
-    fzfcd() {  # Use fzf to select a file, and cd to its directory
-        cd "$(dirname "$(fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)")"
-    }
-fi
-
 # Init Yazi (yz)
 if _has_cmd yazi; then
     function yz() {

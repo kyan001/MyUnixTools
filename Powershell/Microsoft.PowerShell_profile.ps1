@@ -250,25 +250,6 @@ if (Has-Command -Verbose eza) {  # Init Eza (ls and tree)
     Set-Alias "tree" "eza-tree"
 }
 
-if (Has-Command -Verbose fzf) {  # Init fzf (fzfcd)
-    function fzfcd {
-        <#
-        .SYNOPSIS
-            Use fzf to select a file, and cd to its directory
-        .EXAMPLE
-            PS> fzfcd
-        #>
-        $Selection = Invoke-Expression ("fzf" + (if (Has-Command bat) { " --preview 'bat --color=always --line-range=:100 {}' --preview-window up" }))
-        if ($Selection) {
-            if (Test-Path $Selection -PathType Container) {
-                Set-Location $Selection
-            } else {
-                Set-Location (Split-Path -Parent $Selection)
-            }
-        }
-    }
-}
-
 if (Has-Command -Verbose yazi) {  # Init Yazi (yz)
     function yz {
         <#
