@@ -239,6 +239,45 @@ if (Has-Command python3) {  # Add Python3 Scripts to PATH
     $env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
 }
 
+if (Has-Command -Verbose fzf) {
+    function fzfcd {
+        <#
+        .SYNOPSIS
+            # Use fzf to select a file, and cd to its directory
+        .EXAMPLE
+            PS> fzfcd
+        #>
+        $Selection = Invoke-Expression ("fzf" + (if (Has-Command bat) { " --preview 'bat --color=always --line-range=:100 {}' --preview-window up" }))
+        if ($Selection) {
+            if (Test-Path $Selection -PathType Container) {
+                Set-Location $Selection
+            } else {
+                Set-Location (Split-Path -Parent $Selection)
+            }
+        }
+    }
+}
+
+if (Has-Command -Verbose yazi) {  # Init yazi as yz
+    function yz {
+        <#
+        .SYNOPSIS
+            Use yazi as folder navigator, and cd to the selected directory after exiting yazi.
+        .EXAMPLE
+            PS> yz
+            q  # Exit and Cd
+            Q  # Exit without Cd
+        #>
+	    $tmp = (New-TemporaryFile).FullName
+	    yazi.exe $args --cwd-file="$tmp"
+        $cwd = Get-Content -Path $tmp -Encoding UTF8
+        if ($cwd -and $cwd -ne $PWD.Path -and (Test-Path -LiteralPath $cwd -PathType Container)) {
+            Set-Location -LiteralPath (Resolve-Path -LiteralPath $cwd).Path
+        }
+        Remove-Item -Path $tmp
+    }
+}
+
 
 function proxy ([string]$Action, [switch]$Quiet) {
     <#
@@ -302,31 +341,6 @@ function proxy ([string]$Action, [switch]$Quiet) {
         }
     }
 }
-
-
-function fzfcd {
-    <#
-    .SYNOPSIS
-        # Use fzf to select a file, and cd to its directory
-    .EXAMPLE
-        PS> fzfcd
-    #>
-    if (Has-Command -Verbose fzf) {
-        if (Has-Command bat) {
-            $Selection = fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up
-        } else {
-            $Selection = fzf
-        }
-        if ($Selection) {
-            if (Test-Path $Selection -PathType Container) {
-                Set-Location $Selection
-            } else {
-                Set-Location (Split-Path -Parent $Selection)
-            }
-        }
-    }
-}
-
 
 function up {
     <#
