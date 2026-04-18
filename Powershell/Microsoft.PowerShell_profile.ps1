@@ -239,17 +239,18 @@ if (Has-Command python3) {  # Add Python3 Scripts to PATH
     $env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
 }
 
-if (Has-Command -Verbose recycle-bin) {  # Set alias "trash" for "recycle-bin"
+if (Has-Command -Verbose recycle-bin) {  # Init recycle-bin (trash)
     Set-Alias "trash" "recycle-bin"
 }
-if (Has-Command -Verbose eza) {  # Set alias "ls" and "tree" for "eza"
+
+if (Has-Command -Verbose eza) {  # Init Eza (ls and tree)
     function eza-ls { eza --icons=auto --group-directories-first -h @args }
     Set-Alias "ls" "eza-ls"
     function eza-tree { eza --icons=auto --group-directories-first -h -T @args }
     Set-Alias "tree" "eza-tree"
 }
 
-if (Has-Command -Verbose fzf) {
+if (Has-Command -Verbose fzf) {  # Init fzf (fzfcd)
     function fzfcd {
         <#
         .SYNOPSIS
@@ -268,7 +269,7 @@ if (Has-Command -Verbose fzf) {
     }
 }
 
-if (Has-Command -Verbose yazi) {  # Init yazi as yz
+if (Has-Command -Verbose yazi) {  # Init Yazi (yz)
     function yz {
         <#
         .SYNOPSIS
@@ -584,8 +585,8 @@ function venvx {
     }
     $Script = if ($PyScripts.Count -eq 1) {
         $PyScripts[0].Name
-    } elseif (Has-Command fzzf) {
-        $PyScripts.Name | fzf --preview "bat --color=always --line-range=:100 {}" --preview-window right
+    } elseif (Has-Command fzf) {
+        $PyScripts.Name | fzf --preview "bat --color=always --line-range=:100 {}" --preview-window up
     } else {
         Write-Host "[0] Exit"
         for ($i = 0; $i -lt $PyScripts.Count; $i++) {
