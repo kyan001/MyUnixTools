@@ -239,11 +239,21 @@ if (Has-Command python3) {  # Add Python3 Scripts to PATH
     $env:PATH = (Get-Item $(python3 -m site --user-site)).parent.FullName + "\\Scripts" + ";$env:PATH"
 }
 
+if (Has-Command -Verbose recycle-bin) {  # Set alias "trash" for "recycle-bin"
+    Set-Alias "trash" "recycle-bin"
+}
+if (Has-Command -Verbose eza) {  # Set alias "ls" and "tree" for "eza"
+    function eza-ls { eza --icons=auto --group-directories-first -h @args }
+    Set-Alias "ls" "eza-ls"
+    function eza-tree { eza --icons=auto --group-directories-first -h -T @args }
+    Set-Alias "tree" "eza-tree"
+}
+
 if (Has-Command -Verbose fzf) {
     function fzfcd {
         <#
         .SYNOPSIS
-            # Use fzf to select a file, and cd to its directory
+            Use fzf to select a file, and cd to its directory
         .EXAMPLE
             PS> fzfcd
         #>
@@ -515,21 +525,18 @@ function venv {
     .SYNOPSIS
         Deactivate if in a venv, or activate .venv\Scripts\activate
 
-    .OUTPUTS
-        [bool] True if venv is activated, False if deactivated, Null if uv not found.
-
     .EXAMPLE
         venv  # Activate or deactivate venv
     #>
-    $requirements = @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")
+    $Requirements = @("requirements.txt", "requirements-dev.txt", "requirements-opt.txt")
     # If venv is activated, deactivate it.
     if ($env:VIRTUAL_ENV) {
         Run-Command -Verbose "deactivate"
-        return $false
+        return
     }
     # If uv is not installed, return
     if (-not (Has-Command -Verbose uv)) {
-        return $null
+        return
     }
     # If .venv\ not exists, create venv and relaunch the function.
     if (-not (Test-Path ".\.venv")) {
@@ -549,9 +556,9 @@ function venv {
         return venv
     }
     # If .venv\ exists, and python is executable, update it and activate
-    foreach ($file in $requirements) {
-        if (Test-Path ".\$file") {
-            Run-Command -Verbose "uv pip install --refresh -r .\$file"
+    foreach ($File in $Requirements) {
+        if (Test-Path ".\$File") {
+            Run-Command -Verbose "uv pip install --refresh -r .\$File"
         }
     }
     # If .venv\bin\ not exists, create a symlink for it to .venv\Scripts\
@@ -560,19 +567,44 @@ function venv {
     }
     # Activate the venv
     Run-Command -Verbose ".\.venv\Scripts\activate"
-    return $true
 }
 
+function venvx {
+    <#
+    .SYNOPSIS
+        Activate venv if needed, run a `.py` script, then deactivate if venv was activated here.
 
-<# Aliases #>
-if (Has-Command -Verbose recycle-bin) {
-    Set-Alias "trash" "recycle-bin"
-}
-if (Has-Command -Verbose eza) {
-    function eza-ls { eza --icons=auto --group-directories-first -h @args }
-    Set-Alias "ls" "eza-ls"
-    function eza-tree { eza --icons=auto --group-directories-first -h -T @args }
-    Set-Alias "tree" "eza-tree"
+    .EXAMPLE
+        venvx
+    #>
+    $PyScripts = Get-ChildItem -Path .\*.py -ErrorAction SilentlyContinue
+    if (-not $PyScripts) {
+        Echo-Message -Warn "No Python scripts detected"
+        return
+    }
+    $Script = if ($PyScripts.Count -eq 1) {
+        $PyScripts[0].Name
+    } elseif (Has-Command fzzf) {
+        $PyScripts.Name | fzf --preview "bat --color=always --line-range=:100 {}" --preview-window right
+    } else {
+        Write-Host "[0] Exit"
+        for ($i = 0; $i -lt $PyScripts.Count; $i++) {
+            Write-Host "[$($i+1)] $($PyScripts[$i].Name)"
+        }
+        $Selection = [int](Read-Host "Select Script to run")
+        if ($Selection -gt 0 -and $Selection -le $PyScripts.Count) {
+            $PyScripts[$Selection - 1].Name
+        }
+    }
+    if (-not $Script) {
+        Echo-Message -Err "No Script Selected"
+        return
+    }
+
+    $EnteredVenv = -not $env:VIRTUAL_ENV
+    if ($EnteredVenv) { Run-Command -Verbose "venv" }
+    Run-Command -Verbose "python `"$Script`""
+    if ($EnteredVenv) { Run-Command -Verbose "venv" }
 }
 
 
