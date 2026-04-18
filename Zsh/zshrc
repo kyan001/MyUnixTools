@@ -168,6 +168,8 @@ esac
 
 #export NVM_LAZY_LOAD=true  # Lazy load for zsh-nvm
 
+source $ZSH/oh-my-zsh.sh  # Alias after this line to avoid being overridden by oh-my-zsh
+
 # Python User Site-Package Binaries
 if _has_cmd python3; then
     export PATH="$(python3 -m site --user-base)/bin:$PATH"
@@ -178,12 +180,30 @@ if _has_cmd zoxide; then
     eval "$(zoxide init zsh)"
 fi
 
-source $ZSH/oh-my-zsh.sh
+# Init Eza (ls and tree)
+if _has_cmd eza; then
+    alias ls='eza --icons=auto --group-directories-first -h'
+    alias tree='eza --icons=auto --group-directories-first -h -T'
+fi
 
-fzfcd() {  # Use fzf to select a file, and cd to its directory
-    _has_cmd --verbose 'fzf' || return 1  # If fzf not installed, return False
-    cd "$(dirname "$(fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)")"
-}
+# Init Fzf (fzfcd)
+if _has_cmd fzf; then
+    fzfcd() {  # Use fzf to select a file, and cd to its directory
+        cd "$(dirname "$(fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)")"
+    }
+fi
+
+# Init Yazi (yz)
+if _has_cmd yazi; then
+    function yz() {
+        local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+        trap "rm -f -- '$tmp'" INT TERM EXIT
+        command yazi "$@" --cwd-file="$tmp"
+        IFS= read -r -d '' cwd < "$tmp"
+        [ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+        rm -f -- "$tmp"
+    }
+fi
 
 up() {  # Update package managers information and upgrade packages.
     # The term `update` means to get the latest package information from remote servers.
@@ -300,6 +320,41 @@ venv() {  # Deactivate if in a venv, or activate .venv/bin/activate
     done
     # Activate the venv
     _verbose_run "source ./.venv/bin/activate"
+}
+
+venvx() {  # Activate venv if needed, run a .py script, then deactivate if venv was activated here.
+    local py_scripts=()
+    for f in *.py; do
+        if [[ -f "$f" ]]; then
+            py_scripts+=("$f")
+        fi
+    done
+    if [[ ${#py_scripts[@]} -eq 0 ]]; then
+        _echo --warn "No Python scripts detected"
+        return 1
+    fi
+    local script
+    if [[ ${#py_scripts[@]} -eq 1 ]]; then
+        script="${py_scripts[0]}"
+    elif _has_cmd fzf; then
+        script=$(printf '%s\n' "${py_scripts[@]}" | fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)
+    else
+        select script in "${py_scripts[@]}"; do
+            break
+        done
+    fi
+    if [[ -z "$script" ]]; then
+        _echo --err "No Script Selected"
+        return 1
+    fi
+    local prev_venv="$VIRTUAL_ENV"
+    if [[ -z "$prev_venv" ]]; then
+        venv
+    fi
+    _verbose_run "python \"$script\""
+    if [[ -z "$prev_venv" ]]; then
+        venv
+    fi
 }
 
 proxy() {  # proxy [on|off|status]
