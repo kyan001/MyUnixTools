@@ -515,6 +515,9 @@ function venv {
     .SYNOPSIS
         Deactivate if in a venv, or activate .venv\Scripts\activate
 
+    .OUTPUTS
+        [bool] True if venv is activated, False if deactivated, Null if uv not found.
+
     .EXAMPLE
         venv  # Activate or deactivate venv
     #>
@@ -522,31 +525,28 @@ function venv {
     # If venv is activated, deactivate it.
     if ($env:VIRTUAL_ENV) {
         Run-Command -Verbose "deactivate"
-        return
+        return $false
     }
     # If uv is not installed, return
     if (-not (Has-Command -Verbose uv)) {
-        return $false
+        return $null
     }
     # If .venv\ not exists, create venv and relaunch the function.
     if (-not (Test-Path ".\.venv")) {
         Run-Command -Verbose "uv venv"
-        venv
-        return
+        return venv
     }
     # If .venv\ exists, but not executable, recreate venv and relaunch the function.
     if (-not (Test-Path ".\.venv\Scripts\python.exe")) {
         Run-Command -Verbose "Remove-Item -Recurse .\.venv"
-        venv
-        return
+        return venv
     }
     # If .venv\ exists, but version is old, recreate the.venv\
     try {
         & .\.venv\Scripts\python.exe --version > $null 2>&1
     } catch {
         Run-Command -Verbose "Remove-Item -Recurse .\.venv"
-        venv
-        return
+        return venv
     }
     # If .venv\ exists, and python is executable, update it and activate
     foreach ($file in $requirements) {
@@ -560,6 +560,7 @@ function venv {
     }
     # Activate the venv
     Run-Command -Verbose ".\.venv\Scripts\activate"
+    return $true
 }
 
 
