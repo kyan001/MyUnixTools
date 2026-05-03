@@ -328,7 +328,7 @@ venvx() {  # Activate venv if needed, run a .py script, then deactivate if venv 
     fi
     local script
     if [[ ${#py_scripts[@]} -eq 1 ]]; then
-        script="${py_scripts[0]}"
+        script="${py_scripts[*]}"
     elif _has_cmd fzf; then
         script=$(printf '%s\n' "${py_scripts[@]}" | fzf --preview 'bat --color=always --line-range=:100 {}' --preview-window up)
     else
@@ -342,10 +342,13 @@ venvx() {  # Activate venv if needed, run a .py script, then deactivate if venv 
     fi
     local prev_venv="$VIRTUAL_ENV"
     if [[ -z "$prev_venv" ]]; then
+        _echo --title "Activating Venv"
         venv
     fi
+    _echo --title "Running Script"
     _verbose_run "python \"$script\""
     if [[ -z "$prev_venv" ]]; then
+        _echo --title "Deactivating Venv"
         venv
     fi
 }
