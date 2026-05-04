@@ -559,7 +559,7 @@ function venvx {
     .EXAMPLE
         venvx
     #>
-    $PyScripts = Get-ChildItem -Path .\*.py -ErrorAction SilentlyContinue
+    $PyScripts = @(Get-ChildItem -Path .\*.py -ErrorAction SilentlyContinue)
     if (-not $PyScripts) {
         Echo-Message -Warn "No Python scripts detected"
         return
@@ -584,9 +584,16 @@ function venvx {
     }
 
     $EnteredVenv = -not $env:VIRTUAL_ENV
-    if ($EnteredVenv) { Run-Command -Verbose "venv" }
+    if ($EnteredVenv) {
+        Echo-Message -Title "Activating Venv"
+        Run-Command -Verbose "venv"
+    }
+    Echo-Message -Title "Running Script"
     Run-Command -Verbose "python `"$Script`""
-    if ($EnteredVenv) { Run-Command -Verbose "venv" }
+    if ($EnteredVenv) {
+        Echo-Message -Title "Deactivating Venv"
+        Run-Command -Verbose "venv"
+    }
 }
 
 
