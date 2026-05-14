@@ -250,6 +250,10 @@ if (Has-Command -Verbose eza) {  # Init Eza (ls and tree)
     Set-Alias "tree" "eza-tree"
 }
 
+if (Has-Command -Verbose scoop -and Test-Path "$(scoop prefix powertoys)\PowerToys.Awake.exe") {  # Init PowerToys Awake (awake)
+    Set-Alias "awake" "$(scoop prefix powertoys)\PowerToys.Awake"
+}
+
 if (Has-Command -Verbose yazi) {  # Init Yazi (yz)
     function yz {
         <#
@@ -583,6 +587,7 @@ function venvx {
         return
     }
 
+    Echo-Message -Title "Selected Script: _U($Script)"
     $EnteredVenv = -not $env:VIRTUAL_ENV
     if ($EnteredVenv) {
         Echo-Message -Title "Activating Venv"
