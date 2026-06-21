@@ -216,7 +216,7 @@ up() {  # Update package managers information and upgrade packages.
             _echo --title 'Brew Update & Upgrades'
             _has_cmd --verbose 'brew' || return 1  # If brew not installed, return False
             _verbose_run 'brew update'
-            _verbose_run 'brew upgrade'
+            _verbose_run 'brew upgrade --greedy --yes'
             _verbose_run 'brew list --cask | xargs brew upgrade --cask'
             _verbose_run 'brew autoremove'
             _verbose_run 'brew cleanup --prune=all'
