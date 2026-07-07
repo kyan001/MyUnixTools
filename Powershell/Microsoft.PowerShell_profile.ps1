@@ -231,8 +231,7 @@ if (Has-Command starship) {  # Activate Starship prompt
 }
 
 if (Has-Command zoxide) {  # Init Zoxide (z and zi)
-    #$env:_ZO_FZF_OPTS = "--preview 'bat --color=always --line-range=:100 {}' --preview-window up"  # Set fzf options for Zoxide
-    Invoke-Expression (& { (zoxide init powershell | Out-String) })  # Init Zoxide
+    Invoke-Expression (& { (zoxide init powershell --cmd cd | Out-String) })  # Replace `cd`
 }
 
 if (Has-Command python3) {  # Add Python3 Scripts to PATH
@@ -243,7 +242,7 @@ if (Has-Command -Verbose recycle-bin) {  # Init recycle-bin (trash)
     Set-Alias "trash" "recycle-bin"
 }
 
-if (Has-Command -Verbose eza) {  # Init Eza (ls and tree)
+if (Has-Command eza) {  # Init Eza (ls and tree)
     function eza-ls { eza --icons=auto --group-directories-first -h @args }
     Set-Alias "ls" "eza-ls"
     function eza-tree { eza --icons=auto --group-directories-first -h -T @args }
