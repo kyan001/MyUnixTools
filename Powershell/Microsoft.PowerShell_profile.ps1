@@ -231,7 +231,7 @@ if (Has-Command starship) {  # Activate Starship prompt
 }
 
 if (Has-Command zoxide) {  # Init Zoxide (z and zi)
-    Invoke-Expression (& { (zoxide init powershell --cmd cd | Out-String) })  # Replace `cd`
+    Invoke-Expression (& { (zoxide init powershell | Out-String) })
 }
 
 if (Has-Command python3) {  # Add Python3 Scripts to PATH
