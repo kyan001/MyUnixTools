@@ -142,17 +142,6 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     colored-man-pages  # man page colorized
-    #z  # auto jump to history changed dir
-    # _Completions___________
-    #git  # git suggestion
-    #httpie  # HTTPie completion
-    #npm  # npm completion
-    #pip  # pip completion
-    #python  # python completion
-    #rust  # rustc/rustup/cargo completion
-    #fzf  # fzf completion
-    # _3rd party's___________
-    #zsh-nvm  # 3rd party plugins. add wraps of nvm command.
     zsh-autosuggestions  # 3rd party plugins. gray suggestions in tail
     zsh-syntax-highlighting  # 3rd party plugins. highlights shell commands
 )
