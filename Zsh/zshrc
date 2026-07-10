@@ -227,6 +227,16 @@ up() {  # Update package managers information and upgrade packages.
             _verbose_run 'sudo snap refresh'
         fi
     }
+    up_npm() {
+        _echo --title 'NPM Update & Upgrades'
+        _has_cmd --verbose 'npm' || return 1  # If npm not installed, return False
+        _verbose_run 'npm update --global'
+    }
+    up_bun() {
+        _echo --title 'Bun Update & Upgrades'
+        _has_cmd --verbose 'bun' || return 1  # If bun not installed, return False
+        _verbose_run 'bun upgrade --global'
+    }
     up_omz() {
         _echo --title 'Upgrade Oh-My-Zsh'
         _has_cmd --verbose 'omz' || return 1  # If omz not installed, return False
@@ -243,17 +253,14 @@ up() {  # Update package managers information and upgrade packages.
         # _verbose_run 'brew upgrade python3'
         _verbose_run 'open "$(brew --prefix python3)/Python Launcher 3.app"'
     }
-    local package_managers=('pipx' 'brew' 'apt' 'snap')  # Available package managers to update and upgrade
-    local daily_upgrades=('omz' 'rust')  # Available packages for daily upgrade
-    local packages=("${daily_upgrades[@]}" 'python')  # All available packages for upgrade
-    if [[ $# -eq 0 ]]; then  # Run 'up' to run daily updates and upgrades
-        for pm in "${package_managers[@]}"; do  # All package managers will be updated and upgraded
+    local package_managers=('pipx' 'brew' 'apt' 'snap' 'npm' 'bun')  # Available package managers to update and upgrade
+    local packages=('omz' 'rust' 'python')  # All available packages for upgrade
+    local daily_upgrades=('brew' 'apt' 'snap' 'pipx' 'npm' 'bun')  # Available packages for daily upgrade
+    if [[ $# -eq 0 ]]; then  # Run `up` to run daily updates and upgrades
+        for pm in "${daily_upgrades[@]}"; do  # Selected packages will be upgraded daily
             eval "up_$pm"
         done
-        for pm in "${daily_upgrades[@]}"; do  # Partial packages will be upgraded daily
-            eval "up_$pm"
-        done
-    else  # Run 'up pip brew' for brew and pip upgrades only.
+    else  # Run `up pip brew` for brew and pip upgrades only.
         for arg in "$@"; do
             if [[ " ${package_managers[*]} " =~ " $arg " ]]; then  # $arg is a package manager
                 eval "up_$arg"
