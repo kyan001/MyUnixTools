@@ -99,7 +99,7 @@ case $(uname -a) in  # this problem only on Windows Subsystem Linux
         eval $(/opt/homebrew/bin/brew shellenv)
         ;;
 esac
-#export NVM_LAZY_LOAD=true  # Lazy load for zsh-nvm
+
 source $ZSH/oh-my-zsh.sh  # Alias after this line to avoid being overridden by oh-my-zsh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
@@ -130,6 +130,18 @@ if _has_cmd yazi; then
         rm -f -- "$tmp"
     }
 fi
+
+# Init Bun (bun)
+if _has_cmd bun; then
+    export PATH="$HOME/.bun/bin:$PATH"
+fi
+
+# Set EDITOR and VISUAL to nvim
+if _has_cmd nvim; then
+    export EDITOR='nvim'
+    export VISUAL='nvim'
+fi
+
 
 
 ####################
@@ -318,6 +330,7 @@ proxy() {  # proxy [on|off|status]
             fi
         done
         _verbose_run "proxy on"
+        return
     fi
 
     for arg in "$@"; do
