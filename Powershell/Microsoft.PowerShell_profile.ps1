@@ -243,14 +243,14 @@ if (Has-Command -Verbose recycle-bin) {  # Init recycle-bin (trash)
 }
 
 if (Has-Command eza) {  # Init Eza (ls and tree)
-    function eza-ls { eza --icons=auto --group-directories-first -h @args }
+    function eza-ls { eza --icons=auto --group-directories-first --header --all @args }
     Set-Alias "ls" "eza-ls"
-    function eza-tree { eza --icons=auto --group-directories-first -h -T @args }
+    function eza-tree { eza --icons=auto --group-directories-first --header --all --tree @args }
     Set-Alias "tree" "eza-tree"
 }
 
-if (Has-Command -Verbose scoop -and Test-Path "$(scoop prefix powertoys)\PowerToys.Awake.exe") {  # Init PowerToys Awake (awake)
-    Set-Alias "awake" "$(scoop prefix powertoys)\PowerToys.Awake"
+if (Has-Command -Verbose scoop -and Test-Path "$(Split-Path (Get-Process PowerToys).Path)\PowerToys.Awake.exe") {  # Init PowerToys Awake (awake)
+    Set-Alias "awake" "$(Split-Path (Get-Process PowerToys).Path)\PowerToys.Awake"
 }
 
 if (Has-Command -Verbose yazi) {  # Init Yazi (yz)
@@ -387,7 +387,14 @@ function up {
     function Up-Npm {
         Echo-Message -Title 'Npm Update & Upgrades'
         if (Has-Command -Verbose npm) {  # Return if npm not found
-            Run-Command -Verbose "npm update -g"
+            Run-Command -Verbose "npm update --global"
+        }
+    }
+
+    function Up-Bun {
+        Echo-Message -Title 'Bun Update & Upgrades'
+        if (Has-Command -Verbose bun) {  # Return if bun not found
+            Run-Command -Verbose "bun upgrade --global"
         }
     }
 
@@ -443,17 +450,17 @@ function up {
         'scoop' = { Up-Scoop }
         'winget' = { Up-Winget }
         'npm' = { Up-Npm }
+        'bun' = { Up-Bun }
     }
-    $DailyUpgrades = @{
-        'pip' = { Up-Pip }
-        'rust' = { Up-Rust }
-    }
-    $Packages = $DailyUpgrades + @{
+    $Packages = @{
         'dotnet' = { Up-DotNet }
         'clash' = { Up-Clash }
         'zed' = { Up-Zed }
         'python' = { Up-Python }
+        'pip' = { Up-Pip }
+        'rust' = { Up-Rust }
     }
+    $DailyUpgrades = @('scoop', 'winget', 'pipx', 'pip', 'rust')
     $PrintList = {
         Echo-Message -Info "Supported Packages and Managers:`n`t$(@($PackageManagers.Keys + $Packages.Keys) -join ', ')"
     }
@@ -483,11 +490,12 @@ function up {
         return
     }
     if ($Targets.Count -eq 0) {  # Run daily Updates & Upgrades
-        foreach ($Func in $PackageManagers.Values) {  # All package managers will be Updates & Upgrades
-            $Func.Invoke()
-        }
-        foreach ($Func in $DailyUpgrades.Values) {  # Partial packages will be upgraded daily
-            $Func.Invoke()
+        foreach ($target in $DailyUpgrades) {
+            if ($PackageManagers.ContainsKey($target)) {
+                $PackageManagers[$target].Invoke()
+            } elseif ($Packages.ContainsKey($target)) {
+                $Packages[$target].Invoke()
+            }
         }
     } else {
         foreach ($target in $Targets) {
