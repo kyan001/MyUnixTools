@@ -249,8 +249,9 @@ if (Has-Command eza) {  # Init Eza (ls and tree)
     Set-Alias "tree" "eza-tree"
 }
 
-if (Has-Command -Verbose scoop -and Test-Path "$(Split-Path (Get-Process PowerToys).Path)\PowerToys.Awake.exe") {  # Init PowerToys Awake (awake)
-    Set-Alias "awake" "$(Split-Path (Get-Process PowerToys).Path)\PowerToys.Awake"
+$PowerToysDir = (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*' | Where-Object { $_.DisplayName -like 'PowerToys*' }).InstallLocation
+if (Test-Path "$PowerToysDir\PowerToys.Awake.exe") {  # Init PowerToys Awake (awake)
+    Set-Alias "awake" "$PowerToysDir\PowerToys.Awake.exe"
 }
 
 if (Has-Command -Verbose yazi) {  # Init Yazi (yz)
