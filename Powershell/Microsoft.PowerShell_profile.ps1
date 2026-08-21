@@ -272,6 +272,7 @@ if (Has-Command -Verbose yazi) {  # Init Yazi (yz)
         }
         Remove-Item -Path $tmp
     }
+    $env:YAZI_FILE_ONE = "$(scoop prefix git)\usr\bin\file.exe"  # Use File from Scoop Git for Yazi
 }
 
 
