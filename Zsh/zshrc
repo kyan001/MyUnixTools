@@ -195,7 +195,7 @@ up() {  # Update package managers information and upgrade packages.
     up_bun() {
         _echo --title 'Bun Update & Upgrades'
         _has_cmd --verbose 'bun' || return 1  # If bun not installed, return False
-        _verbose_run 'bun update --global'
+        _verbose_run 'bun update --global'  # `update` for packages, `upgrade` for bun itself
     }
     up_omz() {
         _echo --title 'Upgrade Oh-My-Zsh'
