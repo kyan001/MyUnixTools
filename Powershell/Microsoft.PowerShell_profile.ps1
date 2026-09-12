@@ -396,7 +396,7 @@ function up {
     function Up-Bun {
         Echo-Message -Title 'Bun Update & Upgrades'
         if (Has-Command -Verbose bun) {  # Return if bun not found
-            Run-Command -Verbose "bun upgrade --global"
+            Run-Command -Verbose "bun update --global"  # `update` for packages, `upgrade` for bun itself.
         }
     }
 
