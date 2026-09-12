@@ -462,7 +462,7 @@ function up {
         'pip' = { Up-Pip }
         'rust' = { Up-Rust }
     }
-    $DailyUpgrades = @('scoop', 'winget', 'pipx', 'pip', 'rust')
+    $DailyUpgrades = @('scoop', 'winget', 'pipx', 'pip', 'npm', 'bun')
     $PrintList = {
         Echo-Message -Info "Supported Packages and Managers:`n`t$(@($PackageManagers.Keys + $Packages.Keys) -join ', ')"
     }
