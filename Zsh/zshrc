@@ -108,6 +108,11 @@ if _has_cmd python3; then
     export PATH="$(python3 -m site --user-base)/bin:$PATH"
 fi
 
+# Init Rustup
+if _has_cmd rustup; then
+    export PATH="$(brew --prefix rustup)/bin:$PATH"
+fi
+
 # Init Zoxide (z and zi)
 if _has_cmd zoxide; then
     eval "$(zoxide init zsh)"
@@ -213,9 +218,14 @@ up() {  # Update package managers information and upgrade packages.
         # _verbose_run 'brew upgrade python3'
         _verbose_run 'open "$(brew --prefix python3)/Python Launcher 3.app"'
     }
+    up_skills() {
+        _echo --title 'Upgrade Agent Skills (Global)'
+        _has_cmd --verbose 'skills' || return 1  # If skills not installed, return False
+        _verbose_run 'skills upgrade --global'
+    }
     local package_managers=('pipx' 'brew' 'apt' 'snap' 'npm' 'bun')  # Available package managers to update and upgrade
-    local packages=('omz' 'rust' 'python')  # All available packages for upgrade
-    local daily_upgrades=('brew' 'apt' 'snap' 'pipx' 'npm' 'bun')  # Available packages for daily upgrade
+    local packages=('omz' 'rust' 'python', 'skills')  # All available packages for upgrade
+    local daily_upgrades=('brew' 'apt' 'snap' 'pipx')  # Available packages for daily upgrade
     if [[ $# -eq 0 ]]; then  # Run `up` to run daily updates and upgrades
         for pm in "${daily_upgrades[@]}"; do  # Selected packages will be upgraded daily
             eval "up_$pm"
