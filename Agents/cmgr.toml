@@ -2,7 +2,7 @@ name = "Agents"
 
 [[config]]
 src = "AGENTS.md"
-dst = "~/.agents/"
+dst = "~/.agents/AGENTS.md"
 
 [[install]]
 name = "skills"
