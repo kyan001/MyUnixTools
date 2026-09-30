@@ -414,6 +414,13 @@ function up {
         }
     }
 
+    function Up-Skills {
+        Echo-Message -Title 'Agent Skills Update & Upgrades'
+        if (Has-Command -Verbose skills) {
+            Run-Command -Verbose "skills upgrade --global"
+        }
+    }
+
     function Up-DotNet {
         Echo-Message -Title 'Upgrade Windows Desktop Runtime (.NET)'
         if (Has-Command -Verbose scoop) {
@@ -428,6 +435,7 @@ function up {
             Run-Command -Verbose "sudo scoop update clash-verge-rev"
         }
     }
+
 
     function Up-Zed {
         Echo-Message -Title 'Upgrade Zed'
@@ -453,6 +461,7 @@ function up {
         'winget' = { Up-Winget }
         'npm' = { Up-Npm }
         'bun' = { Up-Bun }
+        'skills' = { Up-Skills }
     }
     $Packages = @{
         'dotnet' = { Up-DotNet }
@@ -462,7 +471,7 @@ function up {
         'pip' = { Up-Pip }
         'rust' = { Up-Rust }
     }
-    $DailyUpgrades = @('scoop', 'winget', 'pipx', 'pip', 'npm', 'bun')
+    $DailyUpgrades = @('scoop', 'winget', 'pipx', 'pip')
     $PrintList = {
         Echo-Message -Info "Supported Packages and Managers:`n`t$(@($PackageManagers.Keys + $Packages.Keys) -join ', ')"
     }
