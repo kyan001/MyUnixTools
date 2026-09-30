@@ -1,0 +1,10 @@
+name = "Agents"
+
+[[config]]
+src = "AGENTS.md"
+dst = "~/.agents/"
+
+[[install]]
+name = "skills"
+cmd = "skills"
+manager = "bun"
