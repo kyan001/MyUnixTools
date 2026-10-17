@@ -400,6 +400,13 @@ function up {
         }
     }
 
+    function Up-Dsh {
+        Echo-Message -Title 'Deepseek Harness Plugins Update & Upgrades'
+        if (Has-Command -Verbose dsh) {  # Return if dsh not found
+            Run-Command -Verbose "dsh plugin --profile desktop update --latest"
+        }
+    }
+
     function Up-Rust {
         Echo-Message -Title 'Upgrade Rust Toolchain'
         if (Has-Command -Verbose rustup) {  # Return if rust not found
@@ -462,6 +469,7 @@ function up {
         'npm' = { Up-Npm }
         'bun' = { Up-Bun }
         'skills' = { Up-Skills }
+        'dsh' = { Up-Dsh }
     }
     $Packages = @{
         'dotnet' = { Up-DotNet }
@@ -471,7 +479,7 @@ function up {
         'pip' = { Up-Pip }
         'rust' = { Up-Rust }
     }
-    $DailyUpgrades = @('scoop', 'winget', 'pipx', 'pip')
+    $DailyUpgrades = @('scoop', 'winget', 'pipx', 'pip', 'npm', 'bun', 'skills', 'dsh')
     $PrintList = {
         Echo-Message -Info "Supported Packages and Managers:`n`t$(@($PackageManagers.Keys + $Packages.Keys) -join ', ')"
     }
