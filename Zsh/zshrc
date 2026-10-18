@@ -202,6 +202,11 @@ up() {  # Update package managers information and upgrade packages.
         _has_cmd --verbose 'bun' || return 1  # If bun not installed, return False
         _verbose_run 'bun update --global --latest'  # `update` for packages, `upgrade` for bun itself
     }
+    up_dsh() {
+        _echo --title 'Deepseek Harness Upgrades'
+        _has_cmd --verbose 'dsh' || return 1  # If dsh not installed, return False
+        _verbose_run 'dsh plugin --profile desktop update'
+    }
     up_omz() {
         _echo --title 'Upgrade Oh-My-Zsh'
         _has_cmd --verbose 'omz' || return 1  # If omz not installed, return False
@@ -223,9 +228,9 @@ up() {  # Update package managers information and upgrade packages.
         _has_cmd --verbose 'skills' || return 1  # If skills not installed, return False
         _verbose_run 'skills upgrade --global'
     }
-    local package_managers=('pipx' 'brew' 'apt' 'snap' 'npm' 'bun')  # Available package managers to update and upgrade
-    local packages=('omz' 'rust' 'python', 'skills')  # All available packages for upgrade
-    local daily_upgrades=('brew' 'apt' 'snap' 'pipx')  # Available packages for daily upgrade
+    local package_managers=('pipx' 'brew' 'apt' 'snap' 'npm' 'bun' 'dsh' 'skills')  # Available package managers to update and upgrade
+    local packages=('omz' 'rust' 'python')  # All available packages for upgrade
+    local daily_upgrades=('brew' 'apt' 'snap' 'pipx' 'npm' 'bun' 'dsh' 'skills')  # Available packages for daily upgrade
     if [[ $# -eq 0 ]]; then  # Run `up` to run daily updates and upgrades
         for pm in "${daily_upgrades[@]}"; do  # Selected packages will be upgraded daily
             eval "up_$pm"
