@@ -403,7 +403,7 @@ function up {
     function Up-Dsh {
         Echo-Message -Title 'Deepseek Harness Plugins Update & Upgrades'
         if (Has-Command -Verbose dsh) {  # Return if dsh not found
-            Run-Command -Verbose "dsh plugin --profile desktop update --latest"
+            Run-Command -Verbose "dsh plugin --profile desktop update"
         }
     }
 
